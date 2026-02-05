@@ -13,35 +13,6 @@ import LaunchCountdown from './components/LaunchCountdown'; // Import new compon
 import { User, PageView, SubscriptionTier } from './types';
 import { supabase } from './lib/supabaseClient';
 
-// --- MOCK DATA FOR DEMO MODE ---
-const MOCK_USERS: Record<string, User> = {
-  admin: {
-    id: 'mock-admin',
-    name: 'Admin User',
-    email: 'admin@donify.org',
-    isSubscribed: true,
-    subscriptionTier: 'diamante',
-    hasVotedThisMonth: true,
-    isAdmin: true
-  },
-  subscriber: {
-    id: 'mock-subscriber',
-    name: 'Laura García',
-    email: 'laura@demo.com',
-    isSubscribed: true,
-    subscriptionTier: 'oro',
-    hasVotedThisMonth: false,
-    isAdmin: false
-  },
-  new: {
-    id: 'mock-new',
-    name: 'Nuevo Usuario',
-    email: 'nuevo@demo.com',
-    isSubscribed: false,
-    hasVotedThisMonth: false,
-    isAdmin: false
-  }
-};
 
 // --- LAUNCH CONFIGURATION ---
 const LAUNCH_DATE = new Date('2025-03-04T00:00:00');
@@ -55,7 +26,6 @@ export default function App() {
   const isPreLaunch = new Date() < LAUNCH_DATE;
 
   useEffect(() => {
-    // 1. Check active session
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         fetchProfile(session.user.id, session.user.email!);
@@ -65,19 +35,17 @@ export default function App() {
     });
 
     // 2. Listen for auth changes
-    const {
+   const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) {
         fetchProfile(session.user.id, session.user.email!);
         setCurrentView('app');
       } else {
-        // Only clear user if we are not in mock mode (Mock IDs start with 'mock-')
-        if (user && !user.id.startsWith('mock-')) {
-            setUser(null);
-            if (currentView === 'app' || currentView === 'admin') {
-                setCurrentView('landing');
-            }
+        // Simplified: Always clear user on sign out
+        setUser(null);
+        if (currentView === 'app' || currentView === 'admin') {
+            setCurrentView('landing');
         }
       }
     });
@@ -124,17 +92,7 @@ export default function App() {
     }
   };
 
-  // --- MOCK LOGIN HANDLER ---
-  const handleMockLogin = (type: 'admin' | 'subscriber' | 'new') => {
-    const mockUser = MOCK_USERS[type];
-    setUser(mockUser);
-    if (mockUser.isAdmin) {
-        setCurrentView('admin');
-    } else {
-        setCurrentView('app');
-    }
-  };
-
+  
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center text-primary font-bold">Cargando Donify...</div>;
   }
@@ -151,9 +109,9 @@ export default function App() {
       case 'landing':
         return <Landing onNavigate={setCurrentView} />;
       case 'login':
-        return <Login onNavigate={setCurrentView} initialState="login" onMockLogin={handleMockLogin} />;
+        return <Login onNavigate={setCurrentView} initialState="login"  />;
       case 'signup':
-        return <Login onNavigate={setCurrentView} initialState="signup" onMockLogin={handleMockLogin} />;
+        return <Login onNavigate={setCurrentView} initialState="signup"  />;
       case 'pricing':
         return <PricingPage onNavigate={setCurrentView} />;
       case 'how-it-works':
@@ -179,7 +137,7 @@ export default function App() {
             onNavigate={setCurrentView} 
           />
         ) : (
-          <Login onNavigate={setCurrentView} initialState="login" onMockLogin={handleMockLogin} />
+          <Login onNavigate={setCurrentView} initialState="login" />
         );
       default:
         // Default fallback to Countdown if prelaunch
