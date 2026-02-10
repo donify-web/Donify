@@ -76,16 +76,16 @@ export default function Landing({ onNavigate }: LandingProps) {
             </div>
             <span className="font-bold text-2xl tracking-tight text-gray-800">Donify</span>
           </div>
-          
+
           <nav className="hidden md:flex gap-8 text-base font-medium text-gray-600">
             <button onClick={() => onNavigate('landing')} className="hover:text-primary transition-colors">Inicio</button>
             <button onClick={() => onNavigate('how-it-works')} className="hover:text-primary transition-colors">Cómo funciona</button>
-            <button onClick={() => onNavigate('pricing')} className="hover:text-primary transition-colors">Tarifas</button>
-            <button onClick={() => onNavigate('legal')} className="hover:text-primary transition-colors">Quiénes somos</button>
+            <button onClick={() => onNavigate('organizations')} className="hover:text-primary transition-colors">ONG</button>
+            <button onClick={() => onNavigate('contact')} className="hover:text-primary transition-colors">Contacto</button>
           </nav>
 
           <div className="hidden md:flex items-center gap-4">
-             <button 
+            <button
               onClick={() => onNavigate('login')}
               className="text-primary font-semibold hover:underline"
             >
@@ -97,14 +97,15 @@ export default function Landing({ onNavigate }: LandingProps) {
             {mobileMenuOpen ? <X /> : <Menu />}
           </button>
         </div>
-        
+
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden bg-white border-t border-gray-100 p-4 shadow-lg">
             <nav className="flex flex-col gap-4 text-center">
               <button onClick={() => { setMobileMenuOpen(false); onNavigate('landing'); }}>Inicio</button>
               <button onClick={() => { setMobileMenuOpen(false); onNavigate('how-it-works'); }}>Cómo funciona</button>
-              <button onClick={() => { setMobileMenuOpen(false); onNavigate('pricing'); }}>Tarifas</button>
+              <button onClick={() => { setMobileMenuOpen(false); onNavigate('organizations'); }}>ONG</button>
+              <button onClick={() => { setMobileMenuOpen(false); onNavigate('contact'); }}>Contacto</button>
               <button onClick={() => { setMobileMenuOpen(false); onNavigate('login'); }} className="text-primary font-bold">
                 Iniciar sesión
               </button>
@@ -124,13 +125,13 @@ export default function Landing({ onNavigate }: LandingProps) {
             Las personas donan poco, eligen juntas y el dinero va directamente a las organizaciones más votadas. Sin ruido. Sin intermediarios innecesarios.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-            <button 
+            <button
               onClick={() => onNavigate('signup')}
               className="bg-primary hover:bg-primary-hover text-white px-8 py-4 rounded-lg text-lg font-bold transition-all shadow-lg hover:shadow-xl"
             >
               Empezar ahora <ArrowRight className="inline ml-2" size={20} />
             </button>
-            <button 
+            <button
               onClick={() => onNavigate('how-it-works')}
               className="px-8 py-4 text-gray-600 font-medium hover:text-primary transition-colors flex items-center justify-center"
             >
@@ -138,17 +139,17 @@ export default function Landing({ onNavigate }: LandingProps) {
             </button>
           </div>
         </div>
-        
+
         <div className="flex-1 relative">
           <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-            <img 
-              src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&q=80&w=1000" 
-              alt="Voluntario ayudando" 
+            <img
+              src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&q=80&w=1000"
+              alt="Voluntario ayudando"
               className="w-full h-auto object-cover"
             />
-             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end p-8">
-                <p className="text-white italic font-medium">"Solo una forma sencilla y transparente de participar en algo que importa"</p>
-             </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end p-8">
+              <p className="text-white italic font-medium">"Solo una forma sencilla y transparente de participar en algo que importa"</p>
+            </div>
           </div>
         </div>
       </section>
@@ -157,10 +158,10 @@ export default function Landing({ onNavigate }: LandingProps) {
       <section className="py-20 bg-bgMain">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto mb-16">
-             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Cómo funciona</h2>
-             <p className="text-gray-500">Sin intermediarios innecesarios. Sin ruido.</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Cómo funciona</h2>
+            <p className="text-gray-500">Sin intermediarios innecesarios. Sin ruido.</p>
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-secondary/20 text-primary rounded-xl flex items-center justify-center mb-6">
@@ -181,7 +182,7 @@ export default function Landing({ onNavigate }: LandingProps) {
               </p>
             </div>
             <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
-               <div className="w-12 h-12 bg-secondary/20 text-primary rounded-xl flex items-center justify-center mb-6">
+              <div className="w-12 h-12 bg-secondary/20 text-primary rounded-xl flex items-center justify-center mb-6">
                 <CheckCircle size={28} />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">3. Impacto directo</h3>
@@ -199,23 +200,23 @@ export default function Landing({ onNavigate }: LandingProps) {
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">Elige tu nivel de impacto</h2>
             <p className="text-xl text-gray-500 mb-8">Pequeñas cantidades, resultados gigantes.</p>
-            
+
             {/* Toggle */}
             <div className="inline-flex bg-gray-100 p-1 rounded-xl">
-              <button 
+              <button
                 onClick={() => setPricingMode('simple')}
                 className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${pricingMode === 'simple' ? 'bg-primary text-white shadow-md' : 'text-gray-500 hover:text-gray-900'}`}
               >
                 Simple (0.99€)
               </button>
-              <button 
+              <button
                 onClick={() => setPricingMode('pro')}
                 className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${pricingMode === 'pro' ? 'bg-gray-900 text-white shadow-md' : 'text-gray-500 hover:text-gray-900'}`}
               >
                 Pro (1.99€)
               </button>
             </div>
-             <p className="text-xs text-gray-400 mt-2">La opción más accesible para todos.</p>
+            <p className="text-xs text-gray-400 mt-2">La opción más accesible para todos.</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -231,14 +232,14 @@ export default function Landing({ onNavigate }: LandingProps) {
                   <span className="text-4xl font-bold text-gray-900">{tier.price}€</span>
                   <span className="text-gray-500 text-sm">{tier.period}</span>
                 </div>
-                
+
                 {/* Transparency Line */}
-                 <div className="mb-6 p-3 bg-bgMain rounded-lg">
-                    <div className="flex items-center gap-1 text-xs text-gray-500 mb-1">
-                        <ShieldCheck size={12} /> Donación neta estimada:
-                    </div>
-                    <div className="text-primary font-bold">{tier.net}€</div>
-                 </div>
+                <div className="mb-6 p-3 bg-bgMain rounded-lg">
+                  <div className="flex items-center gap-1 text-xs text-gray-500 mb-1">
+                    <ShieldCheck size={12} /> Donación neta estimada:
+                  </div>
+                  <div className="text-primary font-bold">{tier.net}€</div>
+                </div>
 
                 <ul className="space-y-3 mb-8">
                   <li className="flex items-center gap-2 text-sm text-gray-600">
@@ -252,7 +253,7 @@ export default function Landing({ onNavigate }: LandingProps) {
                   </li>
                 </ul>
 
-                <button 
+                <button
                   onClick={() => onNavigate('login')}
                   className={`w-full py-3 rounded-lg font-bold transition-colors ${tier.highlight ? 'bg-primary text-white hover:bg-primary-hover' : 'bg-gray-50 text-gray-900 hover:bg-gray-100'}`}
                 >
@@ -285,7 +286,7 @@ export default function Landing({ onNavigate }: LandingProps) {
                 <div className="p-6">
                   <h3 className="font-bold text-lg text-gray-900 mb-2">{project.title}</h3>
                   <p className="text-gray-600 text-sm mb-4 line-clamp-2">{project.desc}</p>
-                  
+
                   <div className="mb-4">
                     <div className="flex justify-between text-xs font-bold mb-1">
                       <span className="text-gray-500">POPULARIDAD</span>
@@ -296,7 +297,7 @@ export default function Landing({ onNavigate }: LandingProps) {
                     </div>
                   </div>
 
-                  <button 
+                  <button
                     onClick={() => onNavigate('login')}
                     className="w-full border border-gray-200 text-gray-600 py-2 rounded-lg font-medium hover:border-primary hover:text-primary transition-colors"
                   >
@@ -313,53 +314,53 @@ export default function Landing({ onNavigate }: LandingProps) {
       <section className="py-20 bg-gradient-to-br from-gray-900 to-black text-white relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
         <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
-            <h2 className="text-3xl font-bold mb-12">Transparencia Radical</h2>
-            <p className="text-gray-400 max-w-2xl mx-auto mb-16">
-              El dinero no desaparece. Sabemos exactamente dónde está en cada momento. Usamos Stripe para garantizar la seguridad de cada céntimo.
-            </p>
+          <h2 className="text-3xl font-bold mb-12">Transparencia Radical</h2>
+          <p className="text-gray-400 max-w-2xl mx-auto mb-16">
+            El dinero no desaparece. Sabemos exactamente dónde está en cada momento. Usamos Stripe para garantizar la seguridad de cada céntimo.
+          </p>
 
-            <div className="grid md:grid-cols-3 gap-8 text-left">
-                <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
-                    <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary mb-4">
-                        <Lock size={20} />
-                    </div>
-                    <h3 className="font-bold text-lg mb-2">1. Donación Realizada</h3>
-                    <p className="text-gray-400 text-sm">El usuario elige su suscripción y realiza el pago seguro.</p>
-                </div>
-                <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
-                    <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary mb-4">
-                        <ShieldCheck size={20} />
-                    </div>
-                    <h3 className="font-bold text-lg mb-2">2. Seguridad Stripe</h3>
-                    <p className="text-gray-400 text-sm">Fondos retenidos en balance (7-14 días) por protocolos anti-fraude.</p>
-                </div>
-                 <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
-                    <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary mb-4">
-                        <Globe size={20} />
-                    </div>
-                    <h3 className="font-bold text-lg mb-2">3. Transferencia a ONG</h3>
-                    <p className="text-gray-400 text-sm">Liberación automática a la cuenta bancaria de la organización ganadora.</p>
-                </div>
+          <div className="grid md:grid-cols-3 gap-8 text-left">
+            <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
+              <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary mb-4">
+                <Lock size={20} />
+              </div>
+              <h3 className="font-bold text-lg mb-2">1. Donación Realizada</h3>
+              <p className="text-gray-400 text-sm">El usuario elige su suscripción y realiza el pago seguro.</p>
             </div>
-            
-             <div className="mt-12 inline-block bg-yellow-500/10 border border-yellow-500/20 px-4 py-2 rounded-lg text-yellow-500 text-sm">
-                Disclaimer: Stripe retiene los fondos temporalmente por seguridad antes de liberarlos a la cuenta destino.
-             </div>
+            <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
+              <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary mb-4">
+                <ShieldCheck size={20} />
+              </div>
+              <h3 className="font-bold text-lg mb-2">2. Seguridad Stripe</h3>
+              <p className="text-gray-400 text-sm">Fondos retenidos en balance (7-14 días) por protocolos anti-fraude.</p>
+            </div>
+            <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
+              <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary mb-4">
+                <Globe size={20} />
+              </div>
+              <h3 className="font-bold text-lg mb-2">3. Transferencia a ONG</h3>
+              <p className="text-gray-400 text-sm">Liberación automática a la cuenta bancaria de la organización ganadora.</p>
+            </div>
+          </div>
+
+          <div className="mt-12 inline-block bg-yellow-500/10 border border-yellow-500/20 px-4 py-2 rounded-lg text-yellow-500 text-sm">
+            Disclaimer: Stripe retiene los fondos temporalmente por seguridad antes de liberarlos a la cuenta destino.
+          </div>
         </div>
       </section>
 
       {/* QUIENES SOMOS (About) */}
       <section id="quienes" className="py-20 bg-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">Quiénes somos</h2>
-            <p className="text-lg text-gray-600 leading-relaxed mb-6">
-                Donify nace de una frustración: querer ayudar pero sentir que las pequeñas aportaciones no importan. 
-                Creamos un sistema donde miles de micro-donaciones se suman para financiar proyectos reales y tangibles.
-            </p>
-            <p className="text-lg text-gray-600 leading-relaxed">
-                Somos un equipo independiente de desarrolladores y activistas sociales. No retenemos tu dinero más allá de los 
-                tiempos de seguridad estipulados por nuestros procesadores de pagos. Nuestra misión es democratizar la filantropía.
-            </p>
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">Quiénes somos</h2>
+          <p className="text-lg text-gray-600 leading-relaxed mb-6">
+            Donify nace de una frustración: querer ayudar pero sentir que las pequeñas aportaciones no importan.
+            Creamos un sistema donde miles de micro-donaciones se suman para financiar proyectos reales y tangibles.
+          </p>
+          <p className="text-lg text-gray-600 leading-relaxed">
+            Somos un equipo independiente de desarrolladores y activistas sociales. No retenemos tu dinero más allá de los
+            tiempos de seguridad estipulados por nuestros procesadores de pagos. Nuestra misión es democratizar la filantropía.
+          </p>
         </div>
       </section>
 
@@ -380,8 +381,7 @@ export default function Landing({ onNavigate }: LandingProps) {
               <h4 className="font-bold mb-4 text-gray-200">PLATAFORMA</h4>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li><button onClick={() => onNavigate('how-it-works')} className="hover:text-primary">Cómo funciona</button></li>
-                <li><button onClick={() => onNavigate('pricing')} className="hover:text-primary">Tarifas</button></li>
-                <li><button onClick={() => onNavigate('app')} className="hover:text-primary">Organizaciones</button></li>
+                <li><button onClick={() => onNavigate('organizations')} className="hover:text-primary">Organizaciones</button></li>
               </ul>
             </div>
             <div>
@@ -389,7 +389,6 @@ export default function Landing({ onNavigate }: LandingProps) {
               <ul className="space-y-2 text-sm text-gray-400">
                 <li><button onClick={() => onNavigate('legal')} className="hover:text-primary">Política de Privacidad</button></li>
                 <li><button onClick={() => onNavigate('legal')} className="hover:text-primary">Términos y Condiciones</button></li>
-                <li><button onClick={() => onNavigate('pricing')} className="hover:text-primary">Transparencia de Tarifas</button></li>
               </ul>
             </div>
             <div>
@@ -401,14 +400,14 @@ export default function Landing({ onNavigate }: LandingProps) {
               </ul>
             </div>
           </div>
-          
+
           <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
             <p>© 2026 Donify. Todos los derechos reservados.</p>
             <p className="max-w-md text-center md:text-right">
-                Donify no garantiza que el 100% de la donación bruta llegue al destinatario final debido a las tarifas de 
-                procesamiento de pagos de terceros y costes operativos mínimos. Por favor, revisa nuestra sección de 
-                <button onClick={() => onNavigate('pricing')} className="text-gray-400 underline mx-1">Tarifas y Desglose</button> 
-                para más detalle.
+              Donify no garantiza que el 100% de la donación bruta llegue al destinatario final debido a las tarifas de
+              procesamiento de pagos de terceros y costes operativos mínimos. Por favor, revisa nuestra sección de
+              <button onClick={() => onNavigate('pricing')} className="text-gray-400 underline mx-1">Tarifas y Desglose</button>
+              para más detalle.
             </p>
             <p className="flex items-center gap-1">Hecho con <Heart size={12} className="text-red-500 fill-current" /> para el mundo.</p>
           </div>

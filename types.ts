@@ -1,5 +1,16 @@
 
-export type PageView = 'landing' | 'login' | 'signup' | 'app' | 'pricing' | 'how-it-works' | 'contact' | 'ngo-apply' | 'legal' | 'admin';
+export type PageView = 
+  | 'landing' 
+  | 'app' 
+  | 'login' 
+  | 'signup' 
+  | 'pricing' 
+  | 'how-it-works' 
+  | 'contact' 
+  | 'ngo-apply' 
+  | 'legal' 
+  | 'admin'
+  | 'organizations';
 
 export type SubscriptionTier = 'bronce' | 'plata' | 'oro' | 'diamante';
 export type SubscriptionType = 'simple' | 'pro';

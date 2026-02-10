@@ -11,8 +11,8 @@ self.addEventListener('push', (event) => {
   const title = data.title || 'Donify';
   const options = {
     body: data.body || 'Tu impacto está generando cambios.',
-    icon: '/vite.svg',
-    badge: '/vite.svg',
+    icon: '/logo.svg',
+    badge: '/logo.svg',
     data: { url: data.url || '/app' }
   };
 
