@@ -6,6 +6,10 @@ import PricingPage from './components/PricingPage';
 import HowItWorks from './components/HowItWorks';
 import Contact from './components/Contact';
 import NgoApply from './components/NgoApply';
+import NgoDashboard from './components/NgoDashboard';
+import NgoProjects from './components/NgoProjects';
+import NgoFinance from './components/NgoFinance';
+import NgoSettings from './components/NgoSettings';
 import LegalView from './components/LegalView';
 import AdminPanel from './components/AdminPanel';
 import LaunchCountdown from './components/LaunchCountdown';
@@ -15,7 +19,7 @@ import PublicNavbar from './components/PublicNavbar';
 import PaymentWizard from './components/PaymentWizard';
 import TierBenefitsModal from './components/TierBenefitsModal';
 import RegistrationChoiceModal from './components/RegistrationChoiceModal';
-import { PageView, SubscriptionTier } from './types';
+import { PageView, SubscriptionTier, NgoUser } from './types';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 // --- LAUNCH CONFIGURATION ---
@@ -36,6 +40,16 @@ function AppContent() {
   // Determine if we are in Pre-Launch phase
   const isPreLaunch = new Date() < LAUNCH_DATE;
 
+  // Mock NGO User derivation (In production this would come from a database fetch)
+  const derivedNgoUser: NgoUser | null = user?.isNgo ? {
+    id: user.id || 'ngo-1',
+    ngoName: user.name || 'Mi Organización',
+    email: user.email,
+    isVerified: false,
+    logoUrl: '',
+    category: 'Social'
+  } : null;
+
   const handleLogout = async () => {
     // AuthContext handles the actual logout logic if needed, 
     // but here we might just want to clear view state
@@ -51,9 +65,11 @@ function AppContent() {
 
   const handleRegistrationClick = () => {
     if (user) {
-      // If already logged in, maybe go to dashboard or settings? 
-      // For now, let's just go to app
-      setCurrentView('app');
+      if (user.isNgo) {
+        setCurrentView('ngo-dashboard');
+      } else {
+        setCurrentView('app');
+      }
     } else {
       setShowRegistrationChoice(true);
     }
@@ -98,6 +114,22 @@ function AppContent() {
         return <Contact onNavigate={setCurrentView} />;
       case 'ngo-apply':
         return <NgoApply onNavigate={setCurrentView} />;
+      case 'ngo-dashboard':
+        return derivedNgoUser ? (
+          <NgoDashboard
+            ngoUser={derivedNgoUser}
+            onLogout={handleLogout}
+            onNavigate={setCurrentView}
+          />
+        ) : <Login onNavigate={setCurrentView} initialState="login" />;
+      case 'ngo-projects':
+        return <NgoProjects onNavigate={setCurrentView} />;
+      case 'ngo-finance':
+        return <NgoFinance onNavigate={setCurrentView} />;
+      case 'ngo-settings':
+        return derivedNgoUser ? (
+          <NgoSettings ngoUser={derivedNgoUser} onNavigate={setCurrentView} />
+        ) : <Login onNavigate={setCurrentView} initialState="login" />;
       case 'organizations':
         return <Organizations onNavigate={setCurrentView} />;
       case 'settings':
@@ -158,7 +190,7 @@ function AppContent() {
     }
   };
 
-  const showPublicNavbar = !user && !['login', 'signup', 'app', 'admin', 'settings'].includes(currentView);
+  const showPublicNavbar = !user && !['login', 'signup', 'app', 'admin', 'settings', 'ngo-dashboard', 'ngo-projects', 'ngo-finance', 'ngo-settings'].includes(currentView);
 
   return (
     <div className="min-h-screen bg-white">

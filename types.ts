@@ -8,6 +8,10 @@ export type PageView =
   | 'how-it-works' 
   | 'contact' 
   | 'ngo-apply' 
+  | 'ngo-dashboard'
+  | 'ngo-projects'
+  | 'ngo-finance'
+  | 'ngo-settings'
   | 'legal' 
   | 'cookies'
   | 'admin'
@@ -26,6 +30,8 @@ export interface User {
   hasVotedThisMonth: boolean;
   lastDonationDate?: string; // ISO Date
   isAdmin?: boolean; // New flag for admin access
+  isNgo?: boolean; // New flag for NGO access
+  ngoId?: string; // Link to the NGO profile if user is an NGO admin
 }
 
 export interface OngCandidate {
@@ -35,4 +41,49 @@ export interface OngCandidate {
   description: string;
   imageUrl: string;
   progress: number;
+}
+
+export interface VoteStats {
+    currentMonthVotes: number;
+    ranking: number;
+    totalNgos: number;
+    estimatedRevenue: number;
+    lastMonthVotes: number;
+    historicalVotes: { month: string; votes: number }[];
+}
+
+export interface NgoProject {
+    id: string;
+    ngoId: string;
+    title: string;
+    description: string;
+    category: string;
+    goalAmount: number;
+    imageUrl: string;
+    status: 'draft' | 'voting' | 'completed';
+    votingMonth: string;
+    currentVotes: number;
+}
+
+export interface NgoUser {
+    id: string;
+    ngoName: string;
+    email: string;
+    logoUrl?: string;
+    bannerUrl?: string;
+    isVerified: boolean;
+    description?: string;
+    mission?: string;
+    legalName?: string;
+    cif?: string;
+    phone?: string;
+    address?: string;
+    website?: string;
+    category?: string;
+    socialMedia?: {
+        facebook?: string;
+        instagram?: string;
+        twitter?: string;
+        linkedin?: string;
+    };
 }
