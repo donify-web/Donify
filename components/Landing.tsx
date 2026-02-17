@@ -1,17 +1,18 @@
 
 import React, { useState } from 'react';
 import { PageView } from '../types';
-import { Coins, Heart, CheckCircle, ArrowRight, ShieldCheck, Menu, X, Globe, Lock } from 'lucide-react';
+import { Coins, Heart, CheckCircle, ArrowRight, ShieldCheck, Globe, Lock } from 'lucide-react';
 import { Logo } from './Logo';
 
 interface LandingProps {
   onNavigate: (view: PageView) => void;
+  onShowPaymentWizard: () => void;
+  onShowBenefits: () => void;
 }
 
-export default function Landing({ onNavigate }: LandingProps) {
+export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefits }: LandingProps) {
   const [pricingMode, setPricingMode] = useState<'simple' | 'pro'>('simple');
   const [paymentFrequency, setPaymentFrequency] = useState<'monthly' | 'yearly'>('monthly');
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const tiers = [
     {
@@ -72,53 +73,6 @@ export default function Landing({ onNavigate }: LandingProps) {
 
   return (
     <div className="flex flex-col min-h-screen font-sans text-textMain bg-white">
-      {/* HEADER */}
-      <header className="fixed w-full bg-white/95 backdrop-blur-sm z-50 border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => onNavigate('landing')}>
-            <div className="bg-primary text-white p-2 rounded-lg">
-              <Logo className="w-8 h-8" />
-            </div>
-            <span className="font-bold text-2xl tracking-tight text-gray-800">Donify</span>
-          </div>
-
-          <nav className="hidden md:flex gap-8 text-base font-medium text-gray-600">
-            <button onClick={() => onNavigate('landing')} className="hover:text-primary transition-colors">Inicio</button>
-            <button onClick={() => onNavigate('how-it-works')} className="hover:text-primary transition-colors">Cómo funciona</button>
-            <button onClick={() => onNavigate('organizations')} className="hover:text-primary transition-colors">ONG</button>
-            <button onClick={() => onNavigate('contact')} className="hover:text-primary transition-colors">Contacto</button>
-          </nav>
-
-          <div className="hidden md:flex items-center gap-4">
-            <button
-              onClick={() => onNavigate('login')}
-              className="text-primary font-semibold hover:underline"
-            >
-              Iniciar sesión
-            </button>
-          </div>
-
-          <button className="md:hidden text-gray-600" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            {mobileMenuOpen ? <X /> : <Menu />}
-          </button>
-        </div>
-
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-white border-t border-gray-100 p-4 shadow-lg">
-            <nav className="flex flex-col gap-4 text-center">
-              <button onClick={() => { setMobileMenuOpen(false); onNavigate('landing'); }}>Inicio</button>
-              <button onClick={() => { setMobileMenuOpen(false); onNavigate('how-it-works'); }}>Cómo funciona</button>
-              <button onClick={() => { setMobileMenuOpen(false); onNavigate('organizations'); }}>ONG</button>
-              <button onClick={() => { setMobileMenuOpen(false); onNavigate('contact'); }}>Contacto</button>
-              <button onClick={() => { setMobileMenuOpen(false); onNavigate('login'); }} className="text-primary font-bold">
-                Iniciar sesión
-              </button>
-            </nav>
-          </div>
-        )}
-      </header>
-
       {/* HERO SECTION */}
       <section id="landing" className="pt-32 pb-16 px-6 max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
         <div className="flex-1 space-y-8 text-center md:text-left">
@@ -131,7 +85,7 @@ export default function Landing({ onNavigate }: LandingProps) {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
             <button
-              onClick={() => onNavigate('signup')}
+              onClick={onShowPaymentWizard}
               className="bg-primary hover:bg-primary-hover text-white px-8 py-4 rounded-lg text-lg font-bold transition-all shadow-lg hover:shadow-xl"
             >
               Empezar ahora <ArrowRight className="inline ml-2" size={20} />
@@ -276,7 +230,7 @@ export default function Landing({ onNavigate }: LandingProps) {
                   </ul>
 
                   <button
-                    onClick={() => onNavigate('login')}
+                    onClick={onShowPaymentWizard}
                     className={`w-full py-3 rounded-lg font-bold transition-colors ${tier.highlight ? 'bg-primary text-white hover:bg-primary-hover' : 'bg-gray-50 text-gray-900 hover:bg-gray-100'}`}
                   >
                     Suscribirse {tier.name}

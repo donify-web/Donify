@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { User, OngCandidate, PageView, SubscriptionTier } from '../types';
 import { Bell, LogOut, CheckCircle, AlertCircle, Heart, BellOff, Loader2, Shield, TrendingUp, X, Check, Settings as SettingsIcon } from 'lucide-react';
@@ -10,6 +9,7 @@ interface DashboardProps {
   onLogout: () => void;
   refreshProfile: () => void;
   onNavigate?: (view: PageView) => void;
+  onShowPaymentWizard?: () => void;
 }
 
 const mockCandidates: OngCandidate[] = [
@@ -39,12 +39,10 @@ const mockCandidates: OngCandidate[] = [
   }
 ];
 
-export default function Dashboard({ user, onLogout, refreshProfile, onNavigate }: DashboardProps) {
+export default function Dashboard({ user, onLogout, refreshProfile, onNavigate, onShowPaymentWizard }: DashboardProps) {
   const [notifPermission, setNotifPermission] = useState<NotificationPermission>('default');
   const [isUpdating, setIsUpdating] = useState(false);
   const [localUser, setLocalUser] = useState<User>(user);
-  const [showPlanSelector, setShowPlanSelector] = useState(false);
-  const [pricingMode, setPricingMode] = useState<'simple' | 'pro'>('simple');
 
   useEffect(() => {
     setLocalUser(user);
@@ -75,42 +73,6 @@ export default function Dashboard({ user, onLogout, refreshProfile, onNavigate }
         alert("Error al iniciar el proceso de pago.");
       }
       // Redirection happens inside initiateCheckout
-    }
-  };
-
-  const handleSubscriptionSelect = async (tier: SubscriptionTier) => {
-    setShowPlanSelector(false);
-    setIsUpdating(true);
-
-    // Determine Price ID based on tier and frequency (monthly for now)
-    let key = '';
-    switch (tier) {
-      case 'bronce': key = pricingMode === 'simple' ? 'BRONZE_SIMPLE_MONTHLY' : 'BRONZE_PRO_MONTHLY'; break;
-      case 'plata': key = pricingMode === 'simple' ? 'PLATA_SIMPLE_BIWEEKLY' : 'PLATA_PRO_BIWEEKLY'; break;
-      case 'oro': key = pricingMode === 'simple' ? 'ORO_SIMPLE_WEEKLY' : 'ORO_PRO_WEEKLY'; break;
-      case 'diamante': key = pricingMode === 'simple' ? 'DIAMANTE_SIMPLE_DAILY' : 'DIAMANTE_PRO_DAILY'; break;
-    }
-
-    // @ts-ignore
-    const priceId = PRICE_IDS[key] || PRICE_IDS.BRONZE_SIMPLE;
-
-    if (isMock) {
-      setTimeout(() => {
-        setLocalUser(prev => ({
-          ...prev,
-          isSubscribed: true,
-          subscriptionTier: tier,
-          hasVotedThisMonth: false
-        }));
-        setIsUpdating(false);
-        alert(`[SIMULACIÓN] ¡Suscripción ${tier.toUpperCase()} activada!`);
-      }, 1500);
-    } else {
-      const result = await initiateCheckout(priceId, user.id, 'subscription');
-      if (!result.success) {
-        setIsUpdating(false);
-        alert("El proceso de suscripción falló.");
-      }
     }
   };
 
@@ -154,13 +116,6 @@ export default function Dashboard({ user, onLogout, refreshProfile, onNavigate }
       new Notification("¡Gracias!", { body: "Te avisaremos de las próximas votaciones." });
     }
   };
-
-  const tiers: { id: SubscriptionTier, name: string, freq: string, priceSimple: number, pricePro: number }[] = [
-    { id: 'bronce', name: 'Bronce', freq: 'Mensual', priceSimple: 0.99, pricePro: 1.99 },
-    { id: 'plata', name: 'Plata', freq: 'Quincenal', priceSimple: 0.99, pricePro: 1.99 },
-    { id: 'oro', name: 'Oro', freq: 'Semanal', priceSimple: 0.99, pricePro: 1.99 },
-    { id: 'diamante', name: 'Diamante', freq: 'Diario', priceSimple: 0.99, pricePro: 1.99 },
-  ];
 
   return (
     <div className="min-h-screen bg-bgMain pb-20 relative">
@@ -230,7 +185,7 @@ export default function Dashboard({ user, onLogout, refreshProfile, onNavigate }
                 {/* UPGRADE BUTTON */}
                 {localUser.isSubscribed && (
                   <button
-                    onClick={() => setShowPlanSelector(true)}
+                    onClick={onShowPaymentWizard}
                     disabled={isUpdating}
                     className="bg-gray-100 text-gray-600 p-2 rounded-lg hover:bg-primary/10 hover:text-primary transition-colors text-xs font-bold flex flex-col items-center gap-1"
                   >
@@ -242,7 +197,7 @@ export default function Dashboard({ user, onLogout, refreshProfile, onNavigate }
 
               {!localUser.isSubscribed && (
                 <button
-                  onClick={() => setShowPlanSelector(true)}
+                  onClick={onShowPaymentWizard}
                   disabled={isUpdating}
                   className="mt-3 text-xs bg-gray-900 text-white px-3 py-1.5 rounded-lg hover:bg-black transition-colors shadow-sm w-full sm:w-auto"
                 >
@@ -334,75 +289,6 @@ export default function Dashboard({ user, onLogout, refreshProfile, onNavigate }
         </div>
 
       </div>
-
-      {/* --- PLAN SELECTOR MODAL --- */}
-      {showPlanSelector && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-            onClick={() => setShowPlanSelector(false)}
-          ></div>
-
-          {/* Modal */}
-          <div className="relative w-full max-w-lg bg-white sm:rounded-2xl rounded-t-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col animate-in slide-in-from-bottom-10 duration-300">
-            <div className="p-4 border-b flex justify-between items-center bg-gray-50">
-              <h3 className="font-bold text-gray-900">Elige tu nivel de impacto</h3>
-              <button onClick={() => setShowPlanSelector(false)} className="text-gray-500 hover:text-gray-900">
-                <X size={20} />
-              </button>
-            </div>
-
-            <div className="p-4 overflow-y-auto">
-              {/* Toggle */}
-              <div className="flex justify-center mb-6">
-                <div className="inline-flex bg-gray-100 p-1 rounded-xl">
-                  <button
-                    onClick={() => setPricingMode('simple')}
-                    className={`px-6 py-2 rounded-lg text-xs font-bold transition-all ${pricingMode === 'simple' ? 'bg-primary text-white shadow-sm' : 'text-gray-500'}`}
-                  >
-                    Simple (0.99€)
-                  </button>
-                  <button
-                    onClick={() => setPricingMode('pro')}
-                    className={`px-6 py-2 rounded-lg text-xs font-bold transition-all ${pricingMode === 'pro' ? 'bg-gray-900 text-white shadow-sm' : 'text-gray-500'}`}
-                  >
-                    Pro (1.99€)
-                  </button>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                {tiers.map((tier) => (
-                  <div
-                    key={tier.id}
-                    className={`border rounded-xl p-4 flex items-center justify-between cursor-pointer transition-all ${localUser.subscriptionTier === tier.id ? 'border-primary ring-1 ring-primary/20 bg-primary/5' : 'border-gray-200 hover:border-primary/50'}`}
-                    onClick={() => handleSubscriptionSelect(tier.id)}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${localUser.subscriptionTier === tier.id ? 'border-primary bg-primary' : 'border-gray-300'}`}>
-                        {localUser.subscriptionTier === tier.id && <Check size={10} className="text-white" />}
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-gray-900 text-sm">{tier.name}</h4>
-                        <p className="text-xs text-gray-500">{tier.freq}</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <span className="font-bold text-gray-900 block">{pricingMode === 'simple' ? tier.priceSimple : tier.pricePro}€</span>
-                      <span className="text-[10px] text-gray-400">/{tier.id === 'diamante' ? 'día' : (tier.id === 'oro' ? 'sem' : (tier.id === 'plata' ? '15d' : 'mes'))}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="p-4 bg-gray-50 text-xs text-center text-gray-400 border-t">
-              Procesado seguro por Stripe. Puedes cancelar en cualquier momento.
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

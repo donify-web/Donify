@@ -9,11 +9,12 @@ import NgoApply from './components/NgoApply';
 import LegalView from './components/LegalView';
 import AdminPanel from './components/AdminPanel';
 import LaunchCountdown from './components/LaunchCountdown';
-import Organizations from './components/Organizations';
+import Organizations from './components/Organizations'; // Restored import
 import Settings from './components/Settings';
-import NgoDashboard from './components/NgoDashboard';
-import NgoSettings from './components/NgoSettings';
-import { PageView, NgoUser } from './types';
+import PublicNavbar from './components/PublicNavbar';
+import PaymentWizard from './components/PaymentWizard';
+import TierBenefitsModal from './components/TierBenefitsModal';
+import { PageView } from './types';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 // --- LAUNCH CONFIGURATION ---
@@ -23,6 +24,10 @@ function AppContent() {
   const { user, loading, signOut, refreshProfile } = useAuth();
   const [currentView, setCurrentView] = useState<PageView>('landing');
 
+  // Base State for Modals
+  const [showPaymentWizard, setShowPaymentWizard] = useState(false);
+  const [showBenefitsModal, setShowBenefitsModal] = useState(false);
+
   // Determine if we are in Pre-Launch phase
   const isPreLaunch = new Date() < LAUNCH_DATE;
 
@@ -30,15 +35,10 @@ function AppContent() {
   useEffect(() => {
     if (!loading) {
       if (user) {
-        // Route to appropriate dashboard based on user type
-        if (user.userType === 'ngo') {
-          setCurrentView('ngo-dashboard');
-        } else {
-          setCurrentView('app');
-        }
+        setCurrentView('app');
       } else {
         // If we were in the app and got logged out, go to landing
-        if (currentView === 'app' || currentView === 'admin' || currentView === 'ngo-dashboard') {
+        if (currentView === 'app' || currentView === 'admin') {
           setCurrentView('landing');
         }
       }
@@ -70,7 +70,13 @@ function AppContent() {
 
     switch (currentView) {
       case 'landing':
-        return <Landing onNavigate={setCurrentView} />;
+        return (
+          <Landing
+            onNavigate={setCurrentView}
+            onShowPaymentWizard={() => setShowPaymentWizard(true)}
+            onShowBenefits={() => setShowBenefitsModal(true)}
+          />
+        );
       case 'login':
         return <Login onNavigate={setCurrentView} initialState="login" />;
       case 'signup':
@@ -106,25 +112,7 @@ function AppContent() {
             onLogout={handleLogout}
             refreshProfile={refreshProfile}
             onNavigate={setCurrentView}
-          />
-        ) : (
-          <Login onNavigate={setCurrentView} initialState="login" />
-        );
-      case 'ngo-dashboard':
-        return user?.userType === 'ngo' ? (
-          <NgoDashboard
-            ngoUser={user as any as NgoUser}
-            onLogout={handleLogout}
-            onNavigate={setCurrentView}
-          />
-        ) : (
-          <Login onNavigate={setCurrentView} initialState="login" />
-        );
-      case 'ngo-settings':
-        return user?.userType === 'ngo' ? (
-          <NgoSettings
-            ngoUser={user as any as NgoUser}
-            onNavigate={setCurrentView}
+            onShowPaymentWizard={() => setShowPaymentWizard(true)}
           />
         ) : (
           <Login onNavigate={setCurrentView} initialState="login" />
@@ -132,13 +120,44 @@ function AppContent() {
       default:
         return isPreLaunch && !user
           ? <LaunchCountdown targetDate={LAUNCH_DATE} onLoginRequest={() => setCurrentView('login')} />
-          : <Landing onNavigate={setCurrentView} />;
+          : (
+            <Landing
+              onNavigate={setCurrentView}
+              onShowPaymentWizard={() => setShowPaymentWizard(true)}
+              onShowBenefits={() => setShowBenefitsModal(true)}
+            />
+          );
     }
   };
 
+  const showPublicNavbar = !user && !['login', 'signup', 'app', 'admin', 'settings'].includes(currentView);
+
   return (
     <div className="min-h-screen bg-white">
-      {renderView()}
+      {showPublicNavbar && (
+        <PublicNavbar
+          onNavigate={setCurrentView}
+          onLoginClick={() => setCurrentView('login')}
+        />
+      )}
+      <main className={showPublicNavbar ? 'pt-20' : ''}>
+        {renderView()}
+      </main>
+
+      {/* GLOBAL MODALS */}
+      <PaymentWizard
+        isOpen={showPaymentWizard}
+        onClose={() => setShowPaymentWizard(false)}
+      />
+      <TierBenefitsModal
+        isOpen={showBenefitsModal}
+        onClose={() => setShowBenefitsModal(false)}
+        onSelectTier={(tier) => {
+          setShowBenefitsModal(false);
+          setShowPaymentWizard(true);
+          // TODO: Pass selected tier to payment wizard
+        }}
+      />
     </div>
   );
 }
