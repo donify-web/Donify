@@ -2,43 +2,76 @@
 import { loadStripe } from '@stripe/stripe-js';
 import { supabase } from './supabaseClient';
 
-// Replace with your actual Stripe Publishable Key
-const STRIPE_PUBLISHABLE_KEY = 'pk_test_1234567890...'; 
+// Use environment variable for Stripe Publishable Key
+const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_1234567890...'; 
 
 export const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
 
+// Comprehensive Price IDs for all tiers and payment frequencies
 export const PRICE_IDS = {
+  // One-time donation
   DONATION_5: 'price_donate_5_eur',
   
-  // Bronze (Monthly)
-  BRONZE_SIMPLE: 'price_bronze_simple',
-  BRONZE_PRO: 'price_bronze_pro',
+  // BRONZE TIER
+  BRONZE_SIMPLE_MONTHLY:import.meta.env.PRICE_BRONZE_SIMPLE_MONTHLY ||  
+  'price_bronze_simple_monthly',
+  BRONZE_SIMPLE_YEARLY:import.meta.env.PRICE_BRONZE_SIMPLE_YEARLY || 
+   'price_bronze_simple_yearly',
+  BRONZE_PRO_MONTHLY:import.meta.env.PRICE_BRONZE_PRO_MONTHLY || 
+'price_bronze_pro_monthly',
+BRONZE_PRO_YEARLY:import.meta.env.PRICE_BRONZE_PRO_YEARLY || 
+'price_bronze_pro_yearly',
   
-  // Silver (Bi-weekly)
-  SILVER_SIMPLE: 'price_silver_simple',
-  SILVER_PRO: 'price_silver_pro',
-  
-  // Gold (Weekly)
-  GOLD_SIMPLE: 'price_gold_simple',
-  GOLD_PRO: 'price_gold_pro',
-  
-  // Diamond (Daily)
-  DIAMOND_SIMPLE: 'price_diamond_simple',
-  DIAMOND_PRO: 'price_diamond_pro',
+  // PLATA/SILVER TIER (Bi-weekly)
+ PLATA_SIMPLE_BIWEEKLY:import.meta.env.PRICE_PLATA_SIMPLE_BIWEEKLY || 
+'price_plata_simple_biweekly',
+  PLATA_SIMPLE_YEARLY:import.meta.env.PRICE_PLATA_SIMPLE_YEARLY || 
+'price_plata_simple_yearly',
+  PLATA_PRO_BIWEEKLY:import.meta.env.PRICE_PLATA_PRO_BIWEEKLY || 
+'price_plata_pro_biweekly',
+  PLATA_PRO_YEARLY:import.meta.env.PRICE_PLATA_PRO_YEARLY || 
+'price_plata_pro_yearly',
+
+  // ORO/GOLD TIER (Weekly)
+ORO_SIMPLE_WEEKLY:import.meta.env.PRICE_ORO_SIMPLE_WEEKLY || 
+'price_oro_simple_weekly',
+  ORO_SIMPLE_YEARLY:import.meta.env.PRICE_ORO_SIMPLE_YEARLY || 
+'price_oro_simple_yearly',
+  ORO_PRO_WEEKLY:import.meta.env.PRICE_ORO_PRO_WEEKLY || 
+'price_oro_pro_weekly',
+  ORO_PRO_YEARLY:import.meta.env.PRICE_ORO_PRO_YEARLY || 
+'price_oro_pro_yearly',
+  // DIAMANTE/DIAMOND TIER (Daily)
+DIAMANTE_SIMPLE_DAILY:import.meta.env.PRICE_DIAMANTE_SIMPLE_DAILY || 
+'price_diamante_simple_daily',
+  DIAMANTE_SIMPLE_YEARLY:import.meta.env.PRICE_DIAMANTE_SIMPLE_YEARLY || 
+'price_diamante_simple_yearly',
+  DIAMANTE_PRO_DAILY:import.meta.env.PRICE_DIAMANTE_PRO_DAILY || 
+'price_diamante_pro_daily',
+  DIAMANTE_PRO_YEARLY:import.meta.env.PRICE_DIAMANTE_PRO_YEARLY || 
+'price_diamante_pro_yearly',
+
+  // Legacy aliases for backwards compatibility
+  BRONZE_SIMPLE: 'price_bronze_simple_monthly',
+  BRONZE_PRO: 'price_bronze_pro_monthly',
+  SILVER_SIMPLE: 'price_plata_simple_biweekly',
+  SILVER_PRO: 'price_plata_pro_biweekly',
+  GOLD_SIMPLE: 'price_oro_simple_weekly',
+  GOLD_PRO: 'price_oro_pro_weekly',
+  DIAMOND_SIMPLE: 'price_diamante_simple_daily',
+  DIAMOND_PRO: 'price_diamante_pro_daily',
 };
 
 /**
  * Initiates a Stripe Checkout Session.
  * 
  * In a real production app, this calls a Supabase Edge Function to create the session securely.
- * For this demo, we simulate the network call if no backend is attached.
  */
 export const initiateCheckout = async (priceId: string, userId: string, mode: 'payment' | 'subscription' = 'subscription') => {
   try {
     console.log(`[Stripe] Initiating checkout for ${priceId} (${mode}) for user ${userId}`);
 
-    // 1. REAL IMPLEMENTATION: Call Supabase Edge Function
-    /*
+    // Call Supabase Edge Function
     const { data: session, error } = await supabase.functions.invoke('create-checkout-session', {
       body: { priceId, userId, mode, returnUrl: window.location.origin }
     });
@@ -48,19 +81,74 @@ export const initiateCheckout = async (priceId: string, userId: string, mode: 'p
     const stripe = await stripePromise;
     if (!stripe) throw new Error("Stripe failed to load");
 
-    const { error: stripeError } = await stripe.redirectToCheckout({ sessionId: session.id });
+    const { error: stripeError } = await stripe.redirectToCheckout({ sessionId: session.sessionId });
     if (stripeError) throw stripeError;
-    */
 
-    // 2. DEMO IMPLEMENTATION (To visualize flow without Backend)
-    // We simulate a network delay and success
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // Simulate successful return signal
-    return { success: true, simulated: true };
+    return { success: true };
 
   } catch (error) {
     console.error('[Stripe Error]', error);
+    return { success: false, error };
+  }
+};
+
+/**
+ * Modifies an existing subscription (upgrade/downgrade tier).
+ * Calls Supabase Edge Function to handle the change via Stripe API.
+ */
+export const modifySubscription = async (subscriptionId: string, newPriceId: string, userId: string) => {
+  try {
+    console.log(`[Stripe] Modifying subscription ${subscriptionId} to ${newPriceId} for user ${userId}`);
+
+    // Call Supabase Edge Function
+    const { data, error } = await supabase.functions.invoke('modify-subscription', {
+      body: { subscriptionId, newPriceId, userId }
+    });
+
+    if (error) throw error;
+    return { success: true, data };
+
+  } catch (error) {
+    console.error('[Stripe Error - Modify Subscription]', error);
+    return { success: false, error };
+  }
+};
+
+/**
+ * Switches payment frequency (monthly ↔ yearly) for an existing subscription.
+ * This updates the subscription to use a different price ID with the same tier.
+ */
+export const switchPaymentFrequency = async (subscriptionId: string, newPriceId: string, userId: string) => {
+  try {
+    console.log(`[Stripe] Switching payment frequency for subscription ${subscriptionId} to ${newPriceId}`);
+
+    // Uses the same backend function as modifySubscription
+    return await modifySubscription(subscriptionId, newPriceId, userId);
+
+  } catch (error) {
+    console.error('[Stripe Error - Switch Frequency]', error);
+    return { success: false, error };
+  }
+};
+
+/**
+ * Redirects the user to the Stripe Customer Portal to manage payment methods and subscriptions.
+ */
+export const redirectToCustomerPortal = async (customerId: string) => {
+  try {
+    console.log(`[Stripe] Redirecting customer ${customerId} to billing portal`);
+
+    const { data, error } = await supabase.functions.invoke('create-portal-session', {
+      body: { customerId, returnUrl: window.location.origin + '/settings' }
+    });
+
+    if (error) throw error;
+    if (data?.url) {
+      window.location.href = data.url;
+    }
+    return { success: true };
+  } catch (error) {
+    console.error('[Stripe Error - Portal]', error);
     return { success: false, error };
   }
 };

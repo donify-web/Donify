@@ -10,7 +10,8 @@ export type PageView =
   | 'ngo-apply' 
   | 'legal' 
   | 'admin'
-  | 'organizations';
+  | 'organizations'
+  | 'settings';
 
 export type SubscriptionTier = 'bronce' | 'plata' | 'oro' | 'diamante';
 export type SubscriptionType = 'simple' | 'pro';

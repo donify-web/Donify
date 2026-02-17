@@ -10,6 +10,7 @@ import LegalView from './components/LegalView';
 import AdminPanel from './components/AdminPanel';
 import LaunchCountdown from './components/LaunchCountdown';
 import Organizations from './components/Organizations';
+import Settings from './components/Settings';
 import { PageView } from './types';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
@@ -77,6 +78,12 @@ function AppContent() {
         return <NgoApply onNavigate={setCurrentView} />;
       case 'organizations':
         return <Organizations onNavigate={setCurrentView} />;
+      case 'settings':
+        return user ? (
+          <Settings onNavigate={setCurrentView} user={user} />
+        ) : (
+          <Login onNavigate={setCurrentView} initialState="login" />
+        );
       case 'legal':
         return <LegalView onNavigate={setCurrentView} />;
       case 'admin':
