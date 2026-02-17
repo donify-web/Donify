@@ -11,7 +11,9 @@ import AdminPanel from './components/AdminPanel';
 import LaunchCountdown from './components/LaunchCountdown';
 import Organizations from './components/Organizations';
 import Settings from './components/Settings';
-import { PageView } from './types';
+import NgoDashboard from './components/NgoDashboard';
+import NgoSettings from './components/NgoSettings';
+import { PageView, NgoUser } from './types';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 // --- LAUNCH CONFIGURATION ---
@@ -28,10 +30,15 @@ function AppContent() {
   useEffect(() => {
     if (!loading) {
       if (user) {
-        setCurrentView('app');
+        // Route to appropriate dashboard based on user type
+        if (user.userType === 'ngo') {
+          setCurrentView('ngo-dashboard');
+        } else {
+          setCurrentView('app');
+        }
       } else {
         // If we were in the app and got logged out, go to landing
-        if (currentView === 'app' || currentView === 'admin') {
+        if (currentView === 'app' || currentView === 'admin' || currentView === 'ngo-dashboard') {
           setCurrentView('landing');
         }
       }
@@ -98,6 +105,25 @@ function AppContent() {
             user={user}
             onLogout={handleLogout}
             refreshProfile={refreshProfile}
+            onNavigate={setCurrentView}
+          />
+        ) : (
+          <Login onNavigate={setCurrentView} initialState="login" />
+        );
+      case 'ngo-dashboard':
+        return user?.userType === 'ngo' ? (
+          <NgoDashboard
+            ngoUser={user as any as NgoUser}
+            onLogout={handleLogout}
+            onNavigate={setCurrentView}
+          />
+        ) : (
+          <Login onNavigate={setCurrentView} initialState="login" />
+        );
+      case 'ngo-settings':
+        return user?.userType === 'ngo' ? (
+          <NgoSettings
+            ngoUser={user as any as NgoUser}
             onNavigate={setCurrentView}
           />
         ) : (

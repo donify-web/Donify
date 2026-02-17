@@ -11,10 +11,14 @@ export type PageView =
   | 'legal' 
   | 'admin'
   | 'organizations'
-  | 'settings';
+  | 'settings'
+  | 'ngo-dashboard'
+  | 'ngo-settings'
+  | 'ngo-projects';
 
 export type SubscriptionTier = 'bronce' | 'plata' | 'oro' | 'diamante';
 export type SubscriptionType = 'simple' | 'pro';
+export type UserType = 'donor' | 'ngo' | 'admin';
 
 export interface User {
   id: string;
@@ -24,7 +28,56 @@ export interface User {
   subscriptionTier?: SubscriptionTier;
   hasVotedThisMonth: boolean;
   lastDonationDate?: string; // ISO Date
-  isAdmin?: boolean; // New flag for admin access
+  isAdmin?: boolean;
+  userType?: UserType; // Type of user account
+}
+
+export interface NgoUser {
+  id: string;
+  authUserId: string;
+  ngoName: string;
+  legalName?: string;
+  cif?: string;
+  category?: string;
+  description?: string;
+  mission?: string;
+  logoUrl?: string;
+  bannerUrl?: string;
+  website?: string;
+  email: string;
+  phone?: string;
+  address?: string;
+  socialMedia?: {
+    facebook?: string;
+    instagram?: string;
+    twitter?: string;
+    linkedin?: string;
+  };
+  isVerified: boolean;
+  isActive: boolean;
+  userType: 'ngo';
+}
+
+export interface NgoProject {
+  id: string;
+  ngoId: string;
+  title: string;
+  description: string;
+  category: string;
+  goalAmount?: number;
+  imageUrl?: string;
+  status: 'draft' | 'active' | 'voting' | 'completed' | 'archived';
+  votingMonth?: string;
+  currentVotes?: number;
+}
+
+export interface VoteStats {
+  currentMonthVotes: number;
+  ranking: number;
+  totalNgos: number;
+  estimatedRevenue: number;
+  lastMonthVotes: number;
+  historicalVotes: { month: string; votes: number }[];
 }
 
 export interface OngCandidate {

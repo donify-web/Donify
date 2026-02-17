@@ -10,7 +10,7 @@ interface LandingProps {
 
 export default function Landing({ onNavigate }: LandingProps) {
   const [pricingMode, setPricingMode] = useState<'simple' | 'pro'>('simple');
-
+  const [paymentFrequency, setPaymentFrequency] = useState<'monthly' | 'yearly'>('monthly');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const tiers = [
@@ -160,11 +160,11 @@ export default function Landing({ onNavigate }: LandingProps) {
       </section>
 
       {/* HOW IT WORKS PREVIEW */}
-      <section className="py-10 bg-bgMain">
+      <section className="py-20 bg-bgMain">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">Cómo funciona</h2>
-            <p className="text-gray-500 text-base">Sin intermediarios innecesarios. Sin ruido.</p>
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Cómo funciona</h2>
+            <p className="text-gray-500">Sin intermediarios innecesarios. Sin ruido.</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -200,14 +200,30 @@ export default function Landing({ onNavigate }: LandingProps) {
       </section>
 
       {/* PRICING SECTION */}
-      <section className="py-12 bg-white">
+      <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-8">
-            <Logo className="w-12 h-12 mx-auto mb-4" />
+          <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">Elige tu nivel de impacto</h2>
-            <p className="text-xl text-gray-500 mb-6">Pequeñas cantidades, resultados gigantes.</p>
+            <p className="text-xl text-gray-500 mb-8">Pequeñas cantidades, resultados gigantes.</p>
 
-            {/* Payment Frequency Toggle REMOVED - Hardcoding Monthly */}
+            {/* Payment Frequency Toggle */}
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="inline-flex bg-gray-100 p-1 rounded-xl">
+                <button
+                  onClick={() => setPaymentFrequency('monthly')}
+                  className={`px-8 py-3 rounded-lg text-sm font-bold transition-all ${paymentFrequency === 'monthly' ? 'bg-white text-gray-900 shadow-md' : 'text-gray-500 hover:text-gray-900'}`}
+                >
+                  Pagar Mensualmente
+                </button>
+                <button
+                  onClick={() => setPaymentFrequency('yearly')}
+                  className={`px-8 py-3 rounded-lg text-sm font-bold transition-all ${paymentFrequency === 'yearly' ? 'bg-white text-gray-900 shadow-md' : 'text-gray-500 hover:text-gray-900'}`}
+                >
+                  Pagar Anualmente
+                  <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">-8% ahorro</span>
+                </button>
+              </div>
+            </div>
 
             {/* Mode Toggle */}
             <div className="inline-flex bg-gray-100 p-1 rounded-xl">
@@ -230,31 +246,13 @@ export default function Landing({ onNavigate }: LandingProps) {
           {/* 2-Column Grid */}
           <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             {tiers.map((tier) => {
-              const displayPrice = tier.priceMonthly;
-              const displayPeriod = tier.period;
-
-              // Determine card styling based on tier name
-              let cardStyle = "border-gray-200 bg-white";
-              let btnStyle = "bg-gray-50 text-gray-900 hover:bg-gray-100";
-
-              if (tier.name === 'Bronce') {
-                cardStyle = "border-gray-200 bg-white";
-                btnStyle = "bg-gray-100 text-gray-900 hover:bg-gray-200";
-              } else if (tier.name === 'Plata') {
-                cardStyle = "border-secondary bg-secondary/5 ring-1 ring-secondary/20";
-                btnStyle = "bg-secondary text-white hover:bg-secondary/90";
-              } else if (tier.name === 'Oro') {
-                cardStyle = "border-yellow-500 bg-yellow-50 ring-1 ring-yellow-500/20";
-                btnStyle = "bg-yellow-500 text-white hover:bg-yellow-600";
-              } else if (tier.name === 'Diamante') {
-                cardStyle = "border-primary bg-primary/5 ring-1 ring-primary/20";
-                btnStyle = "bg-primary text-white hover:bg-primary-hover";
-              }
+              const displayPrice = paymentFrequency === 'monthly' ? tier.priceMonthly : tier.priceYearly;
+              const displayPeriod = paymentFrequency === 'monthly' ? tier.period : tier.periodYearly;
 
               return (
-                <div key={tier.name} className={`relative p-6 rounded-2xl border transition-all duration-300 hover:-translate-y-1 shadow-lg ${cardStyle}`}>
+                <div key={tier.name} className={`relative p-6 rounded-2xl border transition-all duration-300 hover:-translate-y-1 ${tier.highlight ? 'border-primary ring-2 ring-primary/20 shadow-xl' : 'border-gray-200 shadow-sm hover:shadow-lg'}`}>
                   {tier.highlight && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full">
                       Más popular
                     </div>
                   )}
@@ -267,19 +265,19 @@ export default function Landing({ onNavigate }: LandingProps) {
 
                   <ul className="space-y-3 mb-8">
                     <li className="flex items-center gap-2 text-sm text-gray-600">
-                      <CheckCircle size={16} className={tier.name === 'Bronce' ? 'text-gray-400' : 'text-primary'} /> Derecho a voto
+                      <CheckCircle size={16} className="text-primary" /> Derecho a voto
                     </li>
                     <li className="flex items-center gap-2 text-sm text-gray-600">
-                      <CheckCircle size={16} className={tier.name === 'Bronce' ? 'text-gray-400' : 'text-primary'} /> Reporte de transparencia
+                      <CheckCircle size={16} className="text-primary" /> Reporte de transparencia
                     </li>
                     <li className="flex items-center gap-2 text-sm text-gray-600">
-                      <CheckCircle size={16} className={tier.name === 'Bronce' ? 'text-gray-400' : 'text-primary'} /> Certificado de donación
+                      <CheckCircle size={16} className="text-primary" /> Certificado de donación
                     </li>
                   </ul>
 
                   <button
                     onClick={() => onNavigate('login')}
-                    className={`w-full py-3 rounded-lg font-bold transition-colors ${btnStyle}`}
+                    className={`w-full py-3 rounded-lg font-bold transition-colors ${tier.highlight ? 'bg-primary text-white hover:bg-primary-hover' : 'bg-gray-50 text-gray-900 hover:bg-gray-100'}`}
                   >
                     Suscribirse {tier.name}
                   </button>
@@ -375,9 +373,9 @@ export default function Landing({ onNavigate }: LandingProps) {
       </section>
 
       {/* QUIENES SOMOS (About) */}
-      <section id="quienes" className="py-12 bg-white text-center">
-        <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Quiénes somos</h2>
+      <section id="quienes" className="py-20 bg-white">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">Quiénes somos</h2>
           <p className="text-lg text-gray-600 leading-relaxed mb-6">
             Donify nace de una frustración: querer ayudar pero sentir que las pequeñas aportaciones no importan.
             Creamos un sistema donde miles de micro-donaciones se suman para financiar proyectos reales y tangibles.
@@ -386,25 +384,6 @@ export default function Landing({ onNavigate }: LandingProps) {
             Somos un equipo independiente de desarrolladores y activistas sociales. No retenemos tu dinero más allá de los
             tiempos de seguridad estipulados por nuestros procesadores de pagos. Nuestra misión es democratizar la filantropía.
           </p>
-
-          <div className="mt-16 bg-gray-900 relative rounded-3xl p-10 md:p-12 overflow-hidden text-white mx-auto max-w-3xl shadow-2xl">
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-primary/20"></div>
-            <div className="relative z-10 flex flex-col items-center gap-6">
-              <h2 className="text-2xl md:text-3xl font-bold leading-tight">¿Listos para hacer que tu cambio importe?</h2>
-              <p className="text-gray-300 max-w-lg mx-auto text-sm md:text-base">
-                Únete a miles de personas que creen que la transparencia y la participación comunitaria son la única forma de cambiar el mundo hoy.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 mt-2">
-                <button onClick={() => onNavigate('signup')} className="bg-primary hover:bg-primary-hover text-white px-8 py-3 rounded-full font-bold transition-all shadow-lg hover:shadow-primary/50">
-                  Unirme a la comunidad
-                </button>
-                <button onClick={() => onNavigate('contact')} className="px-8 py-3 rounded-full font-bold border border-white/20 hover:bg-white/10 transition-all">
-                  Hablar con nosotros
-                </button>
-              </div>
-              <p className="text-xs text-gray-500 font-bold tracking-widest uppercase mt-4">Desde 0.49€ • Pago Seguro • Impacto Radical</p>
-            </div>
-          </div>
         </div>
       </section>
 
