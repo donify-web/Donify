@@ -6,9 +6,10 @@ import { Logo } from './Logo';
 interface PublicNavbarProps {
     onNavigate: (page: PageView) => void;
     onLoginClick: () => void;
+    onJoinClick: () => void;
 }
 
-export default function PublicNavbar({ onNavigate, onLoginClick }: PublicNavbarProps) {
+export default function PublicNavbar({ onNavigate, onLoginClick, onJoinClick }: PublicNavbarProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const navItems = [
@@ -53,7 +54,7 @@ export default function PublicNavbar({ onNavigate, onLoginClick }: PublicNavbarP
                             Iniciar sesión
                         </button>
                         <button
-                            onClick={() => onNavigate('pricing')}
+                            onClick={onJoinClick}
                             className="bg-gray-900 text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-black transition-all hover:scale-105 shadow-lg shadow-gray-900/20 flex items-center gap-2"
                         >
                             <Rocket size={16} />
@@ -99,7 +100,7 @@ export default function PublicNavbar({ onNavigate, onLoginClick }: PublicNavbarP
                             </button>
                             <button
                                 onClick={() => {
-                                    onNavigate('pricing');
+                                    onJoinClick();
                                     setIsMenuOpen(false);
                                 }}
                                 className="w-full py-3 text-center font-semibold text-white bg-primary rounded-xl hover:bg-primary/90 shadow-lg shadow-primary/30"

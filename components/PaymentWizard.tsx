@@ -1,179 +1,306 @@
+
 import React, { useState } from 'react';
-import { X, Check, Shield, Star, Zap, Crown, CreditCard } from 'lucide-react';
-import { SubscriptionTier, SubscriptionType } from '../types';
-import { initiateCheckout } from '../lib/stripeClient';
-import { useAuth } from '../contexts/AuthContext';
+import { User, SubscriptionTier, SubscriptionType } from '../types';
+import {
+    CreditCard, Zap, Check, Star, Trophy, Crown,
+    ChevronDown, Info, X, ShieldCheck, ArrowRight, Loader2,
+    Calendar, RefreshCcw
+} from 'lucide-react';
+import { PRICE_IDS, initiateCheckout } from '../lib/stripeClient';
 
 interface PaymentWizardProps {
-    isOpen: boolean;
+    user: User;
     onClose: () => void;
     initialTier?: SubscriptionTier;
 }
 
-export default function PaymentWizard({ isOpen, onClose, initialTier = 'oro' }: PaymentWizardProps) {
-    const { user } = useAuth();
+export const PaymentWizard: React.FC<PaymentWizardProps> = ({ user, onClose, initialTier = 'bronce' }) => {
     const [selectedTier, setSelectedTier] = useState<SubscriptionTier>(initialTier);
-    const [subscriptionType, setSubscriptionType] = useState<SubscriptionType>('simple');
-    const [frequency, setFrequency] = useState<'monthly' | 'yearly'>('monthly');
-    const [isLoading, setIsLoading] = useState(false);
-
-    if (!isOpen) return null;
-
-    const tiers = {
-        bronce: { name: 'Bronce', price: { simple: 0.99, pro: 1.99 }, color: 'bg-amber-100 text-amber-700', icon: Shield },
-        plata: { name: 'Plata', price: { simple: 2.99, pro: 5.99 }, color: 'bg-gray-100 text-gray-500', icon: Star },
-        oro: { name: 'Oro', price: { simple: 9.99, pro: 19.99 }, color: 'bg-yellow-100 text-yellow-600', icon: Zap },
-        diamante: { name: 'Diamante', price: { simple: 49.99, pro: 99.99 }, color: 'bg-blue-100 text-blue-600', icon: Crown },
-    };
+    const [selectedType, setSelectedType] = useState<SubscriptionType>('simple');
+    const [isYearly, setIsYearly] = useState(false);
+    const [showTierSelect, setShowTierSelect] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handlePayment = async () => {
-        if (!user) return;
-        setIsLoading(true);
+        setIsSubmitting(true);
         try {
-            // Logic to get correct Price ID based on selection
-            // This would normally map to env vars, simulating for now
-            const priceId = `price_${selectedTier}_${subscriptionType}_${frequency}`;
-            console.log(`Initiating checkout for: ${priceId}`);
+            const tierKey = selectedTier.toUpperCase();
 
-            await initiateCheckout(priceId, user.id, frequency === 'yearly' ? 'payment' : 'subscription');
-        } catch (error) {
-            console.error('Payment failed:', error);
+            let priceKey = "";
+            if (isYearly) {
+                // YEARLY logic
+                priceKey = `${tierKey}_${selectedType === 'simple' ? 'SIMPLE' : 'PRO'}_YEARLY`;
+            } else {
+                // RECURRING logic
+                const freqKey = (selectedTier === 'bronce' ? 'MONTHLY' : selectedTier === 'plata' ? 'BIWEEKLY' : selectedTier === 'oro' ? 'WEEKLY' : 'DAILY');
+                priceKey = `${tierKey}_${selectedType === 'simple' ? 'SIMPLE' : 'PRO'}_${freqKey}`;
+            }
+
+            const priceId = (PRICE_IDS as any)[priceKey] || PRICE_IDS.BRONZE_SIMPLE_MONTHLY;
+
+            const result = await initiateCheckout(priceId, user.id);
+            if (!result.success) {
+                alert(result.error);
+            }
+        } catch (error: any) {
+            alert("Error al iniciar el pago: " + error.message);
         } finally {
-            setIsLoading(false);
+            setIsSubmitting(false);
         }
     };
 
-    const currentPrice = tiers[selectedTier].price[subscriptionType];
-    const finalPrice = frequency === 'yearly' ? currentPrice * 12 * 0.8 : currentPrice; // 20% discount mock
+    const tiers = [
+        {
+            id: 'bronce',
+            name: 'Bronce',
+            priceSimple: 5,
+            pricePro: 15,
+            frequency: 'Mensual',
+            icon: <Star className="text-orange-400" size={24} />,
+            desc: 'Impacto básico para dar tus primeros pasos.'
+        },
+        {
+            id: 'plata',
+            name: 'Plata',
+            priceSimple: 15,
+            pricePro: 35,
+            frequency: 'Quincenal',
+            icon: <Zap className="text-blue-400" size={24} />,
+            desc: 'Compromiso medio con mayor poder de decisión.'
+        },
+        {
+            id: 'oro',
+            name: 'Oro',
+            priceSimple: 30,
+            pricePro: 75,
+            frequency: 'Semanal',
+            icon: <Trophy className="text-amber-400" size={24} />,
+            desc: 'Impacto significativo y beneficios exclusivos.',
+            popular: true
+        },
+        {
+            id: 'diamante',
+            name: 'Diamante',
+            priceSimple: 50,
+            pricePro: 150,
+            frequency: 'Diario',
+            icon: <Crown className="text-indigo-400" size={24} />,
+            desc: 'El máximo nivel de apoyo para fundadores.'
+        },
+    ];
+
+    const currentPlan = tiers.find(t => t.id === selectedTier);
+
+    // Calculate display price
+    let basePrice = selectedType === 'simple' ? currentPlan?.priceSimple || 0 : currentPlan?.pricePro || 0;
+    let displayPrice = basePrice;
+
+    if (isYearly) {
+        // Mocking yearly pricing display (usually it's base * 12 or similar)
+        // For Plata (biweekly) it would be base * 26
+        // For Oro (weekly) it would be base * 52
+        // For Diamante (daily) it would be base * 365
+        const multiplier = (selectedTier === 'bronce' ? 12 : selectedTier === 'plata' ? 26 : selectedTier === 'oro' ? 52 : 365);
+        displayPrice = basePrice * multiplier;
+    }
 
     return (
-        <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose}></div>
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
+            <div
+                className="absolute inset-0 bg-gray-900/60 backdrop-blur-md animate-in fade-in duration-500"
+                onClick={!isSubmitting ? onClose : undefined}
+            />
 
-            <div className="relative bg-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200">
-                <div className="bg-gray-50 px-8 py-6 border-b border-gray-100 flex justify-between items-center">
-                    <div>
-                        <h2 className="text-2xl font-bold text-gray-900">Configura tu Plan</h2>
-                        <p className="text-sm text-gray-500">Personaliza tu impacto en Donify</p>
+            <div className="relative bg-white w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row animate-in zoom-in-95 duration-500 border border-white/20">
+                {/* Visual Sidebar */}
+                <div className="hidden md:flex md:w-80 bg-gray-900 p-10 flex-col justify-between relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+                        <div className="absolute top-[-50px] left-[-20px] w-64 h-64 border-2 border-white rounded-full"></div>
+                        <div className="absolute bottom-[-100px] right-[-50px] w-96 h-96 border-[16px] border-primary/20 rounded-full"></div>
                     </div>
-                    <button onClick={onClose} className="p-2 hover:bg-gray-200 rounded-full transition-colors">
-                        <X size={20} />
-                    </button>
+
+                    <div className="relative z-10">
+                        <div className="bg-primary/20 text-primary p-3 rounded-2xl inline-block mb-8 border border-primary/30">
+                            <CreditCard size={24} />
+                        </div>
+                        <h1 className="text-2xl font-black text-white leading-tight mb-3 tracking-tighter italic">
+                            Gestiona tu <br /><span className="text-primary not-italic">Compromiso</span>.
+                        </h1>
+                        <p className="text-[11px] text-gray-500 font-bold uppercase tracking-widest leading-relaxed">
+                            Seguridad Stripe • Transparencia Donify
+                        </p>
+                    </div>
+
+                    <div className="relative z-10">
+                        <div className="p-5 bg-white/5 rounded-2xl border border-white/5 space-y-3">
+                            <div className="flex items-center gap-2 text-primary">
+                                <ShieldCheck size={16} />
+                                <span className="text-[10px] font-black uppercase tracking-widest">Pago Seguro</span>
+                            </div>
+                            <p className="text-[9px] text-gray-400 font-medium leading-relaxed">
+                                Utilizamos Stripe para procesar todos los pagos. Donify nunca almacena tus datos bancarios.
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
-                <div className="p-8">
-                    {/* Frequency Toggle */}
-                    <div className="flex justify-center mb-8">
-                        <div className="bg-gray-100 p-1 rounded-xl flex">
-                            <button
-                                onClick={() => setFrequency('monthly')}
-                                className={`px-6 py-2 rounded-lg text-sm font-semibold transition-all ${frequency === 'monthly' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-900'
-                                    }`}
-                            >
-                                Mensual
-                            </button>
-                            <button
-                                onClick={() => setFrequency('yearly')}
-                                className={`px-6 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 ${frequency === 'yearly' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-900'
-                                    }`}
-                            >
-                                Anual
-                                <span className="bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wide">
-                                    AHORRA 20%
-                                </span>
-                            </button>
+                {/* Content Area */}
+                <div className="flex-1 p-8 md:p-12 relative flex flex-col justify-center bg-gray-50/30">
+                    {!isSubmitting && (
+                        <button
+                            onClick={onClose}
+                            className="absolute top-6 right-6 p-3 text-gray-300 hover:text-gray-900 bg-white rounded-2xl shadow-sm transition-all"
+                        >
+                            <X size={20} />
+                        </button>
+                    )}
+
+                    <div className="max-w-xl mx-auto w-full space-y-8">
+                        <div className="text-center md:text-left">
+                            <h2 className="text-3xl font-black text-gray-900 tracking-tight mb-2">Activar Suscripción</h2>
+                            <p className="text-sm text-gray-500 font-medium">Selecciona el nivel y la frecuencia de tu impacto.</p>
                         </div>
-                    </div>
 
-                    {/* Tier Selection Grid */}
-                    <div className="grid grid-cols-4 gap-4 mb-8">
-                        {(Object.keys(tiers) as SubscriptionTier[]).map((tierKey) => {
-                            const tier = tiers[tierKey];
-                            const isSelected = selectedTier === tierKey;
-
-                            return (
+                        {/* FREQUENCY SELECTOR (ONE-TIME VS RECURRING) */}
+                        <div className="flex flex-col sm:flex-row items-center justify-between p-4 bg-white rounded-2xl border-2 border-gray-100 shadow-sm gap-4">
+                            <div className="flex items-center gap-3">
+                                <div className={`p-2 rounded-xl ${isYearly ? 'bg-indigo-50 text-indigo-600' : 'bg-primary/10 text-primary'}`}>
+                                    {isYearly ? <Calendar size={20} /> : <RefreshCcw size={20} />}
+                                </div>
+                                <div>
+                                    <p className="text-sm font-black text-gray-900">{isYearly ? 'Pago Único (Anual)' : 'Suscripción Periódica'}</p>
+                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{isYearly ? 'Todo de una vez' : 'Cargo automático por periodo'}</p>
+                                </div>
+                            </div>
+                            <div className="flex bg-gray-100 p-1 rounded-xl w-full sm:w-auto">
                                 <button
-                                    key={tierKey}
-                                    onClick={() => setSelectedTier(tierKey)}
-                                    className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${isSelected
-                                            ? 'border-primary bg-primary/5 ring-1 ring-primary/20'
-                                            : 'border-gray-100 hover:border-gray-200 hover:bg-gray-50'
-                                        }`}
+                                    onClick={() => setIsYearly(false)}
+                                    className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-[10px] font-black uppercase transition-all ${!isYearly ? 'bg-white text-primary shadow-sm' : 'text-gray-400 hover:text-gray-600'}`}
                                 >
-                                    <div className={`p-2 rounded-full ${tier.color}`}>
-                                        <tier.icon size={20} />
-                                    </div>
-                                    <span className={`text-sm font-bold ${isSelected ? 'text-primary' : 'text-gray-600'}`}>
-                                        {tier.name}
-                                    </span>
+                                    Periódico
                                 </button>
-                            );
-                        })}
-                    </div>
-
-                    {/* Type Toggle (Simple vs Pro) */}
-                    <div className="bg-blue-50/50 rounded-2xl p-6 mb-8 border border-blue-100">
-                        <div className="flex items-center justify-between mb-4">
-                            <span className="text-sm font-bold text-gray-900">Tipo de Suscripción</span>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <button
-                                onClick={() => setSubscriptionType('simple')}
-                                className={`text-left p-4 rounded-xl border-2 transition-all ${subscriptionType === 'simple'
-                                        ? 'border-blue-500 bg-white shadow-md'
-                                        : 'border-transparent hover:bg-white/50'
-                                    }`}
-                            >
-                                <div className="flex justify-between items-start mb-1">
-                                    <span className="font-bold text-gray-900">Individual</span>
-                                    {subscriptionType === 'simple' && <Check size={16} className="text-blue-500" />}
-                                </div>
-                                <p className="text-xs text-gray-500">Para donantes personales</p>
-                            </button>
-
-                            <button
-                                onClick={() => setSubscriptionType('pro')}
-                                className={`text-left p-4 rounded-xl border-2 transition-all ${subscriptionType === 'pro'
-                                        ? 'border-blue-500 bg-white shadow-md'
-                                        : 'border-transparent hover:bg-white/50'
-                                    }`}
-                            >
-                                <div className="flex justify-between items-start mb-1">
-                                    <span className="font-bold text-gray-900">Profesional</span>
-                                    {subscriptionType === 'pro' && <Check size={16} className="text-blue-500" />}
-                                </div>
-                                <p className="text-xs text-gray-500">Para empresas y marcas</p>
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Summary & Action */}
-                    <div className="flex items-center justify-between pt-6 border-t border-gray-100">
-                        <div>
-                            <p className="text-sm text-gray-500 mb-1">Total a pagar</p>
-                            <div className="flex items-baseline gap-1">
-                                <span className="text-3xl font-bold text-gray-900">€{finalPrice.toFixed(2)}</span>
-                                <span className="text-sm text-gray-500">/{frequency === 'monthly' ? 'mes' : 'año'}</span>
+                                <button
+                                    onClick={() => setIsYearly(true)}
+                                    className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-[10px] font-black uppercase transition-all ${isYearly ? 'bg-white text-primary shadow-sm' : 'text-gray-400 hover:text-gray-600'}`}
+                                >
+                                    Todo de una
+                                </button>
                             </div>
                         </div>
 
-                        <button
-                            onClick={handlePayment}
-                            disabled={isLoading}
-                            className="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-xl font-bold shadow-lg shadow-primary/25 transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                        >
-                            {isLoading ? (
-                                'Procesando...'
-                            ) : (
-                                <>
-                                    <CreditCard size={20} />
-                                    Continuar al Pago
-                                </>
-                            )}
-                        </button>
+                        <div className="grid grid-cols-1 gap-6">
+                            {/* THE FORMAL DROPDOWN */}
+                            <div className="space-y-3">
+                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Nivel de Suscripción</label>
+                                <div className="relative">
+                                    <button
+                                        onClick={() => setShowTierSelect(!showTierSelect)}
+                                        className="w-full bg-white border-2 border-gray-100 rounded-2xl p-5 flex items-center justify-between group hover:border-primary transition-all duration-300 shadow-sm"
+                                    >
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                                                {currentPlan?.icon}
+                                            </div>
+                                            <div className="text-left">
+                                                <p className="font-black text-gray-900 text-base">{currentPlan?.name}</p>
+                                                <p className="text-[11px] font-bold text-gray-400">{isYearly ? 'Anual' : currentPlan?.frequency}</p>
+                                            </div>
+                                        </div>
+                                        <ChevronDown size={24} className={`text-gray-300 group-hover:text-primary transition-transform ${showTierSelect ? 'rotate-180' : ''}`} />
+                                    </button>
+
+                                    {showTierSelect && (
+                                        <div className="absolute w-full mt-3 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-[130] animate-in slide-in-from-top-2 duration-200">
+                                            {tiers.map((t) => (
+                                                <button
+                                                    key={t.id}
+                                                    onClick={() => { setSelectedTier(t.id as SubscriptionTier); setShowTierSelect(false); }}
+                                                    className={`w-full p-5 flex items-center gap-5 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0 ${selectedTier === t.id ? 'bg-primary/5' : ''}`}
+                                                >
+                                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${selectedTier === t.id ? 'bg-primary text-white' : 'bg-gray-100 text-gray-400'}`}>
+                                                        {t.icon}
+                                                    </div>
+                                                    <div className="text-left flex-1">
+                                                        <p className="font-black text-gray-900 text-sm">{t.name}</p>
+                                                        <p className="text-[10px] font-bold text-gray-400">{t.desc}</p>
+                                                    </div>
+                                                    {selectedTier === t.id && <Check size={18} className="text-primary" />}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* TYPE SELECTOR */}
+                            <div className="space-y-3">
+                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Modalidad de Perfil</label>
+                                <div className="bg-white border-2 border-gray-100 p-1.5 rounded-2xl flex items-center gap-1.5 shadow-sm">
+                                    <button
+                                        onClick={() => setSelectedType('simple')}
+                                        className={`flex-1 py-4 rounded-xl text-xs font-black transition-all ${selectedType === 'simple' ? 'bg-gray-900 text-white shadow-lg' : 'text-gray-400 hover:text-gray-600'}`}
+                                    >
+                                        Individual
+                                    </button>
+                                    <button
+                                        onClick={() => setSelectedType('pro')}
+                                        className={`flex-1 py-4 rounded-xl text-xs font-black transition-all ${selectedType === 'pro' ? 'bg-gray-900 text-white shadow-lg' : 'text-gray-400 hover:text-gray-600'}`}
+                                    >
+                                        Profesional
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* PRICE & ACTION */}
+                        <div className="bg-gray-900 rounded-3xl p-8 text-white relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none group-hover:scale-125 transition-transform duration-700">
+                                <Zap size={80} fill="currentColor" className="text-primary" />
+                            </div>
+
+                            <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6">
+                                <div className="text-center md:text-left">
+                                    <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-2 font-sans">Compromiso Seleccionado</p>
+                                    <div className="flex items-baseline justify-center md:justify-start gap-1">
+                                        <span className="text-5xl font-black">{displayPrice}€</span>
+                                        <span className="text-sm font-bold opacity-50">/{isYearly ? 'anual' : currentPlan?.frequency.toLowerCase()}</span>
+                                    </div>
+                                    {isYearly && (
+                                        <p className="text-[10px] text-primary font-black uppercase tracking-widest mt-1">
+                                            Ahorra gestiones periódicas
+                                        </p>
+                                    )}
+                                </div>
+
+                                <button
+                                    onClick={handlePayment}
+                                    disabled={isSubmitting}
+                                    className="w-full md:w-auto px-10 py-5 bg-primary text-white rounded-2xl font-black text-base shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3"
+                                >
+                                    {isSubmitting ? <Loader2 className="animate-spin" size={24} /> : (
+                                        <>
+                                            Pagar {isYearly ? 'Anual' : 'Suscripción'}
+                                            <ArrowRight size={20} />
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+
+                            <div className="mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+                                <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                                    <Info size={14} className="text-primary" />
+                                    Sin permanencia • Cancela cuando quieras
+                                </div>
+                                <div className="flex gap-4 opacity-50">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" alt="Stripe" className="h-4 invert" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     );
-}
+};
+
+export default PaymentWizard;

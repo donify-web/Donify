@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { PageView } from '../types';
+import { PageView, SubscriptionTier } from '../types';
 import { ArrowLeft, CreditCard, FileText, Settings as SettingsIcon, Check, AlertCircle, TrendingUp, X, ChevronRight, Loader2 } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 import { redirectToCustomerPortal, modifySubscription } from '../lib/stripeClient';
@@ -7,11 +7,12 @@ import { redirectToCustomerPortal, modifySubscription } from '../lib/stripeClien
 interface SettingsProps {
     onNavigate: (view: PageView) => void;
     user: any; // Replace with proper User type
+    onShowPaymentWizard?: (tier?: SubscriptionTier) => void;
 }
 
 type Tab = 'subscription' | 'payment' | 'history';
 
-export default function Settings({ onNavigate, user }: SettingsProps) {
+export default function Settings({ onNavigate, user, onShowPaymentWizard }: SettingsProps) {
     const [activeTab, setActiveTab] = useState<Tab>('subscription');
     const [paymentMethods, setPaymentMethods] = useState<any[]>([]);
     const [paymentHistory, setPaymentHistory] = useState<any[]>([]);
@@ -163,14 +164,14 @@ export default function Settings({ onNavigate, user }: SettingsProps) {
 
                                 <div className="grid md:grid-cols-2 gap-4">
                                     <button
-                                        onClick={() => setShowFreqModal(true)}
+                                        onClick={() => onShowPaymentWizard?.()}
                                         className="bg-primary hover:bg-primary-hover text-white py-4 px-6 rounded-xl font-bold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 group"
                                     >
                                         Cambiar Frecuencia
                                         <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
                                     </button>
                                     <button
-                                        onClick={() => setShowTierModal(true)}
+                                        onClick={() => onShowPaymentWizard?.()}
                                         className="bg-gray-900 hover:bg-black text-white py-4 px-6 rounded-xl font-bold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 group"
                                     >
                                         Subir de Nivel

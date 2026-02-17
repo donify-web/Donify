@@ -9,62 +9,67 @@ import NgoApply from './components/NgoApply';
 import LegalView from './components/LegalView';
 import AdminPanel from './components/AdminPanel';
 import LaunchCountdown from './components/LaunchCountdown';
-import Organizations from './components/Organizations'; // Restored import
+import Organizations from './components/Organizations';
 import Settings from './components/Settings';
 import PublicNavbar from './components/PublicNavbar';
 import PaymentWizard from './components/PaymentWizard';
 import TierBenefitsModal from './components/TierBenefitsModal';
-import { PageView } from './types';
+import RegistrationChoiceModal from './components/RegistrationChoiceModal';
+import { PageView, SubscriptionTier } from './types';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 // --- LAUNCH CONFIGURATION ---
-const LAUNCH_DATE = new Date('2025-03-04T00:00:00');
+const LAUNCH_DATE = new Date('2026-03-01T00:00:00');
 
 function AppContent() {
-  const { user, loading, signOut, refreshProfile } = useAuth();
+  const { user, loading } = useAuth();
   const [currentView, setCurrentView] = useState<PageView>('landing');
 
   // Base State for Modals
   const [showPaymentWizard, setShowPaymentWizard] = useState(false);
   const [showBenefitsModal, setShowBenefitsModal] = useState(false);
+  const [selectedTier, setSelectedTier] = useState<SubscriptionTier>('oro'); // Default to oro
+
+
+  const [showRegistrationChoice, setShowRegistrationChoice] = useState(false);
 
   // Determine if we are in Pre-Launch phase
   const isPreLaunch = new Date() < LAUNCH_DATE;
 
-  // React to auth state changes to set initial view
-  useEffect(() => {
-    if (!loading) {
-      if (user) {
-        setCurrentView('app');
-      } else {
-        // If we were in the app and got logged out, go to landing
-        if (currentView === 'app' || currentView === 'admin') {
-          setCurrentView('landing');
-        }
-      }
-    }
-  }, [user, loading]);
-
   const handleLogout = async () => {
-    await signOut();
+    // AuthContext handles the actual logout logic if needed, 
+    // but here we might just want to clear view state
+    const { supabase } = await import('./lib/supabaseClient');
+    await supabase.auth.signOut();
     setCurrentView('landing');
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-white">
-        {/* Simple spinner */}
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mb-4"></div>
-        <div className="text-primary font-bold">Cargando Donify...</div>
-      </div>
-    );
-  }
+  const refreshProfile = () => {
+    // This is handled by AuthContext mostly, but if we need a manual trigger:
+    window.location.reload();
+  };
 
-  // --- RENDER LOGIC ---
+  const handleRegistrationClick = () => {
+    if (user) {
+      // If already logged in, maybe go to dashboard or settings? 
+      // For now, let's just go to app
+      setCurrentView('app');
+    } else {
+      setShowRegistrationChoice(true);
+    }
+  };
+
   const renderView = () => {
-    // BLOCKING LOGIC: If Pre-Launch, User is not logged in, and not on Login/Signup screens
-    const isAuthView = currentView === 'login' || currentView === 'signup';
-    if (isPreLaunch && !user && !isAuthView) {
+    if (loading) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-white">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+      );
+    }
+
+    // Force LaunchCountdown if pre-launch and not logged in (and not in specific bypass views)
+    if (isPreLaunch && !user && !['login', 'admin'].includes(currentView)) {
       return <LaunchCountdown targetDate={LAUNCH_DATE} onLoginRequest={() => setCurrentView('login')} />;
     }
 
@@ -73,8 +78,12 @@ function AppContent() {
         return (
           <Landing
             onNavigate={setCurrentView}
-            onShowPaymentWizard={() => setShowPaymentWizard(true)}
+            onShowPaymentWizard={(tier) => {
+              if (tier) setSelectedTier(tier);
+              setShowPaymentWizard(true);
+            }}
             onShowBenefits={() => setShowBenefitsModal(true)}
+            onJoinClick={handleRegistrationClick}
           />
         );
       case 'login':
@@ -93,17 +102,29 @@ function AppContent() {
         return <Organizations onNavigate={setCurrentView} />;
       case 'settings':
         return user ? (
-          <Settings onNavigate={setCurrentView} user={user} />
+          <Settings
+            onNavigate={setCurrentView}
+            user={user}
+            onShowPaymentWizard={() => setShowPaymentWizard(true)}
+          />
         ) : (
           <Login onNavigate={setCurrentView} initialState="login" />
         );
       case 'legal':
-        return <LegalView onNavigate={setCurrentView} />;
+        return <LegalView onNavigate={setCurrentView} initialTab="terms" />;
+      case 'cookies':
+        return <LegalView onNavigate={setCurrentView} initialTab="cookies" />;
       case 'admin':
         return user?.isAdmin ? (
           <AdminPanel onNavigate={setCurrentView} currentUser={user} />
         ) : (
-          <Dashboard user={user!} onLogout={handleLogout} refreshProfile={refreshProfile} />
+          <Dashboard
+            user={user!}
+            onLogout={handleLogout}
+            refreshProfile={refreshProfile}
+            onNavigate={setCurrentView}
+            onShowPaymentWizard={() => setShowPaymentWizard(true)}
+          />
         );
       case 'app':
         return user ? (
@@ -112,7 +133,10 @@ function AppContent() {
             onLogout={handleLogout}
             refreshProfile={refreshProfile}
             onNavigate={setCurrentView}
-            onShowPaymentWizard={() => setShowPaymentWizard(true)}
+            onShowPaymentWizard={(tier) => {
+              if (tier) setSelectedTier(tier);
+              setShowPaymentWizard(true);
+            }}
           />
         ) : (
           <Login onNavigate={setCurrentView} initialState="login" />
@@ -123,8 +147,12 @@ function AppContent() {
           : (
             <Landing
               onNavigate={setCurrentView}
-              onShowPaymentWizard={() => setShowPaymentWizard(true)}
+              onShowPaymentWizard={(tier) => {
+                if (tier) setSelectedTier(tier);
+                setShowPaymentWizard(true);
+              }}
               onShowBenefits={() => setShowBenefitsModal(true)}
+              onJoinClick={handleRegistrationClick}
             />
           );
     }
@@ -138,26 +166,50 @@ function AppContent() {
         <PublicNavbar
           onNavigate={setCurrentView}
           onLoginClick={() => setCurrentView('login')}
+          onJoinClick={handleRegistrationClick}
         />
       )}
-      <main className={showPublicNavbar ? 'pt-20' : ''}>
-        {renderView()}
-      </main>
+
+      {renderView()}
 
       {/* GLOBAL MODALS */}
-      <PaymentWizard
-        isOpen={showPaymentWizard}
-        onClose={() => setShowPaymentWizard(false)}
-      />
+      {showPaymentWizard && user && (
+        <PaymentWizard
+          user={user}
+          onClose={() => setShowPaymentWizard(false)}
+          initialTier={selectedTier}
+        />
+      )}
       <TierBenefitsModal
         isOpen={showBenefitsModal}
         onClose={() => setShowBenefitsModal(false)}
         onSelectTier={(tier) => {
           setShowBenefitsModal(false);
+          setSelectedTier(tier);
           setShowPaymentWizard(true);
-          // TODO: Pass selected tier to payment wizard
         }}
       />
+      {/* Registration Choice Modal */}
+      {showRegistrationChoice && (
+        <RegistrationChoiceModal
+          isOpen={showRegistrationChoice}
+          onClose={() => setShowRegistrationChoice(false)}
+          onSelectOption={(option) => {
+            setShowRegistrationChoice(false);
+            if (option === 'donor') {
+              // For donors, we usually go to pricing or direct to signup/payment
+              // Let's send them to pricing for now, or open payment wizard if we want that flow
+              // User request: "unirse como ... usuario nuevo de manera limpia"
+              // Maybe just go to generic signup? Or Pricing? 
+              // Existing 'Start Now' buttons often go to Pricing. 
+              // Let's go to Pricing as it's the standard flow before payment.
+              setCurrentView('pricing');
+            } else if (option === 'ngo') {
+              setCurrentView('ngo-apply');
+            }
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -169,3 +221,4 @@ export default function App() {
     </AuthProvider>
   );
 }
+

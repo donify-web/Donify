@@ -1,17 +1,18 @@
 
 import React, { useState, useEffect } from 'react';
 import { PageView } from '../types';
-import { ArrowLeft, Shield, Scale, FileText, Lock } from 'lucide-react';
+import { ArrowLeft, Shield, Scale, FileText, Lock, Check } from 'lucide-react';
 import { Logo } from './Logo';
 
 interface LegalViewProps {
   onNavigate: (view: PageView) => void;
+  initialTab?: Tab;
 }
 
-type Tab = 'privacy' | 'terms' | 'transparency';
+type Tab = 'privacy' | 'terms' | 'transparency' | 'cookies';
 
-export default function LegalView({ onNavigate }: LegalViewProps) {
-  const [activeTab, setActiveTab] = useState<Tab>('terms');
+export default function LegalView({ onNavigate, initialTab = 'terms' }: LegalViewProps) {
+  const [activeTab, setActiveTab] = useState<Tab>(initialTab);
 
   // Scroll to top when tab changes
   useEffect(() => {
@@ -44,7 +45,13 @@ export default function LegalView({ onNavigate }: LegalViewProps) {
             onClick={() => setActiveTab('privacy')}
             className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${activeTab === 'privacy' ? 'bg-primary/10 text-primary' : 'text-gray-600 hover:bg-gray-50'}`}
           >
-            <Shield size={18} /> Privacidad y Cookies
+            <Shield size={18} /> Política de Privacidad
+          </button>
+          <button
+            onClick={() => setActiveTab('cookies')}
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${activeTab === 'cookies' ? 'bg-primary/10 text-primary' : 'text-gray-600 hover:bg-gray-50'}`}
+          >
+            <Lock size={18} /> Política de Cookies
           </button>
           <button
             onClick={() => setActiveTab('transparency')}
@@ -75,6 +82,7 @@ export default function LegalView({ onNavigate }: LegalViewProps) {
           <p className="text-blue-700 text-sm leading-relaxed">
             {activeTab === 'terms' && "Al donar, aceptas que el voto es vinculante y el dinero no es reembolsable una vez cerrado el ciclo. El dinero se reparte 50/30/20% entre las ONGs ganadoras."}
             {activeTab === 'privacy' && "Tus datos son tuyos. Solo los usamos para procesar pagos (Stripe) y enviarte tu certificado fiscal. No vendemos nada a terceros."}
+            {activeTab === 'cookies' && "Solo usamos las cookies necesarias para que la web funcione y para evitar fraudes. No rastreamos tu actividad para publicidad."}
             {activeTab === 'transparency' && "Donify no es un banco. Cobramos lo justo para cubrir las tarifas de tarjeta (Stripe) y mantener los servidores encendidos. Lo demás va íntegro a la causa."}
           </p>
         </div>
@@ -82,6 +90,7 @@ export default function LegalView({ onNavigate }: LegalViewProps) {
         <div className="prose prose-slate max-w-none">
           {activeTab === 'terms' && <TermsContent />}
           {activeTab === 'privacy' && <PrivacyContent />}
+          {activeTab === 'cookies' && <CookiesContent />}
           {activeTab === 'transparency' && <TransparencyContent />}
         </div>
 
@@ -122,30 +131,78 @@ const TermsContent = () => (
 
 const PrivacyContent = () => (
   <div>
-    <h1 className="text-3xl font-bold text-gray-900 mb-2">Política de Privacidad y Cookies</h1>
-    <span className="text-xs text-gray-400 block mb-8">RGPD Compliant</span>
+    <h1 className="text-3xl font-bold text-gray-900 mb-2">Política de Privacidad</h1>
+    <span className="text-xs text-gray-400 block mb-8">RGPD Compliant • Última actualización: Octubre 2024</span>
 
     <h3>1. Responsable del Tratamiento</h3>
     <p>Asociación Juvenil Donify. Domicilio: Calle Nardo 42. Email: hola@donify.org</p>
 
-    <h3>2. Uso de Datos</h3>
-    <p>Solo recopilamos los datos necesarios para:</p>
+    <h3>2. Finalidad y Uso de Datos</h3>
+    <p>Solo recopilamos los datos personales mínimos necesarios para:</p>
     <ul>
-      <li>Gestionar tu suscripción y votos.</li>
-      <li>Procesar pagos de forma segura (a través de Stripe).</li>
-      <li>Emitir certificados de donación legales.</li>
+      <li>Gestionar tu cuenta de socio, votos y suscripción.</li>
+      <li>Tramitar donaciones a través de Stripe (procesador de pagos seguro).</li>
+      <li>Cumplir con obligaciones legales, como la emisión de certificados fiscales de donación.</li>
     </ul>
 
-    <h3>3. Política de Cookies</h3>
-    <p>Utilizamos cookies propias y de terceros:</p>
+    <h3>3. Legitimación</h3>
+    <p>El tratamiento de tus datos se basa en la ejecución del contrato de suscripción y en el cumplimiento de obligaciones legales de transparencia asociativa.</p>
+
+    <h3>4. Destinatarios</h3>
+    <p>No cedemos tus datos a terceros con fines comerciales. Solo compartimos datos con:</p>
     <ul>
-      <li><strong>Técnicas (Necesarias):</strong> Para que puedas iniciar sesión y votar. No requieren consentimiento.</li>
-      <li><strong>Analíticas (Opcionales):</strong> Para entender cómo se usa la web.</li>
-      <li><strong>Stripe:</strong> Cookies de seguridad para prevención de fraude en pagos.</li>
+      <li><strong>Stripe:</strong> Para procesar los cobros de forma segura.</li>
+      <li><strong>Administración Tributaria:</strong> Para que puedas desgravar tu donación.</li>
     </ul>
 
-    <h3>4. Tus Derechos</h3>
-    <p>Puedes ejercer tus derechos de acceso, rectificación, supresión y oposición enviando un email a hola@donify.org.</p>
+    <h3>5. Tus Derechos</h3>
+    <p>Tienes derecho a acceder, rectificar y suprimir tus datos en cualquier momento enviando un email a hola@donify.org.</p>
+  </div>
+);
+
+const CookiesContent = () => (
+  <div>
+    <h1 className="text-3xl font-bold text-gray-900 mb-2">Política de Cookies</h1>
+    <span className="text-xs text-gray-400 block mb-8">Información transparente sobre tu navegación</span>
+
+    <p>En Donify utilizamos cookies para asegurar que nuestra plataforma funciona de forma correcta, segura y para mejorar tu experiencia de usuario.</p>
+
+    <h3>1. ¿Qué es una cookie?</h3>
+    <p>Una cookie es un pequeño archivo de texto que se almacena en tu navegador cuando visitas casi cualquier página web. Su utilidad es que la web sea capaz de recordar tu visita cuando vuelvas a navegar por esa página, como por ejemplo mantener tu sesión iniciada.</p>
+
+    <h3>2. Tipos de cookies que utilizamos</h3>
+    <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100 my-6 space-y-4">
+      <div>
+        <h4 className="font-bold text-gray-900 flex items-center gap-2">
+          <Check size={16} className="text-primary" /> Cookies Técnicas (Necesarias)
+        </h4>
+        <p className="text-sm text-gray-600">Son esenciales para el funcionamiento del sitio. Permiten el inicio de sesión, la gestión de la seguridad y el proceso de votación. Sin ellas, Donify no puede funcionar.</p>
+      </div>
+      <div>
+        <h4 className="font-bold text-gray-900 flex items-center gap-2">
+          <Shield size={16} className="text-blue-500" /> Cookies de Seguridad (Stripe)
+        </h4>
+        <p className="text-sm text-gray-600">Nuestro procesador de pagos, Stripe, utiliza cookies para prevenir el fraude y asegurar que las transacciones son legítimas.</p>
+      </div>
+      <div>
+        <h4 className="font-bold text-gray-900 flex items-center gap-2">
+          <FileText size={16} className="text-gray-400" /> Cookies Analíticas
+        </h4>
+        <p className="text-sm text-gray-600">Utilizamos herramientas anónimas para saber cuánta gente nos visita y qué partes de la web resultan más útiles, sin identificar nunca al usuario individual.</p>
+      </div>
+    </div>
+
+    <h3>3. Desactivación o eliminación de cookies</h3>
+    <p>Puedes desactivar las cookies en cualquier momento configurando las opciones de tu navegador. Sin embargo, ten en cuenta que si desactivas las cookies técnicas, no podrás iniciar sesión ni participar en las votaciones de Donify.</p>
+
+    <ul className="text-sm space-y-1">
+      <li><strong>Chrome:</strong> Configuración - Privacidad y seguridad - Cookies.</li>
+      <li><strong>Safari:</strong> Ajustes - Safari - Privacidad.</li>
+      <li><strong>Firefox:</strong> Opciones - Privacidad y Seguridad - Cookies.</li>
+    </ul>
+
+    <h3>4. Consentimiento</h3>
+    <p>Al navegar por Donify sin desactivar las cookies en tu navegador, aceptas el uso de las mismas para las finalidades descritas en esta política.</p>
   </div>
 );
 

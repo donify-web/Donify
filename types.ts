@@ -9,6 +9,7 @@ export type PageView =
   | 'contact' 
   | 'ngo-apply' 
   | 'legal' 
+  | 'cookies'
   | 'admin'
   | 'organizations'
   | 'settings';

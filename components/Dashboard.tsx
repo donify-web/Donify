@@ -9,7 +9,7 @@ interface DashboardProps {
   onLogout: () => void;
   refreshProfile: () => void;
   onNavigate?: (view: PageView) => void;
-  onShowPaymentWizard?: () => void;
+  onShowPaymentWizard?: (tier?: SubscriptionTier) => void;
 }
 
 const mockCandidates: OngCandidate[] = [
@@ -120,7 +120,7 @@ export default function Dashboard({ user, onLogout, refreshProfile, onNavigate, 
   return (
     <div className="min-h-screen bg-bgMain pb-20 relative">
       {/* HEADER */}
-      <div className="bg-white px-6 py-4 flex justify-between items-center sticky top-0 z-30 shadow-sm">
+      <div className="bg-white/80 backdrop-blur-md px-6 py-4 flex justify-between items-center sticky top-0 z-30 shadow-sm border-b border-gray-100">
         <div>
           <h1 className="text-xl font-bold text-gray-800">Hola, {localUser.name}</h1>
           <div className="flex items-center gap-2">
@@ -185,7 +185,7 @@ export default function Dashboard({ user, onLogout, refreshProfile, onNavigate, 
                 {/* UPGRADE BUTTON */}
                 {localUser.isSubscribed && (
                   <button
-                    onClick={onShowPaymentWizard}
+                    onClick={() => onShowPaymentWizard?.()}
                     disabled={isUpdating}
                     className="bg-gray-100 text-gray-600 p-2 rounded-lg hover:bg-primary/10 hover:text-primary transition-colors text-xs font-bold flex flex-col items-center gap-1"
                   >
@@ -197,7 +197,7 @@ export default function Dashboard({ user, onLogout, refreshProfile, onNavigate, 
 
               {!localUser.isSubscribed && (
                 <button
-                  onClick={onShowPaymentWizard}
+                  onClick={() => onShowPaymentWizard?.()}
                   disabled={isUpdating}
                   className="mt-3 text-xs bg-gray-900 text-white px-3 py-1.5 rounded-lg hover:bg-black transition-colors shadow-sm w-full sm:w-auto"
                 >
