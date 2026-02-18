@@ -46,12 +46,22 @@ function AppContent() {
   // --- AUTO-REDIRECT LOGIC ---
   useEffect(() => {
     if (!loading && user) {
+      console.log('🎯 App.tsx Routing Decision:', {
+        currentView,
+        isAdmin: user.isAdmin,
+        isNgo: user.isNgo,
+        userName: user.name
+      });
+
       if (['login', 'signup'].includes(currentView)) {
         if (user.isAdmin) {
+          console.log('→ Redirecting to ADMIN panel');
           setCurrentView('admin');
         } else if (user.isNgo) {
+          console.log('→ Redirecting to NGO dashboard');
           setCurrentView('ngo-dashboard');
         } else {
+          console.log('→ Redirecting to DONOR dashboard');
           setCurrentView('app');
         }
       }
@@ -89,7 +99,8 @@ function AppContent() {
         setCurrentView('app');
       }
     } else {
-      setShowRegistrationChoice(true);
+      // Go directly to signup page
+      setCurrentView('signup');
     }
   };
 

@@ -10,56 +10,41 @@ export const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
 // Comprehensive Price IDs for all tiers and payment frequencies
 export const PRICE_IDS = {
   // One-time donation
-  DONATION_5: 'price_donate_5_eur',
+  DONATION_5: import.meta.env.VITE_PRICE_DONATION_5 || 'price_donate_5_eur',
   
   // BRONZE TIER
-  BRONZE_SIMPLE_MONTHLY:import.meta.env.PRICE_BRONZE_SIMPLE_MONTHLY ||  
-  'price_bronze_simple_monthly',
-  BRONZE_SIMPLE_YEARLY:import.meta.env.PRICE_BRONZE_SIMPLE_YEARLY || 
-   'price_bronze_simple_yearly',
-  BRONZE_PRO_MONTHLY:import.meta.env.PRICE_BRONZE_PRO_MONTHLY || 
-'price_bronze_pro_monthly',
-BRONZE_PRO_YEARLY:import.meta.env.PRICE_BRONZE_PRO_YEARLY || 
-'price_bronze_pro_yearly',
+  BRONZE_SIMPLE_MONTHLY: import.meta.env.VITE_PRICE_BRONZE_SIMPLE_MONTHLY || 'price_bronze_simple_monthly',
+  BRONZE_SIMPLE_YEARLY: import.meta.env.VITE_PRICE_BRONZE_SIMPLE_YEARLY || 'price_bronze_simple_yearly',
+  BRONZE_PRO_MONTHLY: import.meta.env.VITE_PRICE_BRONZE_PRO_MONTHLY || 'price_bronze_pro_monthly',
+  BRONZE_PRO_YEARLY: import.meta.env.VITE_PRICE_BRONZE_PRO_YEARLY || 'price_bronze_pro_yearly',
   
   // PLATA/SILVER TIER (Bi-weekly)
- PLATA_SIMPLE_BIWEEKLY:import.meta.env.PRICE_PLATA_SIMPLE_BIWEEKLY || 
-'price_plata_simple_biweekly',
-  PLATA_SIMPLE_YEARLY:import.meta.env.PRICE_PLATA_SIMPLE_YEARLY || 
-'price_plata_simple_yearly',
-  PLATA_PRO_BIWEEKLY:import.meta.env.PRICE_PLATA_PRO_BIWEEKLY || 
-'price_plata_pro_biweekly',
-  PLATA_PRO_YEARLY:import.meta.env.PRICE_PLATA_PRO_YEARLY || 
-'price_plata_pro_yearly',
+  PLATA_SIMPLE_BIWEEKLY: import.meta.env.VITE_PRICE_PLATA_SIMPLE_BIWEEKLY || 'price_plata_simple_biweekly',
+  PLATA_SIMPLE_YEARLY: import.meta.env.VITE_PRICE_PLATA_SIMPLE_YEARLY || 'price_plata_simple_yearly',
+  PLATA_PRO_BIWEEKLY: import.meta.env.VITE_PRICE_PLATA_PRO_BIWEEKLY || 'price_plata_pro_biweekly',
+  PLATA_PRO_YEARLY: import.meta.env.VITE_PRICE_PLATA_PRO_YEARLY || 'price_plata_pro_yearly',
 
   // ORO/GOLD TIER (Weekly)
-ORO_SIMPLE_WEEKLY:import.meta.env.PRICE_ORO_SIMPLE_WEEKLY || 
-'price_oro_simple_weekly',
-  ORO_SIMPLE_YEARLY:import.meta.env.PRICE_ORO_SIMPLE_YEARLY || 
-'price_oro_simple_yearly',
-  ORO_PRO_WEEKLY:import.meta.env.PRICE_ORO_PRO_WEEKLY || 
-'price_oro_pro_weekly',
-  ORO_PRO_YEARLY:import.meta.env.PRICE_ORO_PRO_YEARLY || 
-'price_oro_pro_yearly',
+  ORO_SIMPLE_WEEKLY: import.meta.env.VITE_PRICE_ORO_SIMPLE_WEEKLY || 'price_oro_simple_weekly',
+  ORO_SIMPLE_YEARLY: import.meta.env.VITE_PRICE_ORO_SIMPLE_YEARLY || 'price_oro_simple_yearly',
+  ORO_PRO_WEEKLY: import.meta.env.VITE_PRICE_ORO_PRO_WEEKLY || 'price_oro_pro_weekly',
+  ORO_PRO_YEARLY: import.meta.env.VITE_PRICE_ORO_PRO_YEARLY || 'price_oro_pro_yearly',
+
   // DIAMANTE/DIAMOND TIER (Daily)
-DIAMANTE_SIMPLE_DAILY:import.meta.env.PRICE_DIAMANTE_SIMPLE_DAILY || 
-'price_diamante_simple_daily',
-  DIAMANTE_SIMPLE_YEARLY:import.meta.env.PRICE_DIAMANTE_SIMPLE_YEARLY || 
-'price_diamante_simple_yearly',
-  DIAMANTE_PRO_DAILY:import.meta.env.PRICE_DIAMANTE_PRO_DAILY || 
-'price_diamante_pro_daily',
-  DIAMANTE_PRO_YEARLY:import.meta.env.PRICE_DIAMANTE_PRO_YEARLY || 
-'price_diamante_pro_yearly',
+  DIAMANTE_SIMPLE_DAILY: import.meta.env.VITE_PRICE_DIAMANTE_SIMPLE_DAILY || 'price_diamante_simple_daily',
+  DIAMANTE_SIMPLE_YEARLY: import.meta.env.VITE_PRICE_DIAMANTE_SIMPLE_YEARLY || 'price_diamante_simple_yearly',
+  DIAMANTE_PRO_DAILY: import.meta.env.VITE_PRICE_DIAMANTE_PRO_DAILY || 'price_diamante_pro_daily',
+  DIAMANTE_PRO_YEARLY: import.meta.env.VITE_PRICE_DIAMANTE_PRO_YEARLY || 'price_diamante_pro_yearly',
 
   // Legacy aliases for backwards compatibility
-  BRONZE_SIMPLE: 'price_bronze_simple_monthly',
-  BRONZE_PRO: 'price_bronze_pro_monthly',
-  SILVER_SIMPLE: 'price_plata_simple_biweekly',
-  SILVER_PRO: 'price_plata_pro_biweekly',
-  GOLD_SIMPLE: 'price_oro_simple_weekly',
-  GOLD_PRO: 'price_oro_pro_weekly',
-  DIAMOND_SIMPLE: 'price_diamante_simple_daily',
-  DIAMOND_PRO: 'price_diamante_pro_daily',
+  BRONZE_SIMPLE: import.meta.env.VITE_PRICE_BRONZE_SIMPLE_MONTHLY || 'price_bronze_simple_monthly',
+  BRONZE_PRO: import.meta.env.VITE_PRICE_BRONZE_PRO_MONTHLY || 'price_bronze_pro_monthly',
+  SILVER_SIMPLE: import.meta.env.VITE_PRICE_PLATA_SIMPLE_BIWEEKLY || 'price_plata_simple_biweekly',
+  SILVER_PRO: import.meta.env.VITE_PRICE_PLATA_PRO_BIWEEKLY || 'price_plata_pro_biweekly',
+  GOLD_SIMPLE: import.meta.env.VITE_PRICE_ORO_SIMPLE_WEEKLY || 'price_oro_simple_weekly',
+  GOLD_PRO: import.meta.env.VITE_PRICE_ORO_PRO_WEEKLY || 'price_oro_pro_weekly',
+  DIAMOND_SIMPLE: import.meta.env.VITE_PRICE_DIAMANTE_SIMPLE_DAILY || 'price_diamante_simple_daily',
+  DIAMOND_PRO: import.meta.env.VITE_PRICE_DIAMANTE_PRO_DAILY || 'price_diamante_pro_daily',
 };
 
 /**

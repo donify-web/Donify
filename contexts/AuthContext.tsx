@@ -24,16 +24,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 .eq('id', userId)
                 .single();
 
+            if (error) {
+                console.error('❌ Supabase profile fetch error:', error);
+            }
+
             const nameFromEmail = email.includes('@') ? email.split('@')[0] : email;
 
             if (data) {
-                const isAdmin = email === 'admin@donify.org';
-                // Check if user is an NGO
-                const { data: ngoData } = await supabase
-                    .from('ngo_profiles')
-                    .select('id')
-                    .eq('auth_user_id', userId)
-                    .single();
+                // Use account_type field to determine user type
+                const accountType = data.account_type || 'donor';
 
                 return {
                     id: data.id,
@@ -43,23 +42,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     subscriptionTier: data.subscription_tier,
                     hasVotedThisMonth: data.has_voted_this_month,
                     lastDonationDate: data.last_donation_date,
-                    isAdmin: isAdmin,
-                    isNgo: !!ngoData,
-                    ngoId: ngoData?.id
+                    isAdmin: accountType === 'admin',
+                    isNgo: accountType === 'ngo',
+                    ngoId: accountType === 'ngo' ? data.id : undefined
                 } as User;
             } else {
                 // Fallback for new users who don't have a profile yet (race condition on signup trigger)
+                console.warn('⚠️ No profile data found, using fallback');
                 return {
                     id: userId,
                     email: email,
                     name: nameFromEmail,
                     isSubscribed: false,
                     hasVotedThisMonth: false,
-                    isAdmin: email === 'admin@donify.org'
+                    isAdmin: email === 'admin@donify.org',
+                    isNgo: false
                 } as User;
             }
         } catch (err) {
-            console.error('Profile map error:', err);
+            console.error('❌ Profile map error:', err);
             // Absolute fallback to prevent blocking
             return {
                 id: userId,
@@ -67,7 +68,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 name: 'Usuario',
                 isSubscribed: false,
                 hasVotedThisMonth: false,
-                isAdmin: false
+                isAdmin: false,
+                isNgo: false
             } as User;
         }
     };

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PageView } from '../../types';
-import { Mail, Lock, User as UserIcon, Loader2, AlertCircle, ArrowLeft, Heart } from 'lucide-react';
+import { Mail, Lock, User as UserIcon, Loader2, AlertCircle, ArrowLeft, Heart, Building2 } from 'lucide-react';
 import { supabase } from '../../lib/supabaseClient';
 
 interface LoginProps {
@@ -31,11 +31,17 @@ const GoogleLogo = () => (
 
 export default function Login({ onNavigate, initialState = 'login' }: LoginProps) {
   const [isSignUp, setIsSignUp] = useState(initialState === 'signup');
+  const [isNgoMode, setIsNgoMode] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  // NGO-specific fields
+  const [ngoName, setNgoName] = useState('');
+  const [ngoCategory, setNgoCategory] = useState('');
+  const [ngoDescription, setNgoDescription] = useState('');
 
   const handleGoogleLogin = async () => {
     try {
@@ -58,17 +64,30 @@ export default function Login({ onNavigate, initialState = 'login' }: LoginProps
 
     try {
       if (isSignUp) {
-        // Sign Up Logic
-        const { error } = await supabase.auth.signUp({
+        // Sign Up Logic with account_type
+        const { data: authData, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
             data: {
               full_name: fullName,
+              account_type: isNgoMode ? 'ngo' : 'donor',
+              // NGO fields if applicable
+              ...(isNgoMode && {
+                ngo_name: ngoName,
+                ngo_category: ngoCategory,
+                ngo_description: ngoDescription
+              })
             },
           },
         });
         if (error) throw error;
+
+        // The database trigger handles everything - just wait a moment
+        if (authData.user) {
+          console.log(`${isNgoMode ? 'NGO' : 'Donor'} account created, waiting for trigger...`);
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
       } else {
         // Log In Logic
         const { error } = await supabase.auth.signInWithPassword({
@@ -90,6 +109,7 @@ export default function Login({ onNavigate, initialState = 'login' }: LoginProps
 
   const toggleMode = () => {
     setIsSignUp(!isSignUp);
+    setIsNgoMode(false);
     setErrorMsg(null);
   };
 
@@ -179,22 +199,99 @@ export default function Login({ onNavigate, initialState = 'login' }: LoginProps
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {isSignUp && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <UserIcon className="h-5 w-5 text-gray-400" />
+              <>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <UserIcon className="h-5 w-5 text-gray-400" />
+                    </div>
+                    <input
+                      type="text"
+                      required
+                      className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+                      placeholder="Ej. Juan Pérez"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                    />
                   </div>
-                  <input
-                    type="text"
-                    required
-                    className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
-                    placeholder="Ej. Juan Pérez"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                  />
                 </div>
-              </div>
+
+                {/* NGO MODE TOGGLE */}
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <label className="flex items-start cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      checked={isNgoMode}
+                      onChange={(e) => setIsNgoMode(e.target.checked)}
+                      className="mt-1 mr-3 w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <Building2 className="w-4 h-4 text-primary" />
+                        <span className="text-sm font-semibold text-gray-900">Represento una organización sin ánimo de lucro</span>
+                      </div>
+                      <p className="text-xs text-gray-600 mt-1">
+                        Registra tu ONG para acceder a financiación comunitaria
+                      </p>
+                    </div>
+                  </label>
+                </div>
+
+                {/* NGO FIELDS (conditional) */}
+                {isNgoMode && (
+                  <div className="space-y-4 bg-gray-50 border border-gray-200 rounded-lg p-4 animate-in slide-in-from-top-2 duration-300">
+                    <p className="text-xs text-gray-600 font-medium flex items-center gap-1">
+                      <Building2 className="w-3 h-3" />
+                      Datos de la organización
+                    </p>
+
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">Nombre de la ONG *</label>
+                      <input
+                        type="text"
+                        required={isNgoMode}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+                        placeholder="Ej. Fundación Ayuda Social"
+                        value={ngoName}
+                        onChange={(e) => setNgoName(e.target.value)}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">Categoría *</label>
+                      <select
+                        required={isNgoMode}
+                        value={ngoCategory}
+                        onChange={(e) => setNgoCategory(e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
+                      >
+                        <option value="">Selecciona...</option>
+                        <option value="Medio Ambiente">Medio Ambiente</option>
+                        <option value="Social">Social / Humanitario</option>
+                        <option value="Educación">Educación</option>
+                        <option value="Salud">Salud / Investigación</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">Descripción breve *</label>
+                      <textarea
+                        required={isNgoMode}
+                        rows={2}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary transition-colors resize-none"
+                        placeholder="¿Qué hace tu organización?"
+                        value={ngoDescription}
+                        onChange={(e) => setNgoDescription(e.target.value)}
+                      />
+                    </div>
+
+                    <p className="text-xs text-gray-500 italic">
+                      📝 Tu cuenta requerirá verificación antes de poder aceptar donaciones.
+                    </p>
+                  </div>
+                )}
+              </>
             )}
 
             <div>
