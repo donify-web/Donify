@@ -16,7 +16,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [loading, setLoading] = useState(true);
 
     // Helper to safely parse user data
-    const mapSessionToUser = async (userId: string, email: string) => {
+    const mapSessionToUser = async (userId: string, email: string, authMetadata?: any) => {
         try {
             const { data, error } = await supabase
                 .from('profiles')
@@ -24,16 +24,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 .eq('id', userId)
                 .single();
 
-            if (error) {
-                console.error('❌ Supabase profile fetch error:', error);
-            }
-
             const nameFromEmail = email.includes('@') ? email.split('@')[0] : email;
 
             if (data) {
-                // Use account_type field to determine user type
+                // Use account_type field from profile
                 const accountType = data.account_type || 'donor';
-
                 return {
                     id: data.id,
                     email: data.email || email,
@@ -47,29 +42,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     ngoId: accountType === 'ngo' ? data.id : undefined
                 } as User;
             } else {
-                // Fallback for new users who don't have a profile yet (race condition on signup trigger)
-                console.warn('⚠️ No profile data found, using fallback');
+                // Profile fetch failed (RLS or timing) - fall back to auth metadata
+                // This is set during signup in Login.tsx
+                const accountType = authMetadata?.account_type || 'donor';
+                console.warn('⚠️ Profile not found, using auth metadata. account_type:', accountType);
                 return {
                     id: userId,
                     email: email,
-                    name: nameFromEmail,
+                    name: authMetadata?.full_name || nameFromEmail,
                     isSubscribed: false,
                     hasVotedThisMonth: false,
-                    isAdmin: email === 'admin@donify.org',
-                    isNgo: false
+                    isAdmin: accountType === 'admin',
+                    isNgo: accountType === 'ngo',
+                    ngoId: accountType === 'ngo' ? userId : undefined
                 } as User;
             }
         } catch (err) {
             console.error('❌ Profile map error:', err);
-            // Absolute fallback to prevent blocking
+            const accountType = authMetadata?.account_type || 'donor';
             return {
                 id: userId,
                 email: email,
-                name: 'Usuario',
+                name: authMetadata?.full_name || 'Usuario',
                 isSubscribed: false,
                 hasVotedThisMonth: false,
                 isAdmin: false,
-                isNgo: false
+                isNgo: accountType === 'ngo',
+                ngoId: accountType === 'ngo' ? userId : undefined
             } as User;
         }
     };
@@ -82,7 +81,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
 
         const email = session.user.email || 'no-email';
-        const profile = await mapSessionToUser(session.user.id, email);
+        // Pass auth metadata as fallback for when profile read fails (e.g. RLS)
+        const authMetadata = session.user.user_metadata || {};
+        const profile = await mapSessionToUser(session.user.id, email, authMetadata);
         setUser(profile);
         setLoading(false);
     };
