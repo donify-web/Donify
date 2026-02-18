@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { NgoUser, PageView } from '../types';
-import { ArrowLeft, Save, Upload, Building2, Mail, Phone, MapPin, Globe, Facebook, Instagram, Twitter, Linkedin, FileText } from 'lucide-react';
-import { Logo } from './Logo';
+import React, { useState, useEffect } from 'react';
+import { NgoUser, PageView } from '../../types';
+import { ArrowLeft, Save, Upload, Building2, Mail, Phone, MapPin, Globe, Facebook, Instagram, Twitter, Linkedin, FileText, Loader2, Check } from 'lucide-react';
+import { supabase } from '../../lib/supabaseClient';
 
 interface NgoSettingsProps {
     ngoUser: NgoUser;
@@ -10,15 +10,89 @@ interface NgoSettingsProps {
 
 export default function NgoSettings({ ngoUser, onNavigate }: NgoSettingsProps) {
     const [formData, setFormData] = useState<NgoUser>(ngoUser);
+    const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
+    const [saveMessage, setSaveMessage] = useState('');
+
+    useEffect(() => {
+        fetchProfile();
+    }, [ngoUser.id]);
+
+    const fetchProfile = async () => {
+        setIsLoading(true);
+        try {
+            const { data, error } = await supabase
+                .from('ngo_profiles')
+                .select('*')
+                .eq('id', ngoUser.id)
+                .single();
+
+            if (error) throw error;
+
+            if (data) {
+                setFormData({
+                    id: data.id,
+                    ngoName: data.ngo_name,
+                    email: data.email,
+                    logoUrl: data.logo_url,
+                    bannerUrl: data.banner_url,
+                    isVerified: data.is_verified,
+                    description: data.description,
+                    mission: data.mission,
+                    legalName: data.legal_name,
+                    cif: data.cif,
+                    phone: data.phone,
+                    address: data.address,
+                    website: data.website,
+                    category: data.category,
+                    socialMedia: data.social_media || {}
+                });
+            }
+        } catch (error) {
+            console.error('Error fetching profile:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const handleSave = async () => {
         setIsSaving(true);
-        // TODO: Save to Supabase
-        setTimeout(() => {
+        setSaveMessage('');
+
+        try {
+            const updates = {
+                ngo_name: formData.ngoName,
+                email: formData.email,
+                logo_url: formData.logoUrl,
+                banner_url: formData.bannerUrl,
+                description: formData.description,
+                mission: formData.mission,
+                legal_name: formData.legalName,
+                cif: formData.cif,
+                phone: formData.phone,
+                address: formData.address,
+                website: formData.website,
+                category: formData.category,
+                social_media: formData.socialMedia,
+                updated_at: new Date()
+            };
+
+            const { error } = await supabase
+                .from('ngo_profiles')
+                .update(updates)
+                .eq('id', ngoUser.id);
+
+            if (error) throw error;
+
+            setSaveMessage('Cambios guardados correctamente');
+            setTimeout(() => setSaveMessage(''), 3000);
+
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            alert('Error al guardar cambios');
+        } finally {
             setIsSaving(false);
-            alert('Configuración guardada exitosamente');
-        }, 1000);
+        }
     };
 
     const handleInputChange = (field: keyof NgoUser, value: any) => {
@@ -35,10 +109,18 @@ export default function NgoSettings({ ngoUser, onNavigate }: NgoSettingsProps) {
         }));
     };
 
+    if (isLoading) {
+        return (
+            <div className="min-h-screen bg-bgMain flex items-center justify-center">
+                <Loader2 className="animate-spin text-primary" size={32} />
+            </div>
+        );
+    }
+
     return (
-        <div className="min-h-screen bg-bgMain">
+        <div className="min-h-screen bg-bgMain pb-20">
             {/* HEADER */}
-            <nav className="bg-white border-b border-gray-200 sticky top-0 z-40">
+            <nav className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
                 <div className="max-w-7xl mx-auto px-6 py-4">
                     <div className="flex justify-between items-center">
                         <div className="flex items-center gap-4">
@@ -51,14 +133,21 @@ export default function NgoSettings({ ngoUser, onNavigate }: NgoSettingsProps) {
                             </button>
                         </div>
 
-                        <button
-                            onClick={handleSave}
-                            disabled={isSaving}
-                            className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-6 py-2 rounded-lg font-semibold transition-colors disabled:opacity-50"
-                        >
-                            <Save size={18} />
-                            {isSaving ? 'Guardando...' : 'Guardar Cambios'}
-                        </button>
+                        <div className="flex items-center gap-4">
+                            {saveMessage && (
+                                <span className="text-green-600 text-sm font-semibold flex items-center gap-1 animate-fade-in">
+                                    <Check size={16} /> {saveMessage}
+                                </span>
+                            )}
+                            <button
+                                onClick={handleSave}
+                                disabled={isSaving}
+                                className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-6 py-2 rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {isSaving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
+                                {isSaving ? 'Guardando...' : 'Guardar Cambios'}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </nav>
@@ -67,7 +156,7 @@ export default function NgoSettings({ ngoUser, onNavigate }: NgoSettingsProps) {
             <div className="max-w-4xl mx-auto px-6 py-8">
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">Configuración de Perfil</h1>
-                    <p className="text-gray-600">Actualiza la información de tu organización</p>
+                    <p className="text-gray-600">Actualiza la información pública de tu organización.</p>
                 </div>
 
                 {/* INFORMACIÓN BÁSICA */}
@@ -130,12 +219,12 @@ export default function NgoSettings({ ngoUser, onNavigate }: NgoSettingsProps) {
                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                                 >
                                     <option value="">Seleccionar categoría</option>
-                                    <option value="social">Social</option>
-                                    <option value="medio-ambiente">Medio Ambiente</option>
-                                    <option value="educacion">Educación</option>
-                                    <option value="salud">Salud</option>
-                                    <option value="derechos-humanos">Derechos Humanos</option>
-                                    <option value="animales">Animales</option>
+                                    <option value="Social">Social</option>
+                                    <option value="Medio Ambiente">Medio Ambiente</option>
+                                    <option value="Educación">Educación</option>
+                                    <option value="Salud">Salud</option>
+                                    <option value="Derechos Humanos">Derechos Humanos</option>
+                                    <option value="Animales">Animales</option>
                                 </select>
                             </div>
                         </div>
@@ -178,31 +267,47 @@ export default function NgoSettings({ ngoUser, onNavigate }: NgoSettingsProps) {
                     <div className="grid md:grid-cols-2 gap-6">
                         <div>
                             <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                Logo
+                                Logo (URL por ahora)
                             </label>
-                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors cursor-pointer">
+                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors cursor-pointer group">
                                 {formData.logoUrl ? (
-                                    <img src={formData.logoUrl} alt="Logo" className="w-32 h-32 mx-auto object-cover rounded-lg mb-2" />
+                                    <img src={formData.logoUrl} alt="Logo" className="w-32 h-32 mx-auto object-cover rounded-lg mb-4 shadow-sm" />
                                 ) : (
-                                    <Upload className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                                    <div className="w-32 h-32 mx-auto bg-gray-50 rounded-lg flex items-center justify-center mb-4">
+                                        <Upload className="w-8 h-8 text-gray-300" />
+                                    </div>
                                 )}
-                                <p className="text-sm text-gray-600">Haz clic para subir</p>
-                                <p className="text-xs text-gray-400 mt-1">PNG, JPG (máx. 2MB)</p>
+                                <input
+                                    type="url"
+                                    className="w-full text-xs p-2 border border-gray-200 rounded text-gray-600 mb-2"
+                                    placeholder="https://..."
+                                    value={formData.logoUrl || ''}
+                                    onChange={(e) => handleInputChange('logoUrl', e.target.value)}
+                                />
+                                <p className="text-xs text-gray-400">Pega un enlace a tu logo</p>
                             </div>
                         </div>
 
                         <div>
                             <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                Banner
+                                Banner (URL por ahora)
                             </label>
-                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors cursor-pointer">
+                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors cursor-pointer group">
                                 {formData.bannerUrl ? (
-                                    <img src={formData.bannerUrl} alt="Banner" className="w-full h-32 object-cover rounded-lg mb-2" />
+                                    <img src={formData.bannerUrl} alt="Banner" className="w-full h-32 object-cover rounded-lg mb-4 shadow-sm" />
                                 ) : (
-                                    <Upload className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                                    <div className="w-full h-32 bg-gray-50 rounded-lg flex items-center justify-center mb-4">
+                                        <Upload className="w-8 h-8 text-gray-300" />
+                                    </div>
                                 )}
-                                <p className="text-sm text-gray-600">Haz clic para subir</p>
-                                <p className="text-xs text-gray-400 mt-1">PNG, JPG (máx. 5MB)</p>
+                                <input
+                                    type="url"
+                                    className="w-full text-xs p-2 border border-gray-200 rounded text-gray-600 mb-2"
+                                    placeholder="https://..."
+                                    value={formData.bannerUrl || ''}
+                                    onChange={(e) => handleInputChange('bannerUrl', e.target.value)}
+                                />
+                                <p className="text-xs text-gray-400">Pega un enlace a tu banner</p>
                             </div>
                         </div>
                     </div>

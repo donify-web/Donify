@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Logo } from './Logo';
+import { Logo } from '../shared/Logo';
 import { Lock, ArrowRight, Bell, Calendar, Rocket } from 'lucide-react';
 
 interface LaunchCountdownProps {

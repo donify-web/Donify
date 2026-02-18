@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { PageView, SubscriptionTier } from '../types';
+import { PageView, SubscriptionTier } from '../../types';
 import { ArrowLeft, CreditCard, FileText, Settings as SettingsIcon, Check, AlertCircle, TrendingUp, X, ChevronRight, Loader2 } from 'lucide-react';
-import { supabase } from '../lib/supabaseClient';
-import { redirectToCustomerPortal, modifySubscription } from '../lib/stripeClient';
+import { supabase } from '../../lib/supabaseClient';
+import { redirectToCustomerPortal, modifySubscription } from '../../lib/stripeClient';
 
 interface SettingsProps {
     onNavigate: (view: PageView) => void;
@@ -84,25 +84,14 @@ export default function Settings({ onNavigate, user, onShowPaymentWizard }: Sett
     return (
         <div className="min-h-screen bg-bgMain font-sans">
             {/* HEADER */}
-            <nav className="bg-white border-b border-gray-200 h-20 flex items-center px-6">
-                <div className="max-w-7xl mx-auto w-full flex justify-between items-center">
-                    <div className="flex items-center gap-4">
-                        <button
-                            onClick={() => onNavigate('app')}
-                            className="text-gray-500 hover:text-primary flex items-center gap-2 font-medium transition-colors"
-                        >
-                            <ArrowLeft size={20} /> Volver al Panel
-                        </button>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <SettingsIcon className="text-primary" size={24} />
-                        <h1 className="text-xl font-bold text-gray-900">Configuración</h1>
-                    </div>
-                </div>
-            </nav>
+            {/* HEADER */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2">
+                <h1 className="text-3xl font-black text-gray-900 tracking-tight">Configuración</h1>
+                <p className="text-gray-500 font-medium">Gestiona tu cuenta y preferencias.</p>
+            </div>
 
             {/* TABS */}
-            <div className="max-w-5xl mx-auto px-6 py-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
                     <div className="flex border-b border-gray-200 overflow-x-auto">
                         <button

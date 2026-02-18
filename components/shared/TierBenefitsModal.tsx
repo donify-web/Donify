@@ -1,6 +1,6 @@
 import React from 'react';
 import { X, Check, Star, Shield, Zap, Crown } from 'lucide-react';
-import { SubscriptionTier } from '../types';
+import { SubscriptionTier } from '../../types';
 
 interface TierBenefitsModalProps {
     isOpen: boolean;

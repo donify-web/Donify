@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Menu, X, Rocket } from 'lucide-react';
-import { PageView } from '../types';
-import { Logo } from './Logo';
+import { PageView } from '../../types';
+import { Logo } from '../shared/Logo';
 
 interface PublicNavbarProps {
     onNavigate: (page: PageView) => void;

@@ -16,7 +16,9 @@ export type PageView =
   | 'cookies'
   | 'admin'
   | 'organizations'
-  | 'settings';
+  | 'settings'
+  | 'dashboard-impact'
+  | 'dashboard-news';
 
 export type SubscriptionTier = 'bronce' | 'plata' | 'oro' | 'diamante';
 export type SubscriptionType = 'simple' | 'pro';
@@ -87,3 +89,12 @@ export interface NgoUser {
         linkedin?: string;
     };
 }
+
+export interface NgoPayout {
+    id: string;
+    amount: number;
+    currency: string;
+    status: 'pending' | 'completed' | 'failed';
+    payout_date?: string;
+}
+

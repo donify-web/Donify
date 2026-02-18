@@ -1,29 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import Landing from './components/Landing';
-import Dashboard from './components/Dashboard';
-import Login from './components/Login';
-import PricingPage from './components/PricingPage';
-import HowItWorks from './components/HowItWorks';
-import Contact from './components/Contact';
-import NgoApply from './components/NgoApply';
-import NgoDashboard from './components/NgoDashboard';
-import NgoProjects from './components/NgoProjects';
-import NgoFinance from './components/NgoFinance';
-import NgoSettings from './components/NgoSettings';
-import LegalView from './components/LegalView';
+import Landing from './components/public/Landing';
+import Dashboard from './components/donor/Dashboard';
+import Login from './components/auth/Login';
+import PricingPage from './components/public/PricingPage';
+import HowItWorks from './components/public/HowItWorks';
+import Contact from './components/public/Contact';
+import NgoApply from './components/ngo/NgoApply';
+import NgoDashboard from './components/ngo/NgoDashboard';
+import NgoProjects from './components/ngo/NgoProjects';
+import NgoFinance from './components/ngo/NgoFinance';
+import NgoSettings from './components/ngo/NgoSettings';
+import LegalView from './components/public/LegalView';
 import AdminPanel from './components/AdminPanel';
-import LaunchCountdown from './components/LaunchCountdown';
-import Organizations from './components/Organizations';
-import Settings from './components/Settings';
-import PublicNavbar from './components/PublicNavbar';
-import PaymentWizard from './components/PaymentWizard';
-import TierBenefitsModal from './components/TierBenefitsModal';
-import RegistrationChoiceModal from './components/RegistrationChoiceModal';
+import LaunchCountdown from './components/public/LaunchCountdown';
+import Organizations from './components/public/Organizations';
+import Settings from './components/donor/Settings';
+import PublicNavbar from './components/public/PublicNavbar';
+import PaymentWizard from './components/shared/PaymentWizard';
+import TierBenefitsModal from './components/shared/TierBenefitsModal';
+import RegistrationChoiceModal from './components/auth/RegistrationChoiceModal';
+import DonorDashboardLayout from './components/donor/DonorDashboardLayout';
+import DonorImpact from './components/donor/DonorImpact';
+import DonorNews from './components/donor/DonorNews';
 import { PageView, SubscriptionTier, NgoUser } from './types';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 // --- LAUNCH CONFIGURATION ---
-const LAUNCH_DATE = new Date('2026-03-01T00:00:00');
+const LAUNCH_DATE = new Date('2026-01-01T00:00:00'); // Set to past for testing
 
 function AppContent() {
   const { user, loading } = useAuth();
@@ -39,6 +42,21 @@ function AppContent() {
 
   // Determine if we are in Pre-Launch phase
   const isPreLaunch = new Date() < LAUNCH_DATE;
+
+  // --- AUTO-REDIRECT LOGIC ---
+  useEffect(() => {
+    if (!loading && user) {
+      if (['login', 'signup'].includes(currentView)) {
+        if (user.isAdmin) {
+          setCurrentView('admin');
+        } else if (user.isNgo) {
+          setCurrentView('ngo-dashboard');
+        } else {
+          setCurrentView('app');
+        }
+      }
+    }
+  }, [user, loading, currentView]);
 
   // Mock NGO User derivation (In production this would come from a database fetch)
   const derivedNgoUser: NgoUser | null = user?.isNgo ? {
@@ -125,53 +143,59 @@ function AppContent() {
       case 'ngo-projects':
         return <NgoProjects onNavigate={setCurrentView} />;
       case 'ngo-finance':
-        return <NgoFinance onNavigate={setCurrentView} />;
+        return derivedNgoUser ? (
+          <NgoFinance onNavigate={setCurrentView} ngoId={derivedNgoUser.id} />
+        ) : <Login onNavigate={setCurrentView} initialState="login" />;
       case 'ngo-settings':
         return derivedNgoUser ? (
           <NgoSettings ngoUser={derivedNgoUser} onNavigate={setCurrentView} />
         ) : <Login onNavigate={setCurrentView} initialState="login" />;
       case 'organizations':
         return <Organizations onNavigate={setCurrentView} />;
-      case 'settings':
-        return user ? (
-          <Settings
-            onNavigate={setCurrentView}
-            user={user}
-            onShowPaymentWizard={() => setShowPaymentWizard(true)}
-          />
-        ) : (
-          <Login onNavigate={setCurrentView} initialState="login" />
-        );
-      case 'legal':
-        return <LegalView onNavigate={setCurrentView} initialTab="terms" />;
-      case 'cookies':
-        return <LegalView onNavigate={setCurrentView} initialTab="cookies" />;
       case 'admin':
         return user?.isAdmin ? (
-          <AdminPanel onNavigate={setCurrentView} currentUser={user} />
-        ) : (
-          <Dashboard
-            user={user!}
-            onLogout={handleLogout}
-            refreshProfile={refreshProfile}
-            onNavigate={setCurrentView}
-            onShowPaymentWizard={() => setShowPaymentWizard(true)}
-          />
-        );
+          <AdminPanel currentUser={user} onNavigate={setCurrentView} />
+        ) : <Login onNavigate={setCurrentView} initialState="login" />;
       case 'app':
-        return user ? (
-          <Dashboard
+      case 'dashboard-impact':
+      case 'dashboard-news':
+      case 'settings':
+        // DONOR DASHBOARD VIEWS
+        if (!user) return <Login onNavigate={setCurrentView} initialState="login" />;
+
+        return (
+          <DonorDashboardLayout
             user={user}
-            onLogout={handleLogout}
-            refreshProfile={refreshProfile}
+            currentView={currentView}
             onNavigate={setCurrentView}
-            onShowPaymentWizard={(tier) => {
-              if (tier) setSelectedTier(tier);
-              setShowPaymentWizard(true);
-            }}
-          />
-        ) : (
-          <Login onNavigate={setCurrentView} initialState="login" />
+            onLogout={handleLogout}
+          >
+            {currentView === 'app' && (
+              <Dashboard
+                user={user}
+                onLogout={handleLogout}
+                refreshProfile={refreshProfile}
+                minimalMode={true}
+                onShowPaymentWizard={(tier) => {
+                  if (tier) setSelectedTier(tier);
+                  setShowPaymentWizard(true);
+                }}
+                // We pass undefined/null for onNavigate to Dashboard to hide its internal header nav items if we want,
+                // or keep them. The Layout has its own Nav. 
+                // Let's keep onNavigate so internal links work, but Dashboard might need cleanup to remove duplicate headers.
+                onNavigate={setCurrentView}
+              />
+            )}
+            {currentView === 'dashboard-impact' && <DonorImpact user={user} />}
+            {currentView === 'dashboard-news' && <DonorNews />}
+            {currentView === 'settings' && (
+              <Settings
+                onNavigate={setCurrentView}
+                user={user}
+                onShowPaymentWizard={() => setShowPaymentWizard(true)}
+              />
+            )}
+          </DonorDashboardLayout>
         );
       default:
         return isPreLaunch && !user
@@ -205,7 +229,7 @@ function AppContent() {
       {renderView()}
 
       {/* GLOBAL MODALS */}
-      {showPaymentWizard && user && (
+      {showPaymentWizard && (
         <PaymentWizard
           user={user}
           onClose={() => setShowPaymentWizard(false)}
@@ -229,13 +253,8 @@ function AppContent() {
           onSelectOption={(option) => {
             setShowRegistrationChoice(false);
             if (option === 'donor') {
-              // For donors, we usually go to pricing or direct to signup/payment
-              // Let's send them to pricing for now, or open payment wizard if we want that flow
-              // User request: "unirse como ... usuario nuevo de manera limpia"
-              // Maybe just go to generic signup? Or Pricing? 
-              // Existing 'Start Now' buttons often go to Pricing. 
-              // Let's go to Pricing as it's the standard flow before payment.
-              setCurrentView('pricing');
+              // Redirect donors to Signup page instead of Pricing
+              setCurrentView('signup');
             } else if (option === 'ngo') {
               setCurrentView('ngo-apply');
             }

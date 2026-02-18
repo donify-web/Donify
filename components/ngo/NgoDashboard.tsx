@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NgoUser, VoteStats, NgoProject, PageView } from '../types';
+import { NgoUser, VoteStats, NgoProject, PageView } from '../../types';
 import {
     TrendingUp,
     Users,
@@ -13,7 +13,7 @@ import {
     Eye,
     ChevronRight
 } from 'lucide-react';
-import { Logo } from './Logo';
+import { Logo } from '../shared/Logo';
 
 interface NgoDashboardProps {
     ngoUser: NgoUser;
@@ -259,7 +259,10 @@ export default function NgoDashboard({ ngoUser, onLogout, onNavigate }: NgoDashb
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                     <h3 className="font-bold text-gray-900 mb-4">Acciones Rápidas</h3>
                     <div className="grid md:grid-cols-3 gap-4">
-                        <button className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-primary/5 transition-all group">
+                        <button
+                            onClick={() => onNavigate && onNavigate('ngo-projects')}
+                            className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-primary/5 transition-all group"
+                        >
                             <div className="flex items-center gap-3">
                                 <div className="p-2 bg-blue-100 rounded-lg group-hover:bg-primary/20 transition-colors">
                                     <Calendar size={20} className="text-blue-600 group-hover:text-primary" />
@@ -269,7 +272,10 @@ export default function NgoDashboard({ ngoUser, onLogout, onNavigate }: NgoDashb
                             <ChevronRight size={20} className="text-gray-400 group-hover:text-primary" />
                         </button>
 
-                        <button className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-primary/5 transition-all group">
+                        <button
+                            onClick={() => onNavigate && onNavigate('ngo-finance')}
+                            className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-primary/5 transition-all group"
+                        >
                             <div className="flex items-center gap-3">
                                 <div className="p-2 bg-green-100 rounded-lg group-hover:bg-primary/20 transition-colors">
                                     <DollarSign size={20} className="text-green-600 group-hover:text-primary" />

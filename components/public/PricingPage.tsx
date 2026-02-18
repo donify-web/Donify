@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
-import { PageView } from '../types';
+import { PageView } from '../../types';
 import { ArrowLeft, Info, Shield, HelpCircle, Check, X as XIcon, CreditCard, ChevronDown } from 'lucide-react';
-import { Logo } from './Logo';
+import { Logo } from '../shared/Logo';
 
 interface PricingPageProps {
     onNavigate: (view: PageView) => void;

@@ -1,7 +1,7 @@
 import React from 'react';
-import { PageView, SubscriptionTier } from '../types';
+import { PageView, SubscriptionTier } from '../../types';
 import { Coins, Heart, CheckCircle, ArrowRight, ShieldCheck, Globe, Lock, Star, Zap, Crown, Shield } from 'lucide-react';
-import { Logo } from './Logo';
+import { Logo } from '../shared/Logo';
 
 interface LandingProps {
   onNavigate: (view: PageView) => void;

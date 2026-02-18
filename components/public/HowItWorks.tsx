@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PageView } from '../types';
+import { PageView } from '../../types';
 import {
   ArrowLeft,
   Coins,
@@ -12,7 +12,7 @@ import {
   ChevronDown,
   ChevronUp
 } from 'lucide-react';
-import { Logo } from './Logo';
+import { Logo } from '../shared/Logo';
 
 interface HowItWorksProps {
   onNavigate: (view: PageView) => void;

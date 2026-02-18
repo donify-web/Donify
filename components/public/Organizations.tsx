@@ -1,7 +1,7 @@
 import React from 'react';
-import { PageView } from '../types';
+import { PageView } from '../../types';
 import { ArrowLeft, Building2, CheckCircle, Heart, Shield, Users } from 'lucide-react';
-import { Logo } from './Logo';
+import { Logo } from '../shared/Logo';
 
 interface OrganizationsProps {
     onNavigate: (view: PageView) => void;

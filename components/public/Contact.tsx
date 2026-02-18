@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
-import { PageView } from '../types';
+import { PageView } from '../../types';
 import { ArrowLeft, Mail, Handshake, Megaphone, CheckCircle, Loader2 } from 'lucide-react';
-import { Logo } from './Logo';
+import { Logo } from '../shared/Logo';
 
 interface ContactProps {
   onNavigate: (view: PageView) => void;

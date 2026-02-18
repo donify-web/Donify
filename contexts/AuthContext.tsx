@@ -28,6 +28,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
             if (data) {
                 const isAdmin = email === 'admin@donify.org';
+                // Check if user is an NGO
+                const { data: ngoData } = await supabase
+                    .from('ngo_profiles')
+                    .select('id')
+                    .eq('auth_user_id', userId)
+                    .single();
+
                 return {
                     id: data.id,
                     email: data.email || email,
@@ -36,7 +43,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     subscriptionTier: data.subscription_tier,
                     hasVotedThisMonth: data.has_voted_this_month,
                     lastDonationDate: data.last_donation_date,
-                    isAdmin: isAdmin
+                    isAdmin: isAdmin,
+                    isNgo: !!ngoData,
+                    ngoId: ngoData?.id
                 } as User;
             } else {
                 // Fallback for new users who don't have a profile yet (race condition on signup trigger)
