@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { PageView } from '../../types';
 import {
-  ArrowLeft,
   Coins,
   Vote,
-  ArrowRight,
   ShieldCheck,
   Calculator,
   Users,
@@ -12,7 +10,6 @@ import {
   ChevronDown,
   ChevronUp
 } from 'lucide-react';
-import { Logo } from '../shared/Logo';
 
 interface HowItWorksProps {
   onNavigate: (view: PageView) => void;
@@ -45,25 +42,6 @@ export default function HowItWorks({ onNavigate }: HowItWorksProps) {
 
   return (
     <div className="min-h-screen bg-white font-sans text-textMain animate-in fade-in duration-500">
-      {/* HEADER SIMPLE */}
-      <nav className="fixed w-full bg-white/95 backdrop-blur-sm z-50 border-b border-gray-100 h-20 flex items-center px-6">
-        <div className="max-w-7xl mx-auto w-full flex justify-between items-center">
-          <div
-            className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
-            onClick={() => onNavigate('landing')}
-          >
-            <Logo className="w-8 h-8 text-primary" />
-            <span className="font-bold text-xl text-gray-800">Donify</span>
-          </div>
-          <button
-            onClick={() => onNavigate('landing')}
-            className="text-gray-500 hover:text-primary flex items-center gap-2 font-medium transition-colors"
-          >
-            <ArrowLeft size={20} /> Volver al Inicio
-          </button>
-        </div>
-      </nav>
-
       {/* HERO SECTION */}
       <section className="pt-32 pb-16 px-6 bg-gradient-to-b from-bgMain to-white">
         <div className="max-w-4xl mx-auto text-center space-y-6">

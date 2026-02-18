@@ -215,7 +215,7 @@ function AppContent() {
     }
   };
 
-  const showPublicNavbar = !user && !['login', 'signup', 'app', 'admin', 'settings', 'ngo-dashboard', 'ngo-projects', 'ngo-finance', 'ngo-settings'].includes(currentView);
+  const showPublicNavbar = !['login', 'signup', 'app', 'admin', 'settings', 'ngo-dashboard', 'ngo-projects', 'ngo-finance', 'ngo-settings', 'dashboard-impact', 'dashboard-news'].includes(currentView);
 
   return (
     <div className="min-h-screen bg-white">

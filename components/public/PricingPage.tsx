@@ -1,8 +1,7 @@
 
 import React, { useState } from 'react';
 import { PageView } from '../../types';
-import { ArrowLeft, Info, Shield, HelpCircle, Check, X as XIcon, CreditCard, ChevronDown } from 'lucide-react';
-import { Logo } from '../shared/Logo';
+import { Info, Shield, HelpCircle, Check, X as XIcon, CreditCard, ChevronDown } from 'lucide-react';
 
 interface PricingPageProps {
     onNavigate: (view: PageView) => void;
@@ -21,22 +20,6 @@ export default function PricingPage({ onNavigate }: PricingPageProps) {
 
     return (
         <div className="min-h-screen bg-bgMain font-sans text-textMain animate-in fade-in duration-300">
-            {/* Navigation Bar */}
-            <nav className="fixed w-full bg-white/95 backdrop-blur-sm z-50 border-b border-gray-100 h-20 flex items-center px-6">
-                <div className="max-w-7xl mx-auto w-full flex justify-between items-center">
-                    <div className="flex items-center gap-2" onClick={() => onNavigate('landing')}>
-                        <Logo className="w-8 h-8 text-primary" />
-                        <span className="font-bold text-xl text-gray-800">Donify</span>
-                    </div>
-                    <button
-                        onClick={() => onNavigate('landing')}
-                        className="text-gray-500 hover:text-primary flex items-center gap-2 font-medium"
-                    >
-                        <ArrowLeft size={20} /> Volver
-                    </button>
-                </div>
-            </nav>
-
             <main className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-bold text-gray-900 mb-4">Cuentas Claras</h1>

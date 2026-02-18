@@ -1,8 +1,7 @@
 
 import React, { useState } from 'react';
 import { PageView } from '../../types';
-import { ArrowLeft, Mail, Handshake, Megaphone, CheckCircle, Loader2 } from 'lucide-react';
-import { Logo } from '../shared/Logo';
+import { Mail, Handshake, Megaphone, CheckCircle, Loader2 } from 'lucide-react';
 
 interface ContactProps {
   onNavigate: (view: PageView) => void;
@@ -42,13 +41,7 @@ export default function Contact({ onNavigate }: ContactProps) {
 
   return (
     <div className="min-h-screen bg-bgMain font-sans text-textMain">
-      <nav className="p-6">
-        <button onClick={() => onNavigate('landing')} className="flex items-center gap-2 text-gray-500 hover:text-primary transition-colors">
-          <ArrowLeft size={20} /> Volver
-        </button>
-      </nav>
-
-      <main className="max-w-6xl mx-auto px-6 py-10 grid md:grid-cols-2 gap-16 items-start">
+      <main className="max-w-6xl mx-auto px-6 pt-32 pb-10 grid md:grid-cols-2 gap-16 items-start">
         {/* Left Side: Context */}
         <div className="space-y-8">
           <div>
