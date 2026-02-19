@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { PageView } from '../../types';
-import { Mail, Handshake, Megaphone, CheckCircle, Loader2 } from 'lucide-react';
+import { Mail, Handshake, Lightbulb, CheckCircle, Loader2 } from 'lucide-react';
 
 interface ContactProps {
   onNavigate: (view: PageView) => void;
@@ -59,7 +59,7 @@ export default function Contact({ onNavigate }: ContactProps) {
               <div>
                 <h3 className="font-bold text-gray-900">Soporte General</h3>
                 <p className="text-sm text-gray-500 mb-1">Dudas sobre pagos o cuenta.</p>
-                <a href="mailto:hola@donify.org" className="text-primary font-medium hover:underline">hola@donify.org</a>
+                <a href="mailto:info@donify.org" className="text-primary font-medium hover:underline">info@donify.org</a>
               </div>
             </div>
 
@@ -75,13 +75,13 @@ export default function Contact({ onNavigate }: ContactProps) {
             </div>
 
             <div className="flex items-start gap-4 p-4 bg-white rounded-xl shadow-sm">
-              <div className="bg-orange-50 p-3 rounded-lg text-orange-600">
-                <Megaphone size={24} />
+              <div className="bg-amber-50 p-3 rounded-lg text-amber-600">
+                <Lightbulb size={24} />
               </div>
               <div>
-                <h3 className="font-bold text-gray-900">Prensa</h3>
-                <p className="text-sm text-gray-500 mb-1">Kit de medios y entrevistas.</p>
-                <a href="mailto:prensa@donify.org" className="text-primary font-medium hover:underline">prensa@donify.org</a>
+                <h3 className="font-bold text-gray-900">Ideas y Feedback</h3>
+                <p className="text-sm text-gray-500 mb-1">Ayúdanos a mejorar Donify.</p>
+                <a href="mailto:ideas@donify.org" className="text-primary font-medium hover:underline">ideas@donify.org</a>
               </div>
             </div>
           </div>

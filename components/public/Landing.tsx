@@ -267,12 +267,12 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
                 },
                 {
                   name: "Carlos Ruiz",
-                  role: "Suscriptor Desde 2024",
+                  role: "Suscriptor",
                   quote: "La transparencia lo es todo para mí. Aquí sé exactamente a dónde va cada céntimo. Es la forma más honesta de ayudar.",
                   img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150"
                 },
                 {
-                  name: "Ana Martínez",
+                  name: "Inés Cuevas",
                   role: "Voluntaria y Donante",
                   quote: "Me encanta la comunidad. No es solo dar dinero, es ser parte de un movimiento que elige qué problemas solucionar hoy.",
                   img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=150"
