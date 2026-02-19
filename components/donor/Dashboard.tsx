@@ -180,7 +180,7 @@ export default function Dashboard({ user, onLogout, refreshProfile, onNavigate, 
                 disabled={isUpdating}
                 className="flex-1 md:flex-none bg-gray-900 text-white px-6 py-3 rounded-xl hover:bg-black transition-colors shadow-lg shadow-gray-200 font-bold"
               >
-                {isUpdating ? 'Procesando...' : 'Activar Suscripción'}
+                Activar Suscripción
               </button>
             ) : (
               <button
