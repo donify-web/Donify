@@ -1,4 +1,4 @@
-px import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import { NgoProject } from '../../types';
 import { Loader2, ArrowRight } from 'lucide-react';
@@ -73,60 +73,65 @@ export default function VotingSection() {
 
                 <div className="grid md:grid-cols-3 gap-8">
                     {projects.map((project: any) => {
-                        const progress = Math.min((project.currentVotes / 500) * 100, 100); // Mock progress based on votes vs arbitrary goal or handle differently
-                        // Or use goalAmount if it represents votes? No, goalAmount is usually money. 
-                        // Let's assume progress bar represents "Votes Share" or just visual engagement.
-                        // I'll effectively hide the % or use real calculation if I had total votes.
-                        // For now, let's use a visual progress bar relative to a target or just show vote count.
+                        // Calculate percentage of total votes
+                        const totalVotesInSystem = projects.reduce((acc, p: any) => acc + (p.currentVotes || 0), 0);
+                        const percentage = totalVotesInSystem > 0
+                            ? Math.round(((project.currentVotes || 0) / totalVotesInSystem) * 100)
+                            : 0;
 
                         return (
-                            <div key={project.id} className="group relative bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
-                                <div className="h-56 overflow-hidden relative">
+                            <div key={project.id} className="group flex flex-col bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                                {/* Image Section */}
+                                <div className="h-48 overflow-hidden relative">
                                     <img
                                         src={project.imageUrl || 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&q=80'}
                                         alt={project.title}
-                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-80" />
+                                    {/* Gradient Overlay */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60" />
 
-                                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold shadow-sm text-gray-900">
-                                        {project.category}
+                                    {/* Percentage Badge (Top Right) */}
+                                    <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold shadow-sm text-primary">
+                                        {percentage}% votado
                                     </div>
 
-                                    <div className="absolute bottom-4 left-4 text-white">
-                                        <div className="flex items-center gap-2 mb-1">
-                                            {project.ngoLogo ? (
-                                                <img src={project.ngoLogo} className="w-6 h-6 rounded-full border border-white/50" />
-                                            ) : <div className="w-6 h-6 rounded-full bg-white/20" />}
-                                            <span className="text-sm font-medium text-white/90">{project.ngoName}</span>
-                                        </div>
+                                    {/* Category Badge (Top Left) */}
+                                    <div className="absolute top-4 left-4 bg-black/30 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-white border border-white/20">
+                                        {project.category}
                                     </div>
                                 </div>
 
-                                <div className="p-8">
-                                    <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-primary transition-colors line-clamp-2">
+                                {/* Content Section */}
+                                <div className="p-6 flex-1 flex flex-col">
+                                    <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors line-clamp-1">
                                         {project.title}
                                     </h3>
-                                    <p className="text-gray-500 mb-6 line-clamp-2 leading-relaxed">
+
+                                    <div className="flex items-center gap-2 mb-4">
+                                        {project.ngoLogo ? (
+                                            <img src={project.ngoLogo} className="w-5 h-5 rounded-full bg-gray-100" />
+                                        ) : <div className="w-5 h-5 rounded-full bg-gray-200" />}
+                                        <span className="text-sm font-medium text-gray-500">{project.ngoName}</span>
+                                    </div>
+
+                                    <p className="text-gray-500 text-sm mb-6 line-clamp-3 leading-relaxed flex-1">
                                         {project.description}
                                     </p>
 
-                                    <div className="mb-6">
-                                        <div className="flex justify-between text-sm font-bold mb-2">
-                                            <span className="text-gray-900">{project.currentVotes} Votos</span>
-                                            <span className="text-primary">En curso</span>
-                                        </div>
-                                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                                    {/* Progress Bar Section (Bottom) */}
+                                    <div className="mt-auto">
+                                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden mb-4">
                                             <div
                                                 className="h-full bg-primary rounded-full transition-all duration-1000 ease-out"
-                                                style={{ width: `${Math.random() * 40 + 20}%` }} // Mock width for visual liveliness as logic for total votes isn't here
+                                                style={{ width: `${percentage}%` }}
                                             />
                                         </div>
-                                    </div>
 
-                                    <button className="w-full py-3 rounded-xl border-2 border-primary text-primary font-bold hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-2 group-hover:shadow-lg hover:shadow-primary/30">
-                                        Votar Proyecto <ArrowRight size={18} />
-                                    </button>
+                                        <button className="w-full py-2.5 rounded-xl border border-gray-200 text-gray-700 font-bold hover:bg-primary hover:text-white hover:border-primary transition-all flex items-center justify-center gap-2 text-sm">
+                                            Votar Proyecto
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         );

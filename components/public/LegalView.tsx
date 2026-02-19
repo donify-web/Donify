@@ -74,16 +74,16 @@ export default function LegalView({ onNavigate, initialTab = 'terms' }: LegalVie
       {/* CONTENT AREA */}
       <main className="flex-1 p-6 md:p-12 md:max-w-4xl">
 
-        {/* TL;DR Summary Box */}
-        <div className="bg-blue-50 border border-blue-100 rounded-xl p-6 mb-10">
-          <h4 className="text-blue-800 font-bold mb-2 flex items-center gap-2">
-            <InfoIcon />
+        {/* Summary Section - redesign */}
+        <div className="mb-12 pl-6 border-l-4 border-primary/60 py-2">
+          <h4 className="text-gray-900 font-bold mb-2 text-lg flex items-center gap-2">
+            En Resumen
           </h4>
-          <p className="text-blue-700 text-sm leading-relaxed">
-            {activeTab === 'terms' && "Al donar, aceptas que el voto es vinculante y el dinero no es reembolsable una vez cerrado el ciclo. El dinero se reparte 50/30/20% entre las ONGs ganadoras."}
-            {activeTab === 'privacy' && "Tus datos son tuyos. Solo los usamos para procesar pagos (Stripe) y enviarte tu certificado fiscal. No vendemos nada a terceros."}
-            {activeTab === 'cookies' && "Solo usamos las cookies necesarias para que la web funcione y para evitar fraudes. No rastreamos tu actividad para publicidad."}
-            {activeTab === 'transparency' && "Donify no es un banco. Cobramos lo justo para cubrir las tarifas de tarjeta (Stripe) y mantener los servidores encendidos. Lo demás va íntegro a la causa."}
+          <p className="text-gray-600 text-lg leading-relaxed italic">
+            {activeTab === 'terms' && "Al donar, aceptas que el voto es vinculante y el dinero no es reembolsable. El 100% del beneficio neto va a las causas elegidas."}
+            {activeTab === 'privacy' && "Tus datos son sagrados. Solo los usamos para procesar pagos y cumplir la ley. Jamás los vendemos."}
+            {activeTab === 'cookies' && "Solo usamos las cookies estrictamente necesarias para que la web funcione y sea segura."}
+            {activeTab === 'transparency' && "Somos una asociación sin ánimo de lucro. Cobramos solo lo necesario para cubrir costes operativos y pasarelas de pago."}
           </p>
         </div>
 

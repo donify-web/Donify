@@ -140,19 +140,51 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
             </button>
           </div>
 
-          {/* STATISTICS / SOCIAL PROOF */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto mb-32 border-t border-b border-gray-200/50 py-12 bg-white/30 backdrop-blur-sm rounded-3xl">
-            {[
-              { label: 'Donantes Activos', value: '1,240+' },
-              { label: 'Fondos Recaudados', value: '€45k+' },
-              { label: 'Proyectos Financiados', value: '32' },
-              { label: 'ONGs Verificadas', value: '15' },
-            ].map((stat, i) => (
-              <div key={i}>
-                <div className="text-3xl lg:text-4xl font-bold text-gray-900 mb-1">{stat.value}</div>
-                <div className="text-sm text-gray-500 font-medium uppercase tracking-wide">{stat.label}</div>
-              </div>
-            ))}
+          {/* VOICES OF IMPACT - TESTIMONIALS */}
+          <div className="max-w-7xl mx-auto mb-32 relative">
+            {/* Personal Backdrop/Pattern */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 via-transparent to-blue-50/50 rounded-3xl -z-10" />
+            <div className="absolute -top-10 -right-10 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
+            <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-blue-100/30 rounded-full blur-3xl" />
+
+            <div className="text-center mb-12 pt-12">
+              <span className="text-primary font-bold uppercase tracking-widest text-xs mb-2 block">Comunidad Donify</span>
+              <h3 className="text-3xl font-bold text-gray-900">Historias Reales de Impacto</h3>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8 px-8 pb-12">
+              {[
+                {
+                  name: "Laura Gómez",
+                  role: "Suscriptora Nivel Oro",
+                  quote: "Nunca pensé que 2€ pudieran sentirse tan poderosos. Ver cómo mi voto ayuda a decidir el destino de los fondos es increíble.",
+                  img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150"
+                },
+                {
+                  name: "Carlos Ruiz",
+                  role: "Suscriptor Desde 2024",
+                  quote: "La transparencia lo es todo para mí. Aquí sé exactamente a dónde va cada céntimo. Es la forma más honesta de ayudar.",
+                  img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150"
+                },
+                {
+                  name: "Ana Martínez",
+                  role: "Voluntaria y Donante",
+                  quote: "Me encanta la comunidad. No es solo dar dinero, es ser parte de un movimiento que elige qué problemas solucionar hoy.",
+                  img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=150"
+                }
+              ].map((person, i) => (
+                <div key={i} className="bg-white/80 backdrop-blur-md p-8 rounded-2xl shadow-sm border border-white/50 hover:shadow-md transition-shadow">
+                  <div className="flex items-center gap-4 mb-4">
+                    <img src={person.img} className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm" alt={person.name} />
+                    <div>
+                      <div className="font-bold text-gray-900 text-sm">{person.name}</div>
+                      <div className="text-xs text-primary font-medium">{person.role}</div>
+                    </div>
+                  </div>
+                  <p className="text-gray-600 text-sm italic leading-relaxed">"{person.quote}"</p>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* VOTING SECTION (Real Data) */}

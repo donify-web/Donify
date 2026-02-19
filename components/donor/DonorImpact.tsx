@@ -21,6 +21,80 @@ export default function DonorImpact({ user }: DonorImpactProps) {
                 </p>
             </header>
 
+            {/* LIVE VOTING RESULTS */}
+            <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 mb-8">
+                <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                    <TrendingUp className="text-primary" /> Resultados de Votación en Vivo
+                </h2>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {/* Mock Project for Visual - In production this would map active projects */}
+                    <div className="group flex flex-col bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300">
+                        <div className="h-40 overflow-hidden relative">
+                            <img
+                                src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=800"
+                                alt="Reforestación"
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60" />
+                            <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-md px-2 py-1 rounded-full text-xs font-bold shadow-sm text-primary">
+                                65% votado
+                            </div>
+                            <div className="absolute top-3 left-3 bg-black/30 backdrop-blur-md px-2 py-1 rounded-full text-xs font-bold text-white border border-white/20">
+                                Medio Ambiente
+                            </div>
+                        </div>
+                        <div className="p-5">
+                            <h3 className="font-bold text-gray-900 mb-1 group-hover:text-primary transition-colors">Reforestación Galicia</h3>
+                            <div className="mt-4">
+                                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                                    <div className="h-full bg-primary rounded-full" style={{ width: '65%' }}></div>
+                                </div>
+                                <div className="flex justify-between text-xs text-gray-500 mt-2 font-medium">
+                                    <span>1,245 votos</span>
+                                    <span>Meta: €5,000</span>
+                                </div>
+                            </div>
+
+                            <button className="w-full mt-4 py-2 rounded-xl bg-gray-50 text-gray-900 text-sm font-bold hover:bg-black hover:text-white transition-all">
+                                Votar Ahora
+                            </button>
+                        </div>
+                    </div>
+                    <div className="group flex flex-col bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300">
+                        <div className="h-40 overflow-hidden relative">
+                            <img
+                                src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800"
+                                alt="Comedores Sociales"
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60" />
+                            <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-md px-2 py-1 rounded-full text-xs font-bold shadow-sm text-primary">
+                                35% votado
+                            </div>
+                            <div className="absolute top-3 left-3 bg-black/30 backdrop-blur-md px-2 py-1 rounded-full text-xs font-bold text-white border border-white/20">
+                                Ayuda Humanitaria
+                            </div>
+                        </div>
+                        <div className="p-5">
+                            <h3 className="font-bold text-gray-900 mb-1 group-hover:text-primary transition-colors">Comedores Sociales</h3>
+                            <div className="mt-4">
+                                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                                    <div className="h-full bg-primary rounded-full" style={{ width: '35%' }}></div>
+                                </div>
+                                <div className="flex justify-between text-xs text-gray-500 mt-2 font-medium">
+                                    <span>890 votos</span>
+                                    <span>Meta: €3,500</span>
+                                </div>
+                            </div>
+
+                            <button className="w-full mt-4 py-2 rounded-xl bg-gray-50 text-gray-900 text-sm font-bold hover:bg-black hover:text-white transition-all">
+                                Votar Ahora
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {/* MAIN STATS GRID */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden group">

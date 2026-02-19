@@ -11,7 +11,8 @@ import {
     FolderOpen,
     Calendar,
     Eye,
-    ChevronRight
+    ChevronRight,
+    Vote
 } from 'lucide-react';
 import { Logo } from '../shared/Logo';
 
@@ -160,14 +161,77 @@ export default function NgoDashboard({ ngoUser, onLogout, onNavigate }: NgoDashb
                     ))}
                 </div>
 
-                {/* CURRENT PROJECT & HISTORICAL VOTES */}
+                {/* REAL-TIME VOTING RESULTS */}
+                <div className="mb-8">
+                    <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <Vote className="text-primary" /> Resultados en Tiempo Real
+                    </h2>
+
+                    {/* Fetch and display active projects here - Mock for now mirroring VotingSection logic */}
+                    {/* In a real scenario, we'd fetch these. reusing the mock structure for visual consistency with the requested design */}
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {[mockProject].map((project) => {
+                            const totalVotesInSystem = 1000; // Mock total for percentage calculation context
+                            const percentage = Math.round((project.currentVotes / totalVotesInSystem) * 100);
+
+                            return (
+                                <div key={project.id} className="group flex flex-col bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                                    {/* Image Section */}
+                                    <div className="h-48 overflow-hidden relative">
+                                        <img
+                                            src={project.imageUrl}
+                                            alt={project.title}
+                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60" />
+
+                                        {/* Percentage Badge */}
+                                        <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold shadow-sm text-primary">
+                                            {percentage}% votado
+                                        </div>
+                                        <div className="absolute top-4 left-4 bg-black/30 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-white border border-white/20">
+                                            {project.category}
+                                        </div>
+                                    </div>
+
+                                    {/* Content */}
+                                    <div className="p-6 flex-1 flex flex-col">
+                                        <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors line-clamp-1">
+                                            {project.title}
+                                        </h3>
+                                        <p className="text-gray-500 text-sm mb-6 line-clamp-2">{project.description}</p>
+
+                                        {/* Progress Bar */}
+                                        <div className="mt-auto">
+                                            <div className="flex justify-between text-xs font-bold text-gray-500 mb-2">
+                                                <span>{project.currentVotes} votos</span>
+                                                <span>Meta: €{project.goalAmount}</span>
+                                            </div>
+                                            <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                                                <div
+                                                    className="h-full bg-primary rounded-full transition-all duration-1000 ease-out"
+                                                    style={{ width: `${percentage}%` }}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                {/* CURRENT PROJECT & HISTORICAL VOTES (Existing) */}
                 <div className="grid lg:grid-cols-3 gap-6 mb-8">
+                    {/* Note: In a real app, if we show the active project above, we might want to repurpose this section or show details. 
+                        For now, keeping it as 'Detailed View' or 'Management View' while the above is 'Public/Competition View' 
+                    */}
                     {/* CURRENT PROJECT */}
                     <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                         <div className="p-6 border-b border-gray-100">
                             <div className="flex justify-between items-start">
                                 <div>
-                                    <h2 className="text-xl font-bold text-gray-900 mb-1">Proyecto Actual en Votación</h2>
+                                    <h2 className="text-xl font-bold text-gray-900 mb-1">Detalles del Proyecto</h2>
                                     <p className="text-sm text-gray-500">Febrero 2026</p>
                                 </div>
                                 <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">

@@ -11,7 +11,7 @@ import NgoProjects from './components/ngo/NgoProjects';
 import NgoFinance from './components/ngo/NgoFinance';
 import NgoSettings from './components/ngo/NgoSettings';
 import LegalView from './components/public/LegalView';
-import AdminPanel from './components/AdminPanel';
+import AdminPanel from './components/admin/AdminPanel';
 import LaunchCountdown from './components/public/LaunchCountdown';
 import Organizations from './components/public/Organizations';
 import Settings from './components/donor/Settings';
@@ -22,6 +22,7 @@ import RegistrationChoiceModal from './components/auth/RegistrationChoiceModal';
 import DonorDashboardLayout from './components/donor/DonorDashboardLayout';
 import DonorImpact from './components/donor/DonorImpact';
 import DonorNews from './components/donor/DonorNews';
+import CookieConsent from './components/shared/CookieConsent';
 import { PageView, SubscriptionTier, NgoUser, SubscriptionType } from './types';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
@@ -42,6 +43,10 @@ function AppContent() {
 
   // Determine if we are in Pre-Launch phase
   const isPreLaunch = new Date() < LAUNCH_DATE;
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentView]);
 
   // --- AUTO-REDIRECT LOGIC ---
   useEffect(() => {
@@ -273,6 +278,8 @@ function AppContent() {
           }}
         />
       )}
+
+      <CookieConsent onShowPolicy={() => setCurrentView('cookies')} />
     </div>
   );
 }
