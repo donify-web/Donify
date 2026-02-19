@@ -266,7 +266,7 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
             </div>
             <div className="flex gap-8 text-sm text-gray-500">
               <button onClick={() => onNavigate('legal')} className="hover:text-gray-900">Términos</button>
-              <button onClick={() => onNavigate('legal')} className="hover:text-gray-900">Privacidad</button>
+              <button onClick={() => onNavigate('privacy')} className="hover:text-gray-900">Privacidad</button>
               <button onClick={() => onNavigate('cookies')} className="hover:text-gray-900">Cookies</button>
               <button onClick={() => onNavigate('contact')} className="hover:text-gray-900">Contacto</button>
             </div>

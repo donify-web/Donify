@@ -13,6 +13,7 @@ export type PageView =
   | 'ngo-finance'
   | 'ngo-settings'
   | 'legal' 
+  | 'privacy'
   | 'cookies'
   | 'admin'
   | 'organizations'

@@ -162,6 +162,8 @@ function AppContent() {
         ) : <Login onNavigate={setCurrentView} initialState="login" />;
       case 'legal':
         return <LegalView onNavigate={setCurrentView} initialTab="terms" />;
+      case 'privacy':
+        return <LegalView onNavigate={setCurrentView} initialTab="privacy" />;
       case 'cookies':
         return <LegalView onNavigate={setCurrentView} initialTab="cookies" />;
       case 'app':
