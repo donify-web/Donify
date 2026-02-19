@@ -280,7 +280,7 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
               ].map((person, i) => (
                 <div key={i} className="bg-white/80 backdrop-blur-md p-8 rounded-2xl shadow-sm border border-white/50 hover:shadow-md transition-shadow">
                   <div className="flex items-center gap-4 mb-4">
-                    <img src={person.img} className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm" alt={person.name} />
+                    <img src={person.img} loading="lazy" width="48" height="48" className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm" alt={person.name} />
                     <div>
                       <div className="font-bold text-gray-900 text-sm">{person.name}</div>
                       <div className="text-xs text-primary font-medium">{person.role}</div>

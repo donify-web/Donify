@@ -44,7 +44,7 @@ export default function VotingSection() {
                             title: 'Reforestación Galicia',
                             description: 'Plantación de 500 árboles nativos en zonas afectadas por incendios forestales.',
                             category: 'Medio Ambiente',
-                            imageUrl: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80',
+                            imageUrl: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=800',
                             currentVotes: 245,
                             ngoName: 'EcoAsturias',
                             status: 'voting',
@@ -57,7 +57,7 @@ export default function VotingSection() {
                             title: 'Comedores Sociales Madrid',
                             description: 'Apoyo nutricional diario para 200 personas en situación de vulnerabilidad.',
                             category: 'Ayuda Humanitaria',
-                            imageUrl: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80',
+                            imageUrl: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800',
                             currentVotes: 189,
                             ngoName: 'Manos Unidas',
                             status: 'voting',
@@ -70,7 +70,7 @@ export default function VotingSection() {
                             title: 'Educación Digital Rural',
                             description: 'Tablets y conectividad para escuelas rurales en la España vaciada.',
                             category: 'Educación',
-                            imageUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80',
+                            imageUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=800',
                             currentVotes: 120,
                             ngoName: 'EduFuture',
                             status: 'voting',
@@ -89,7 +89,7 @@ export default function VotingSection() {
                         title: 'Reforestación Galicia',
                         description: 'Plantación de 500 árboles nativos en zonas afectadas por incendios forestales.',
                         category: 'Medio Ambiente',
-                        imageUrl: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80',
+                        imageUrl: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=800',
                         currentVotes: 245,
                         ngoName: 'EcoAsturias',
                         status: 'voting',
@@ -165,8 +165,11 @@ export default function VotingSection() {
                                 {/* Image Section */}
                                 <div className="h-48 overflow-hidden relative">
                                     <img
-                                        src={project.imageUrl || 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&q=80'}
+                                        src={project.imageUrl || 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&q=80&w=800'}
                                         alt={project.title}
+                                        loading="lazy"
+                                        width="800"
+                                        height="600"
                                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                                     />
                                     {/* Gradient Overlay */}
