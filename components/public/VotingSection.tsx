@@ -182,7 +182,6 @@ export default function VotingSection() {
                                     </p>
 
                                     {/* Progress Bar Section (Bottom) */}
-                                    {/* Progress Bar Section (Bottom) */}
                                     <div className="mt-auto">
                                         <div className="h-2 bg-gray-100 rounded-full overflow-hidden mb-2">
                                             <div
