@@ -19,7 +19,7 @@ export default function VotingSection() {
                     .order('current_votes', { ascending: false })
                     .limit(3);
 
-                if (data) {
+                if (data && data.length > 0) {
                     const mapped: NgoProject[] = data.map(p => ({
                         id: p.id,
                         ngoId: p.ngo_id,
@@ -31,17 +31,72 @@ export default function VotingSection() {
                         status: p.status,
                         votingMonth: p.voting_month,
                         currentVotes: p.current_votes,
-                        // Add joined NGO data if needed for UI, but NgoProject type might not have it. 
-                        // I will extend the display locally or use the added fields properties if I updated type, 
-                        // but I didn't update NgoProject to have ngoName.
-                        // I'll just use the raw data for display or cast it.
                         ngoName: p.ngo_profiles?.ngo_name,
                         ngoLogo: p.ngo_profiles?.logo_url
                     } as any));
                     setProjects(mapped);
+                } else {
+                    // Fallback to mock data for demo if no DB data
+                    setProjects([
+                        {
+                            id: 'mock-1',
+                            ngoId: '1',
+                            title: 'Reforestación Galicia',
+                            description: 'Plantación de 500 árboles nativos en zonas afectadas por incendios forestales.',
+                            category: 'Medio Ambiente',
+                            imageUrl: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80',
+                            currentVotes: 245,
+                            ngoName: 'EcoAsturias',
+                            status: 'voting',
+                            goalAmount: 5000,
+                            votingMonth: '2026-02'
+                        },
+                        {
+                            id: 'mock-2',
+                            ngoId: '2',
+                            title: 'Comedores Sociales Madrid',
+                            description: 'Apoyo nutricional diario para 200 personas en situación de vulnerabilidad.',
+                            category: 'Ayuda Humanitaria',
+                            imageUrl: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80',
+                            currentVotes: 189,
+                            ngoName: 'Manos Unidas',
+                            status: 'voting',
+                            goalAmount: 3500,
+                            votingMonth: '2026-02'
+                        },
+                        {
+                            id: 'mock-3',
+                            ngoId: '3',
+                            title: 'Educación Digital Rural',
+                            description: 'Tablets y conectividad para escuelas rurales en la España vaciada.',
+                            category: 'Educación',
+                            imageUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80',
+                            currentVotes: 120,
+                            ngoName: 'EduFuture',
+                            status: 'voting',
+                            goalAmount: 8000,
+                            votingMonth: '2026-02'
+                        }
+                    ]);
                 }
             } catch (error) {
                 console.error('Error fetching voting projects:', error);
+                // Also set mock data on error just in case
+                setProjects([
+                    {
+                        id: 'mock-error-1',
+                        ngoId: '1',
+                        title: 'Reforestación Galicia',
+                        description: 'Plantación de 500 árboles nativos en zonas afectadas por incendios forestales.',
+                        category: 'Medio Ambiente',
+                        imageUrl: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80',
+                        currentVotes: 245,
+                        ngoName: 'EcoAsturias',
+                        status: 'voting',
+                        goalAmount: 5000,
+                        votingMonth: '2026-02'
+                    }
+                ]);
             } finally {
                 setLoading(false);
             }
@@ -56,7 +111,8 @@ export default function VotingSection() {
         </div>
     );
 
-    if (projects.length === 0) return null; // Don't show section if no active projects
+    // Removed the null return so it always shows something (either DB data or Mock data)
+    // if (projects.length === 0) return null;
 
     return (
         <section className="py-20 bg-white relative overflow-hidden">
