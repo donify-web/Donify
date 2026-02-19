@@ -23,7 +23,9 @@ export default function AdminPanel({ onNavigate, currentUser }: AdminPanelProps)
     votesCast: 0
   });
   const [pendingNgos, setPendingNgos] = useState<NgoUser[]>([]);
+  const [pendingProjects, setPendingProjects] = useState<any[]>([]); // Using any for now or need to import NgoProject type with 'ngo_profiles' join if needed for NGO Name
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'ngos' | 'projects'>('ngos');
 
   useEffect(() => {
     fetchAdminData();
@@ -48,7 +50,7 @@ export default function AdminPanel({ onNavigate, currentUser }: AdminPanelProps)
       });
 
       // 2. Fetch Pending NGOs
-      const { data: ngos, error } = await supabase
+      const { data: ngos, error: ngoError } = await supabase
         .from('ngo_profiles')
         .select('*')
         .eq('is_verified', false)
@@ -67,6 +69,18 @@ export default function AdminPanel({ onNavigate, currentUser }: AdminPanelProps)
           cif: n.cif
         }));
         setPendingNgos(mappedNgos);
+      }
+
+      // 3. Fetch Pending Projects
+      // We also fetch the NGO name to display it.
+      const { data: projects, error: projError } = await supabase
+        .from('projects')
+        .select('*, ngo_profiles(ngo_name)')
+        .eq('status', 'pending_approval')
+        .order('created_at', { ascending: false });
+
+      if (projects) {
+        setPendingProjects(projects);
       }
 
     } catch (error) {
@@ -96,6 +110,38 @@ export default function AdminPanel({ onNavigate, currentUser }: AdminPanelProps)
 
         if (!error) {
           setPendingNgos(prev => prev.filter(n => n.id !== ngoId));
+        }
+      }
+    }
+  };
+
+  const handleReviewProject = async (projectId: string, approve: boolean) => {
+    if (approve) {
+      // Set status to 'voting' directly? Or 'draft' (approved but not active)?
+      // Prompt says: "Admin (or auto-logic) selects the top 3 projects to be active... status=voting"
+      // Let's assume verifying it makes it 'voting' for simplicity or 'draft' -> Admin manually sets to voting separately?
+      // Let's set to 'voting' so it appears on Landing immediately or 'approved' state if we had one.
+      // Since schema only has 'draft', 'pending_approval', 'voting', 'completed'.
+      // I will set it to 'voting' for now, or assume this makes it eligible.
+      // Let's use 'voting' (Active).
+      const { error } = await supabase
+        .from('projects')
+        .update({ status: 'voting' })
+        .eq('id', projectId);
+
+      if (!error) {
+        setPendingProjects(prev => prev.filter(p => p.id !== projectId));
+        alert('Proyecto Aprobado y puesto en Votación');
+      }
+    } else {
+      if (confirm('¿Rechazar proyecto? Se devolverá a Borrador.')) {
+        const { error } = await supabase
+          .from('projects')
+          .update({ status: 'draft' })
+          .eq('id', projectId);
+
+        if (!error) {
+          setPendingProjects(prev => prev.filter(p => p.id !== projectId));
         }
       }
     }
@@ -164,59 +210,127 @@ export default function AdminPanel({ onNavigate, currentUser }: AdminPanelProps)
 
         <div className="grid md:grid-cols-3 gap-8">
 
-          {/* Main Column: Pending Verifications */}
+          {/* Main Column: Verifications & Approvals */}
           <div className="md:col-span-2 space-y-6">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
-                <AlertTriangle size={20} className="text-orange-500" /> Solicitudes de Verificación
-                <span className="bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full text-xs">{pendingNgos.length}</span>
-              </h2>
 
-              {pendingNgos.length === 0 ? (
-                <div className="text-center py-10 text-gray-500 bg-gray-50 rounded-lg border border-dashed border-gray-200">
-                  <CheckCircle size={40} className="mx-auto text-green-500 mb-2 opacity-50" />
-                  <p>No hay solicitudes pendientes.</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {pendingNgos.map((ngo) => (
-                    <div key={ngo.id} className="border border-gray-200 rounded-lg p-4 hover:border-primary/30 transition-colors">
-                      <div className="flex justify-between items-start">
-                        <div className="flex gap-4">
-                          <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
-                            {ngo.logoUrl ? <img src={ngo.logoUrl} className="w-full h-full object-cover" /> : <Building2 size={20} className="text-gray-400" />}
-                          </div>
-                          <div>
-                            <h3 className="font-bold text-gray-900">{ngo.ngoName}</h3>
-                            <p className="text-sm text-gray-500">{ngo.email} • {ngo.cif || 'Sin CIF'}</p>
-                            <a href={ngo.website} target="_blank" rel="noreferrer" className="text-xs text-blue-600 hover:underline mt-1 block">
-                              {ngo.website || 'Sin sitio web'}
-                            </a>
-                          </div>
-                        </div>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleVerifyNgo(ngo.id, false)}
-                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors border border-transparent hover:border-red-100"
-                            title="Rechazar"
-                          >
-                            <XCircle size={20} />
-                          </button>
-                          <button
-                            onClick={() => handleVerifyNgo(ngo.id, true)}
-                            className="px-4 py-2 bg-green-600 text-white rounded-lg font-bold text-sm hover:bg-green-700 flex items-center gap-2 shadow-sm"
-                          >
-                            <CheckCircle size={16} /> Aprobar
-                          </button>
-                        </div>
-                      </div>
-                      <div className="mt-3 bg-gray-50 p-3 rounded text-sm text-gray-700">
-                        <p className="font-semibold text-xs text-gray-500 uppercase mb-1">Descripción / Misión</p>
-                        {ngo.description || 'Sin descripción proporcionada.'}
-                      </div>
+            {/* TABS */}
+            <div className="flex gap-4 border-b border-gray-200 mb-4">
+              <button onClick={() => setActiveTab('ngos')} className={`pb-2 px-4 font-bold border-b-2 transition-colors ${activeTab === 'ngos' ? 'border-primary text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>
+                ONGs Pendientes ({pendingNgos.length})
+              </button>
+              <button onClick={() => setActiveTab('projects')} className={`pb-2 px-4 font-bold border-b-2 transition-colors ${activeTab === 'projects' ? 'border-primary text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>
+                Proyectos Pendientes ({pendingProjects.length})
+              </button>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+
+              {activeTab === 'ngos' && (
+                <>
+                  <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
+                    <AlertTriangle size={20} className="text-orange-500" /> ONGs por Verificar
+                  </h2>
+                  {pendingNgos.length === 0 ? (
+                    <div className="text-center py-10 text-gray-500 bg-gray-50 rounded-lg border border-dashed border-gray-200">
+                      <CheckCircle size={40} className="mx-auto text-green-500 mb-2 opacity-50" />
+                      <p>No hay solicitudes de ONG pendientes.</p>
                     </div>
-                  ))}
-                </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {pendingNgos.map((ngo) => (
+                        <div key={ngo.id} className="border border-gray-200 rounded-lg p-4 hover:border-primary/30 transition-colors">
+                          <div className="flex justify-between items-start">
+                            <div className="flex gap-4">
+                              <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
+                                {ngo.logoUrl ? <img src={ngo.logoUrl} className="w-full h-full object-cover" /> : <Building2 size={20} className="text-gray-400" />}
+                              </div>
+                              <div>
+                                <h3 className="font-bold text-gray-900">{ngo.ngoName}</h3>
+                                <p className="text-sm text-gray-500">{ngo.email} • {ngo.cif || 'Sin CIF'}</p>
+                                <a href={ngo.website} target="_blank" rel="noreferrer" className="text-xs text-blue-600 hover:underline mt-1 block">
+                                  {ngo.website || 'Sin sitio web'}
+                                </a>
+                              </div>
+                            </div>
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => handleVerifyNgo(ngo.id, false)}
+                                className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors border border-transparent hover:border-red-100"
+                                title="Rechazar"
+                              >
+                                <XCircle size={20} />
+                              </button>
+                              <button
+                                onClick={() => handleVerifyNgo(ngo.id, true)}
+                                className="px-4 py-2 bg-green-600 text-white rounded-lg font-bold text-sm hover:bg-green-700 flex items-center gap-2 shadow-sm"
+                              >
+                                <CheckCircle size={16} /> Aprobar
+                              </button>
+                            </div>
+                          </div>
+                          <div className="mt-3 bg-gray-50 p-3 rounded text-sm text-gray-700">
+                            <p className="font-semibold text-xs text-gray-500 uppercase mb-1">Descripción / Misión</p>
+                            {ngo.description || 'Sin descripción proporcionada.'}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+
+              {activeTab === 'projects' && (
+                <>
+                  <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
+                    <AlertTriangle size={20} className="text-orange-500" /> Proyectos Pendientes de Revisión
+                  </h2>
+                  {pendingProjects.length === 0 ? (
+                    <div className="text-center py-10 text-gray-500 bg-gray-50 rounded-lg border border-dashed border-gray-200">
+                      <CheckCircle size={40} className="mx-auto text-green-500 mb-2 opacity-50" />
+                      <p>No hay proyectos pendientes de revisión.</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {pendingProjects.map((proj) => (
+                        <div key={proj.id} className="border border-gray-200 rounded-lg p-4 hover:border-primary/30 transition-colors">
+                          <div className="flex justify-between items-start">
+                            <div className="flex gap-4">
+                              <div className="w-16 h-12 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
+                                {proj.image_url ? <img src={proj.image_url} className="w-full h-full object-cover" /> : <Building2 size={20} className="text-gray-400" />}
+                              </div>
+                              <div>
+                                <h3 className="font-bold text-gray-900">{proj.title}</h3>
+                                <p className="text-sm text-gray-500">
+                                  ONG: <span className="font-semibold">{proj.ngo_profiles?.ngo_name || 'Desconocida'}</span> • {proj.category}
+                                </p>
+                                <p className="text-xs text-gray-500 font-mono mt-1">Meta: €{proj.goal_amount}</p>
+                              </div>
+                            </div>
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => handleReviewProject(proj.id, false)}
+                                className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors border border-transparent hover:border-red-100"
+                                title="Devolver a Borrador"
+                              >
+                                <XCircle size={20} />
+                              </button>
+                              <button
+                                onClick={() => handleReviewProject(proj.id, true)}
+                                className="px-4 py-2 bg-green-600 text-white rounded-lg font-bold text-sm hover:bg-green-700 flex items-center gap-2 shadow-sm"
+                              >
+                                <CheckCircle size={16} /> Aprobar
+                              </button>
+                            </div>
+                          </div>
+                          <div className="mt-3 bg-gray-50 p-3 rounded text-sm text-gray-700">
+                            <p className="font-semibold text-xs text-gray-500 uppercase mb-1">Descripción</p>
+                            {proj.description || 'Sin descripción.'}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>

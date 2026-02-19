@@ -143,7 +143,9 @@ function AppContent() {
           />
         ) : <Login onNavigate={setCurrentView} initialState="login" />;
       case 'ngo-projects':
-        return <NgoProjects onNavigate={setCurrentView} />;
+        return derivedNgoUser ? (
+          <NgoProjects onNavigate={setCurrentView} ngoUser={derivedNgoUser} />
+        ) : <Login onNavigate={setCurrentView} initialState="login" />;
       case 'ngo-finance':
         return derivedNgoUser ? (
           <NgoFinance onNavigate={setCurrentView} ngoId={derivedNgoUser.id} />
@@ -158,6 +160,10 @@ function AppContent() {
         return user?.isAdmin ? (
           <AdminPanel currentUser={user} onNavigate={setCurrentView} />
         ) : <Login onNavigate={setCurrentView} initialState="login" />;
+      case 'legal':
+        return <LegalView onNavigate={setCurrentView} initialTab="terms" />;
+      case 'cookies':
+        return <LegalView onNavigate={setCurrentView} initialTab="cookies" />;
       case 'app':
       case 'dashboard-impact':
       case 'dashboard-news':

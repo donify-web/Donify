@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { PageView, SubscriptionTier, SubscriptionType } from '../../types';
-import { Coins, Heart, CheckCircle, ArrowRight, ShieldCheck, Globe, Star, Zap, Crown } from 'lucide-react';
+import { Coins, Heart, CheckCircle, ArrowRight, ShieldCheck, Globe, Star, Zap, Crown, Lock } from 'lucide-react';
 import { Logo } from '../shared/Logo';
+import VotingSection from './VotingSection';
 
 interface LandingProps {
   onNavigate: (view: PageView) => void;
@@ -154,6 +155,9 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
             ))}
           </div>
 
+          {/* VOTING SECTION (Real Data) */}
+          <VotingSection />
+
           {/* PRICING SECTION */}
           <div id="pricing" className="mb-20">
             <div className="text-center mb-8">
@@ -222,9 +226,23 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
             </div>
 
             <div className="mt-12 text-center">
-              <button onClick={onShowBenefits} className="text-gray-500 hover:text-primary underline text-sm transition-colors">
+              <button onClick={onShowBenefits} className="text-gray-500 hover:text-primary underline text-sm transition-colors mb-8">
                 Ver comparación detallada de beneficios
               </button>
+
+              <div className="flex flex-col items-center gap-3 opacity-70">
+                <div className="flex items-center gap-4 text-gray-400">
+                  <div className="flex items-center gap-1"><ShieldCheck size={16} /> <span className="text-xs font-semibold">Pago Seguro SSL</span></div>
+                  <div className="flex items-center gap-1"><Lock size={16} /> <span className="text-xs font-semibold">Encriptación 256-bit</span></div>
+                </div>
+                <div className="flex items-center gap-2 text-gray-400 text-xs">
+                  <span>Aceptamos:</span>
+                  <span className="font-bold border border-gray-200 px-2 py-1 rounded bg-white">VISA</span>
+                  <span className="font-bold border border-gray-200 px-2 py-1 rounded bg-white">Mastercard</span>
+                  <span className="font-bold border border-gray-200 px-2 py-1 rounded bg-white">Apple Pay</span>
+                  <span className="font-bold border border-gray-200 px-2 py-1 rounded bg-white">G Pay</span>
+                </div>
+              </div>
             </div>
           </div>
 

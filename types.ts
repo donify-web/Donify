@@ -61,9 +61,9 @@ export interface NgoProject {
     description: string;
     category: string;
     goalAmount: number;
-    imageUrl: string;
-    status: 'draft' | 'voting' | 'completed';
-    votingMonth: string;
+    imageUrl?: string;
+    status: 'draft' | 'voting' | 'completed' | 'pending_approval';
+    votingMonth?: string;
     currentVotes: number;
 }
 

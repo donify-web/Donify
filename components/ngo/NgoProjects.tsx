@@ -1,53 +1,70 @@
-import React, { useState } from 'react';
-import { PageView, NgoProject } from '../../types';
-import { ArrowLeft, Plus, Edit2, Trash2, Eye, Calendar, DollarSign, Image as ImageIcon, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { PageView, NgoProject, NgoUser } from '../../types';
+import { ArrowLeft, Plus, Edit2, Trash2, Eye, Calendar, DollarSign, Image as ImageIcon, X, Loader2 } from 'lucide-react';
+import { supabase } from '../../lib/supabaseClient';
 
 interface NgoProjectsProps {
     onNavigate: (view: PageView) => void;
+    ngoUser: NgoUser;
 }
 
-// Mock Data
-const initialProjects: NgoProject[] = [
-    {
-        id: '1',
-        ngoId: 'ngo-1',
-        title: 'Reforestación de zonas quemadas',
-        description: 'Plantación de 500 árboles nativos en Galicia.',
-        category: 'Medio Ambiente',
-        goalAmount: 5000,
-        imageUrl: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=800',
-        status: 'voting',
-        votingMonth: '2026-02',
-        currentVotes: 245
-    },
-    {
-        id: '2',
-        ngoId: 'ngo-1',
-        title: 'Beca comedor escolar',
-        description: 'Asegurar comida caliente para 50 niños.',
-        category: 'Social',
-        goalAmount: 2000,
-        imageUrl: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800',
-        status: 'draft',
-        votingMonth: '2026-03',
-        currentVotes: 0
-    }
-];
-
-export default function NgoProjects({ onNavigate }: NgoProjectsProps) {
-    const [projects, setProjects] = useState<NgoProject[]>(initialProjects);
+export default function NgoProjects({ onNavigate, ngoUser }: NgoProjectsProps) {
+    const [projects, setProjects] = useState<NgoProject[]>([]);
+    const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentProject, setCurrentProject] = useState<Partial<NgoProject>>({});
-    const [activeTab, setActiveTab] = useState<'voting' | 'draft' | 'completed'>('voting');
+    const [activeTab, setActiveTab] = useState<'voting' | 'draft' | 'completed' | 'pending_approval'>('voting');
+    const [saving, setSaving] = useState(false);
+
+    useEffect(() => {
+        fetchProjects();
+    }, [ngoUser.id]);
+
+    const fetchProjects = async () => {
+        setLoading(true);
+        const { data, error } = await supabase
+            .from('projects')
+            .select('*')
+            .eq('ngo_id', ngoUser.id)
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('Error fetching projects:', error);
+        } else if (data) {
+            // Map snake_case to camelCase if needed, or if types match. 
+            // My SQL schema uses snake_case keys (title, description etc are same). 
+            // Only ngo_id, image_url, goal_amount, voting_month, current_votes need mapping if type expects camelCase.
+            // Let's assume type expects camelCase based on previous viewing of types.ts.
+            const mapped: NgoProject[] = data.map(p => ({
+                id: p.id,
+                ngoId: p.ngo_id,
+                title: p.title,
+                description: p.description,
+                category: p.category,
+                imageUrl: p.image_url,
+                goalAmount: p.goal_amount,
+                status: p.status,
+                votingMonth: p.voting_month,
+                currentVotes: p.current_votes
+            }));
+            setProjects(mapped);
+        }
+        setLoading(false);
+    };
 
     const handleEdit = (project: NgoProject) => {
         setCurrentProject(project);
         setIsModalOpen(true);
     };
 
-    const handleDelete = (id: string) => {
+    const handleDelete = async (id: string) => {
         if (confirm('¿Estás seguro de que quieres eliminar este proyecto?')) {
-            setProjects(prev => prev.filter(p => p.id !== id));
+            const { error } = await supabase.from('projects').delete().eq('id', id);
+            if (!error) {
+                setProjects(prev => prev.filter(p => p.id !== id));
+            } else {
+                alert('Error al eliminar proyecto');
+            }
         }
     };
 
@@ -55,30 +72,75 @@ export default function NgoProjects({ onNavigate }: NgoProjectsProps) {
         setCurrentProject({
             status: 'draft',
             currentVotes: 0,
-            ngoId: 'ngo-1', // Mock ID
+            ngoId: ngoUser.id,
             imageUrl: 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&q=80&w=800' // Default image
         });
         setIsModalOpen(true);
     };
 
-    const handleSave = (e: React.FormEvent) => {
+    const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
+        setSaving(true);
 
+        const projectData = {
+            ngo_id: ngoUser.id,
+            title: currentProject.title,
+            description: currentProject.description,
+            category: currentProject.category,
+            image_url: currentProject.imageUrl,
+            goal_amount: currentProject.goalAmount,
+            status: currentProject.status || 'draft',
+            voting_month: currentProject.votingMonth, // Optional
+            // current_votes is usually managed by system, not editable here unless strict admin
+        };
+
+        let result;
         if (currentProject.id) {
-            // Edit
-            setProjects(prev => prev.map(p => p.id === currentProject.id ? currentProject as NgoProject : p));
+            // Update
+            result = await supabase
+                .from('projects')
+                .update(projectData)
+                .eq('id', currentProject.id)
+                .select()
+                .single();
         } else {
             // Create
-            const newProject = {
-                ...currentProject,
-                id: Math.random().toString(36).substr(2, 9),
-            } as NgoProject;
-            setProjects(prev => [...prev, newProject]);
+            result = await supabase
+                .from('projects')
+                .insert([{ ...projectData, current_votes: 0 }])
+                .select()
+                .single();
         }
-        setIsModalOpen(false);
+
+        const { data, error } = result;
+
+        if (error) {
+            console.error(error);
+            alert('Error al guardar proyecto: ' + error.message);
+        } else if (data) {
+            // Refresh list or update local state manually
+            await fetchProjects();
+            setIsModalOpen(false);
+        }
+        setSaving(false);
     };
 
-    const filteredProjects = projects.filter(p => p.status === activeTab);
+    // Filter projects logic
+    // We treat 'pending_approval' as a separate tab or group it? 
+    // Let's add 'pending_approval' to tabs or show it under 'Draft' for now?
+    // User requested "Approve projects", so they likely go to a 'Pending' state.
+    // I added 'pending_approval' to state types.
+
+    // Group draft and pending? Or separate?
+    // Let's separate for clarity.
+
+    const filteredProjects = projects.filter(p => {
+        if (activeTab === 'voting') return p.status === 'voting';
+        if (activeTab === 'draft') return p.status === 'draft';
+        if (activeTab === 'completed') return p.status === 'completed';
+        if (activeTab === 'pending_approval') return p.status === 'pending_approval';
+        return false;
+    });
 
     return (
         <div className="min-h-screen bg-bgMain p-6">
@@ -101,88 +163,92 @@ export default function NgoProjects({ onNavigate }: NgoProjectsProps) {
                     </button>
                 </div>
 
-                <h1 className="text-3xl font-bold text-gray-900 mb-6">Gestión de Proyectos</h1>
+                <div className="flex justify-between items-end mb-6">
+                    <h1 className="text-3xl font-bold text-gray-900">Gestión de Proyectos</h1>
+                    <div className="text-sm text-gray-500">
+                        ONG: <span className="font-bold text-gray-900">{ngoUser.ngoName}</span>
+                    </div>
+                </div>
 
                 {/* TABS */}
-                <div className="flex gap-4 mb-8 border-b border-gray-200">
-                    <button
-                        onClick={() => setActiveTab('voting')}
-                        className={`pb-3 px-1 font-medium text-sm transition-colors relative ${activeTab === 'voting' ? 'text-primary' : 'text-gray-500 hover:text-gray-700'}`}
-                    >
-                        En Votación (Activos)
-                        {activeTab === 'voting' && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-t-full"></span>}
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('draft')}
-                        className={`pb-3 px-1 font-medium text-sm transition-colors relative ${activeTab === 'draft' ? 'text-primary' : 'text-gray-500 hover:text-gray-700'}`}
-                    >
-                        Borradores
-                        {activeTab === 'draft' && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-t-full"></span>}
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('completed')}
-                        className={`pb-3 px-1 font-medium text-sm transition-colors relative ${activeTab === 'completed' ? 'text-primary' : 'text-gray-500 hover:text-gray-700'}`}
-                    >
-                        Completados (Histórico)
-                        {activeTab === 'completed' && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-t-full"></span>}
-                    </button>
+                <div className="flex gap-4 mb-8 border-b border-gray-200 overflow-x-auto">
+                    {(['voting', 'pending_approval', 'draft', 'completed'] as const).map(tab => (
+                        <button
+                            key={tab}
+                            onClick={() => setActiveTab(tab)}
+                            className={`pb-3 px-1 font-medium text-sm transition-colors relative whitespace-nowrap ${activeTab === tab ? 'text-primary' : 'text-gray-500 hover:text-gray-700'}`}
+                        >
+                            {tab === 'voting' && 'En Votación'}
+                            {tab === 'pending_approval' && 'Pendientes'}
+                            {tab === 'draft' && 'Borradores'}
+                            {tab === 'completed' && 'Histórico'}
+                            {activeTab === tab && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-t-full"></span>}
+                        </button>
+                    ))}
                 </div>
 
                 {/* PROJECTS GRID */}
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredProjects.length === 0 ? (
-                        <div className="col-span-full text-center py-20 bg-white rounded-2xl border border-gray-200 border-dashed">
-                            <p className="text-gray-500">No hay proyectos en esta categoría.</p>
-                            <button onClick={handleAddNew} className="text-primary font-semibold mt-2 hover:underline">Crear uno nuevo</button>
-                        </div>
-                    ) : (
-                        filteredProjects.map(project => (
-                            <div key={project.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden group hover:shadow-md transition-all">
-                                <div className="h-48 overflow-hidden relative">
-                                    <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                                    <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-bold shadow-sm">
-                                        {project.category}
-                                    </div>
-                                    {project.status === 'voting' && (
-                                        <div className="absolute bottom-2 left-2 bg-green-500 text-white px-2 py-1 rounded-md text-xs font-bold shadow-sm flex items-center gap-1">
-                                            <Eye size={12} /> En Votación
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="p-5">
-                                    <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-1">{project.title}</h3>
-                                    <p className="text-gray-500 text-sm line-clamp-2 mb-4 h-10">{project.description}</p>
-
-                                    <div className="flex items-center gap-4 text-sm text-gray-500 mb-6">
-                                        <div className="flex items-center gap-1">
-                                            <Calendar size={14} />
-                                            <span>{project.votingMonth}</span>
-                                        </div>
-                                        <div className="flex items-center gap-1">
-                                            <DollarSign size={14} />
-                                            <span>Meta: €{project.goalAmount}</span>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex gap-2">
-                                        <button
-                                            onClick={() => handleEdit(project)}
-                                            className="flex-1 bg-gray-50 hover:bg-gray-100 text-gray-700 py-2 rounded-lg font-medium text-sm transition-colors flex items-center justify-center gap-2 border border-gray-200"
-                                        >
-                                            <Edit2 size={16} /> Editar
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(project.id)}
-                                            className="w-10 flex items-center justify-center bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors border border-red-100"
-                                        >
-                                            <Trash2 size={16} />
-                                        </button>
-                                    </div>
-                                </div>
+                {loading ? (
+                    <div className="flex justify-center py-20"><Loader2 className="animate-spin text-primary" size={32} /></div>
+                ) : (
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {filteredProjects.length === 0 ? (
+                            <div className="col-span-full text-center py-20 bg-white rounded-2xl border border-gray-200 border-dashed">
+                                <p className="text-gray-500">No hay proyectos en esta categoría.</p>
+                                <button onClick={handleAddNew} className="text-primary font-semibold mt-2 hover:underline">Crear uno nuevo</button>
                             </div>
-                        ))
-                    )}
-                </div>
+                        ) : (
+                            filteredProjects.map(project => (
+                                <div key={project.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden group hover:shadow-md transition-all">
+                                    <div className="h-48 overflow-hidden relative">
+                                        <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                                        <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md text-xs font-bold shadow-sm">
+                                            {project.category}
+                                        </div>
+                                        <div className={`absolute bottom-2 left-2 px-2 py-1 rounded-md text-xs font-bold shadow-sm flex items-center gap-1 ${project.status === 'voting' ? 'bg-green-500 text-white' :
+                                                project.status === 'pending_approval' ? 'bg-orange-500 text-white' :
+                                                    'bg-gray-200 text-gray-700'
+                                            }`}>
+                                            {project.status === 'voting' ? 'En Votación' : project.status === 'pending_approval' ? 'Pendiente' : project.status}
+                                        </div>
+                                    </div>
+                                    <div className="p-5">
+                                        <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-1">{project.title}</h3>
+                                        <p className="text-gray-500 text-sm line-clamp-2 mb-4 h-10">{project.description}</p>
+
+                                        <div className="flex items-center gap-4 text-sm text-gray-500 mb-6">
+                                            {project.votingMonth && (
+                                                <div className="flex items-center gap-1">
+                                                    <Calendar size={14} />
+                                                    <span>{project.votingMonth}</span>
+                                                </div>
+                                            )}
+                                            <div className="flex items-center gap-1">
+                                                <DollarSign size={14} />
+                                                <span>Meta: €{project.goalAmount}</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => handleEdit(project)}
+                                                className="flex-1 bg-gray-50 hover:bg-gray-100 text-gray-700 py-2 rounded-lg font-medium text-sm transition-colors flex items-center justify-center gap-2 border border-gray-200"
+                                            >
+                                                <Edit2 size={16} /> Editar
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(project.id)}
+                                                className="w-10 flex items-center justify-center bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors border border-red-100"
+                                            >
+                                                <Trash2 size={16} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                )}
 
                 {/* MODAL / FORM */}
                 {isModalOpen && (
@@ -268,6 +334,20 @@ export default function NgoProjects({ onNavigate }: NgoProjectsProps) {
                                     </div>
                                 </div>
 
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Estado (Solicitud)</label>
+                                    <select
+                                        value={currentProject.status || 'draft'}
+                                        onChange={e => setCurrentProject(p => ({ ...p, status: e.target.value as any }))}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                                    >
+                                        <option value="draft">Borrador</option>
+                                        <option value="pending_approval">Enviar para Aprobación</option>
+                                        {/* NGOs cannot select 'voting' or 'completed' directly usually, but for now allow strict manual selection or limit it */}
+                                    </select>
+                                    <p className="text-xs text-gray-500 mt-1">Selecciona "Enviar para Aprobación" para que un administrador revise tu proyecto.</p>
+                                </div>
+
                                 <div className="pt-4 flex gap-4">
                                     <button
                                         type="button"
@@ -278,9 +358,11 @@ export default function NgoProjects({ onNavigate }: NgoProjectsProps) {
                                     </button>
                                     <button
                                         type="submit"
-                                        className="flex-1 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover shadow-lg transition-all transform hover:-translate-y-0.5"
+                                        disabled={saving}
+                                        className="flex-1 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
                                     >
-                                        Guardar Proyecto
+                                        {saving && <Loader2 className="animate-spin" size={18} />}
+                                        {saving ? 'Guardando...' : 'Guardar Proyecto'}
                                     </button>
                                 </div>
                             </form>
