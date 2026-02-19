@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { User, OngCandidate, PageView, SubscriptionTier } from '../../types';
 import { Bell, LogOut, CheckCircle, AlertCircle, Heart, BellOff, Loader2, Shield, TrendingUp, X, Check, Settings as SettingsIcon } from 'lucide-react';
 import { supabase } from '../../lib/supabaseClient';
-import { initiateCheckout, PRICE_IDS } from '../../lib/stripeClient';
+import { OneTimeDonationButton } from './OneTimeDonationButton'; // Imported new component
 
 interface DashboardProps {
   user: User;
@@ -56,26 +56,8 @@ export default function Dashboard({ user, onLogout, refreshProfile, onNavigate, 
   const isMock = user.id.startsWith('mock-');
 
   // --- PAYMENT LOGIC ---
-  const handleOneTimeDonation = async (amount: number = 5) => {
-    setIsUpdating(true);
-    // Use price IDs from stripeClient. In this case, DONATION_5 is specifically for 5€
-    const priceId = amount === 5 ? PRICE_IDS.DONATION_5 : PRICE_IDS.DONATION_5;
-
-    if (isMock) {
-      setTimeout(() => {
-        setLocalUser(prev => ({ ...prev, lastDonationDate: new Date().toISOString() }));
-        setIsUpdating(false);
-        alert(`[SIMULACIÓN] ¡Donación puntual de ${amount}€ recibida! Ya puedes votar.`);
-      }, 1500);
-    } else {
-      const result = await initiateCheckout(priceId, user.id, 'payment');
-      if (!result.success) {
-        setIsUpdating(false);
-        alert("Error al iniciar el proceso de pago.");
-      }
-      // Redirection happens inside initiateCheckout
-    }
-  };
+  // --- PAYMENT LOGIC ---
+  // handleOneTimeDonation moved to OneTimeDonationButton component
 
   const handleVote = async (ongName: string) => {
     if (!canVote) return;
@@ -288,13 +270,14 @@ export default function Dashboard({ user, onLogout, refreshProfile, onNavigate, 
                   <p className="text-white/80 text-sm mb-6 leading-relaxed">
                     ¿No quieres suscribirte? Haz una donación puntual para desbloquear tu voto este mes.
                   </p>
-                  <button
-                    onClick={() => handleOneTimeDonation(5)}
-                    disabled={isUpdating}
+                  <OneTimeDonationButton
+                    user={user}
+                    amount={5}
                     className="w-full bg-white text-primary py-3 rounded-xl text-sm font-black shadow-lg hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
+                    onDonationSuccess={() => setLocalUser(prev => ({ ...prev, lastDonationDate: new Date().toISOString() }))}
                   >
-                    {isUpdating ? 'Procesando...' : 'Donar 5€'}
-                  </button>
+                    Donar 5€
+                  </OneTimeDonationButton>
                 </div>
                 {/* Decorative background elements */}
                 <div className="absolute top-[-50%] right-[-50%] w-full h-full border-[40px] border-white/5 rounded-full"></div>
