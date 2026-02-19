@@ -142,8 +142,7 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
 
 
 
-          {/* VOTING SECTION (Real Data) */}
-          <VotingSection />
+
 
           {/* PRICING SECTION */}
           <div id="pricing" className="mb-20">

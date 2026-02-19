@@ -182,17 +182,18 @@ export default function VotingSection() {
                                     </p>
 
                                     {/* Progress Bar Section (Bottom) */}
+                                    {/* Progress Bar Section (Bottom) */}
                                     <div className="mt-auto">
-                                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden mb-4">
+                                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden mb-2">
                                             <div
                                                 className="h-full bg-primary rounded-full transition-all duration-1000 ease-out"
                                                 style={{ width: `${percentage}%` }}
                                             />
                                         </div>
-
-                                        <button className="w-full py-2.5 rounded-xl border border-gray-200 text-gray-700 font-bold hover:bg-primary hover:text-white hover:border-primary transition-all flex items-center justify-center gap-2 text-sm">
-                                            Votar Proyecto
-                                        </button>
+                                        <div className="flex justify-between items-center text-xs text-gray-500 font-medium">
+                                            <span>{project.currentVotes} votos</span>
+                                            <span>Meta: €{project.goalAmount}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

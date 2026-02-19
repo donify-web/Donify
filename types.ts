@@ -66,6 +66,8 @@ export interface NgoProject {
     status: 'draft' | 'voting' | 'completed' | 'pending_approval';
     votingMonth?: string;
     currentVotes: number;
+    ngoName?: string;
+    ngoLogo?: string;
 }
 
 export interface NgoUser {
