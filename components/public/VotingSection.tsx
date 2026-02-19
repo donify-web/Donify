@@ -64,10 +64,16 @@ export default function VotingSection() {
 
             <div className="max-w-7xl mx-auto px-6">
                 <div className="text-center mb-16">
-                    <span className="text-primary font-bold uppercase tracking-widest text-sm mb-2 block">Tu Voz Importa</span>
-                    <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Proyectos en Votación este Mes</h2>
+                    <span className="text-primary font-bold uppercase tracking-widest text-sm mb-2 flex items-center justify-center gap-2">
+                        <span className="relative flex h-3 w-3">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                        </span>
+                        En Vivo
+                    </span>
+                    <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Resultados en Tiempo Real</h2>
                     <p className="text-xl text-gray-500 max-w-2xl mx-auto">
-                        Los suscriptores están decidiendo ahora mismo dónde irá la recaudación de este mes.
+                        Tu suscripción decide el destino de los fondos. Vota por tu causa favorita y ve el impacto al instante.
                     </p>
                 </div>
 
