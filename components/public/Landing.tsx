@@ -1,69 +1,84 @@
-import React from 'react';
-import { PageView, SubscriptionTier } from '../../types';
-import { Coins, Heart, CheckCircle, ArrowRight, ShieldCheck, Globe, Lock, Star, Zap, Crown, Shield } from 'lucide-react';
+import React, { useState } from 'react';
+import { PageView, SubscriptionTier, SubscriptionType } from '../../types';
+import { Coins, Heart, CheckCircle, ArrowRight, ShieldCheck, Globe, Star, Zap, Crown } from 'lucide-react';
 import { Logo } from '../shared/Logo';
 
 interface LandingProps {
   onNavigate: (view: PageView) => void;
-  onShowPaymentWizard: (tier?: SubscriptionTier) => void; // Updated signature
+  onShowPaymentWizard: (tier?: SubscriptionTier, type?: SubscriptionType) => void;
   onShowBenefits: () => void;
   onJoinClick: () => void;
 }
 
 export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefits, onJoinClick }: LandingProps) {
+  const [pricingMode, setPricingMode] = useState<SubscriptionType>('simple');
 
   const tiers = [
     {
       id: 'bronce',
       name: 'Bronce',
-      price: 0.99,
+      price: pricingMode === 'simple' ? 0.99 : 1.99,
       period: 'mes',
-      icon: Shield,
+      icon: ShieldCheck,
       description: 'Tu impacto empieza aquí',
       gradient: 'bg-gradient-bronze',
       border: 'border-orange-200',
       text: 'text-amber-800',
       button: 'bg-amber-100 text-amber-900 hover:bg-amber-200',
-      features: ['Voto en proyectos mensuales', 'Insignia de Bronce en perfil', 'Newsletter trimestral']
+      features: [
+        'Potestad de voto',
+        'Certificado de donación (PDF Bronce)'
+      ]
     },
     {
       id: 'plata',
       name: 'Plata',
-      price: 2.99,
-      period: 'mes',
+      price: pricingMode === 'simple' ? 0.99 : 1.99,
+      period: '2 semanas',
       icon: Star,
       description: 'Más compromiso, más ayuda',
       gradient: 'bg-gradient-silver',
       border: 'border-gray-200',
       text: 'text-gray-800',
       button: 'bg-gray-200 text-gray-900 hover:bg-gray-300',
-      features: ['Voto con peso x2', 'Insignia de Plata destacada', 'Reportes de impacto detallados', 'Acceso anticipado a votaciones']
+      features: [
+        'Potestad de voto',
+        'Certificado de donación (PDF Plata)'
+      ]
     },
     {
       id: 'oro',
       name: 'Oro',
-      price: 9.99,
-      period: 'mes',
+      price: pricingMode === 'simple' ? 0.99 : 1.99,
+      period: 'semana',
       icon: Zap,
       description: 'Lidera el cambio real',
       gradient: 'bg-gradient-gold',
       border: 'border-yellow-200',
       text: 'text-yellow-800',
       button: 'bg-yellow-100 text-yellow-900 hover:bg-yellow-200',
-      features: ['Voto con peso x5', 'Insignia de Oro exclusiva', 'Chat directo con fundadores', 'Mención en la web oficial']
+      features: [
+        'Potestad de voto',
+        'Certificado de donación (PDF Oro)',
+        'Acceso exclusivo a informes mensuales de datos de donaciones'
+      ]
     },
     {
       id: 'diamante',
       name: 'Diamante',
-      price: 49.99,
-      period: 'mes',
+      price: pricingMode === 'simple' ? 0.99 : 1.99,
+      period: '4 días',
       icon: Crown,
       description: 'Impacto transformador',
       gradient: 'bg-gradient-diamond',
       border: 'border-cyan-200',
       text: 'text-cyan-900',
       button: 'bg-cyan-100 text-cyan-900 hover:bg-cyan-200',
-      features: ['Voto con peso x10', 'Insignia Diamante animada', 'Invitación a eventos anuales', 'Participación en comité asesor']
+      features: [
+        'Potestad de voto',
+        'Certificado de donación (PDF Diamante)',
+        'Acceso exclusivo a informes mensuales de datos de donaciones'
+      ]
     }
   ];
 
@@ -141,11 +156,32 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
 
           {/* PRICING SECTION */}
           <div id="pricing" className="mb-20">
-            <div className="text-center mb-16">
+            <div className="text-center mb-8">
               <h2 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-4">Elige tu nivel de impacto</h2>
-              <p className="text-xl text-gray-500 max-w-2xl mx-auto">
+              <p className="text-xl text-gray-500 max-w-2xl mx-auto mb-8">
                 Transparencia total. Cancela cuando quieras. El 100% de tu voto cuenta.
               </p>
+
+              {/* TOGGLE */}
+              <div className="flex items-center justify-center mb-10">
+                <div className="bg-gray-100 p-1 rounded-full flex relative">
+                  <div
+                    className={`absolute top-1 bottom-1 w-1/2 bg-white rounded-full shadow-sm transition-transform duration-300 ease-in-out ${pricingMode === 'pro' ? 'translate-x-full' : 'translate-x-0'}`}
+                  ></div>
+                  <button
+                    onClick={() => setPricingMode('simple')}
+                    className={`relative z-10 px-6 py-2 rounded-full font-bold text-sm transition-colors ${pricingMode === 'simple' ? 'text-gray-900' : 'text-gray-500'}`}
+                  >
+                    Simple (0.99€)
+                  </button>
+                  <button
+                    onClick={() => setPricingMode('pro')}
+                    className={`relative z-10 px-6 py-2 rounded-full font-bold text-sm transition-colors ${pricingMode === 'pro' ? 'text-gray-900' : 'text-gray-500'}`}
+                  >
+                    Pro (1.99€)
+                  </button>
+                </div>
+              </div>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
@@ -176,7 +212,7 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
                   </ul>
 
                   <button
-                    onClick={() => onShowPaymentWizard(tier.id as SubscriptionTier)}
+                    onClick={() => onShowPaymentWizard(tier.id as SubscriptionTier, pricingMode)}
                     className={`w-full py-4 rounded-xl font-bold shadow-sm transition-all hover:scale-105 active:scale-95 ${tier.button} border border-black/5`}
                   >
                     Suscribirse

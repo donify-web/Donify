@@ -12,11 +12,12 @@ interface PaymentWizardProps {
     user?: User | null;
     onClose: () => void;
     initialTier?: SubscriptionTier;
+    initialType?: SubscriptionType; // Added
 }
 
-export const PaymentWizard: React.FC<PaymentWizardProps> = ({ user, onClose, initialTier = 'bronce' }) => {
+export const PaymentWizard: React.FC<PaymentWizardProps> = ({ user, onClose, initialTier = 'bronce', initialType = 'simple' }) => {
     const [selectedTier, setSelectedTier] = useState<SubscriptionTier>(initialTier);
-    const [selectedType, setSelectedType] = useState<SubscriptionType>('simple');
+    const [selectedType, setSelectedType] = useState<SubscriptionType>(initialType);
     const [isYearly, setIsYearly] = useState(false);
     const [showTierSelect, setShowTierSelect] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -133,8 +134,8 @@ export const PaymentWizard: React.FC<PaymentWizardProps> = ({ user, onClose, ini
         {
             id: 'bronce',
             name: 'Bronce',
-            priceSimple: 5,
-            pricePro: 15,
+            priceSimple: 0.99,
+            pricePro: 1.99,
             frequency: 'Mensual',
             icon: <Star className="text-orange-400" size={24} />,
             desc: 'Impacto básico para dar tus primeros pasos.'
@@ -142,8 +143,8 @@ export const PaymentWizard: React.FC<PaymentWizardProps> = ({ user, onClose, ini
         {
             id: 'plata',
             name: 'Plata',
-            priceSimple: 15,
-            pricePro: 35,
+            priceSimple: 0.99,
+            pricePro: 1.99,
             frequency: 'Quincenal',
             icon: <Zap className="text-blue-400" size={24} />,
             desc: 'Compromiso medio con mayor poder de decisión.'
@@ -151,8 +152,8 @@ export const PaymentWizard: React.FC<PaymentWizardProps> = ({ user, onClose, ini
         {
             id: 'oro',
             name: 'Oro',
-            priceSimple: 30,
-            pricePro: 75,
+            priceSimple: 0.99,
+            pricePro: 1.99,
             frequency: 'Semanal',
             icon: <Trophy className="text-amber-400" size={24} />,
             desc: 'Impacto significativo y beneficios exclusivos.',
@@ -161,8 +162,8 @@ export const PaymentWizard: React.FC<PaymentWizardProps> = ({ user, onClose, ini
         {
             id: 'diamante',
             name: 'Diamante',
-            priceSimple: 50,
-            pricePro: 150,
+            priceSimple: 0.99,
+            pricePro: 1.99,
             frequency: 'Diario',
             icon: <Crown className="text-indigo-400" size={24} />,
             desc: 'El máximo nivel de apoyo para fundadores.'

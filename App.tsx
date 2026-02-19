@@ -22,7 +22,7 @@ import RegistrationChoiceModal from './components/auth/RegistrationChoiceModal';
 import DonorDashboardLayout from './components/donor/DonorDashboardLayout';
 import DonorImpact from './components/donor/DonorImpact';
 import DonorNews from './components/donor/DonorNews';
-import { PageView, SubscriptionTier, NgoUser } from './types';
+import { PageView, SubscriptionTier, NgoUser, SubscriptionType } from './types';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 // --- LAUNCH CONFIGURATION ---
@@ -36,7 +36,7 @@ function AppContent() {
   const [showPaymentWizard, setShowPaymentWizard] = useState(false);
   const [showBenefitsModal, setShowBenefitsModal] = useState(false);
   const [selectedTier, setSelectedTier] = useState<SubscriptionTier>('oro'); // Default to oro
-
+  const [selectedType, setSelectedType] = useState<SubscriptionType>('simple'); // Default to simple
 
   const [showRegistrationChoice, setShowRegistrationChoice] = useState(false);
 
@@ -113,8 +113,9 @@ function AppContent() {
         return (
           <Landing
             onNavigate={setCurrentView}
-            onShowPaymentWizard={(tier) => {
+            onShowPaymentWizard={(tier, type) => {
               if (tier) setSelectedTier(tier);
+              if (type) setSelectedType(type);
               setShowPaymentWizard(true);
             }}
             onShowBenefits={() => setShowBenefitsModal(true)}
@@ -204,8 +205,9 @@ function AppContent() {
           : (
             <Landing
               onNavigate={setCurrentView}
-              onShowPaymentWizard={(tier) => {
+              onShowPaymentWizard={(tier, type) => {
                 if (tier) setSelectedTier(tier);
+                if (type) setSelectedType(type);
                 setShowPaymentWizard(true);
               }}
               onShowBenefits={() => setShowBenefitsModal(true)}
@@ -235,6 +237,7 @@ function AppContent() {
           user={user}
           onClose={() => setShowPaymentWizard(false)}
           initialTier={selectedTier}
+          initialType={selectedType}
         />
       )}
       <TierBenefitsModal
