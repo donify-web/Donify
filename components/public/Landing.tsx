@@ -232,6 +232,9 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
             </div>
           </div>
 
+          {/* VOTING SECTION (Real Data) */}
+          <VotingSection />
+
           {/* TRUST INDICATORS */}
           <div className="py-20 border-t border-gray-200/50">
             <h3 className="text-gray-400 font-semibold uppercase tracking-widest text-sm mb-10">Con la confianza de</h3>

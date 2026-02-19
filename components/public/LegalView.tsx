@@ -135,7 +135,7 @@ const PrivacyContent = () => (
     <span className="text-xs text-gray-400 block mb-8">RGPD Compliant • Última actualización: Octubre 2024</span>
 
     <h3>1. Responsable del Tratamiento</h3>
-    <p>Asociación Juvenil Donify. Domicilio: Calle Nardo 42. Email: hola@donify.org</p>
+    <p>Asociación Juvenil Donify. Domicilio: Calle Nardo 42. Email: info@donify.org</p>
 
     <h3>2. Finalidad y Uso de Datos</h3>
     <p>Solo recopilamos los datos personales mínimos necesarios para:</p>
@@ -156,7 +156,7 @@ const PrivacyContent = () => (
     </ul>
 
     <h3>5. Tus Derechos</h3>
-    <p>Tienes derecho a acceder, rectificar y suprimir tus datos en cualquier momento enviando un email a hola@donify.org.</p>
+    <p>Tienes derecho a acceder, rectificar y suprimir tus datos en cualquier momento enviando un email a info@donify.org.</p>
   </div>
 );
 

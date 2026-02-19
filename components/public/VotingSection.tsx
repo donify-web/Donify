@@ -106,9 +106,28 @@ export default function VotingSection() {
     }, []);
 
     if (loading) return (
-        <div className="flex justify-center py-20 bg-white">
-            <Loader2 className="animate-spin text-primary" size={32} />
-        </div>
+        <section className="py-20 bg-white relative overflow-hidden">
+            <div className="max-w-7xl mx-auto px-6">
+                <div className="text-center mb-16">
+                    <div className="h-4 w-32 bg-gray-200 rounded-full mx-auto mb-4 animate-pulse"></div>
+                    <div className="h-10 w-3/4 max-w-lg bg-gray-200 rounded-xl mx-auto mb-6 animate-pulse"></div>
+                    <div className="h-4 w-1/2 max-w-md bg-gray-200 rounded-full mx-auto animate-pulse"></div>
+                </div>
+                <div className="grid md:grid-cols-3 gap-8">
+                    {[1, 2, 3].map((i) => (
+                        <div key={i} className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden h-[400px] animate-pulse">
+                            <div className="h-48 bg-gray-200"></div>
+                            <div className="p-6">
+                                <div className="h-6 w-3/4 bg-gray-200 rounded mb-4"></div>
+                                <div className="h-4 w-full bg-gray-200 rounded mb-2"></div>
+                                <div className="h-4 w-2/3 bg-gray-200 rounded mb-6"></div>
+                                <div className="h-10 w-full bg-gray-200 rounded-xl mt-auto"></div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </section>
     );
 
     // Removed the null return so it always shows something (either DB data or Mock data)
