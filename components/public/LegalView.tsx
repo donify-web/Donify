@@ -1,8 +1,7 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { PageView } from '../../types';
-import { ArrowLeft, Shield, Scale, FileText, Lock, Check } from 'lucide-react';
-import { Logo } from '../shared/Logo';
+import { Shield, Check, FileText, Lock } from 'lucide-react';
 
 interface LegalViewProps {
   onNavigate: (view: PageView) => void;
@@ -11,99 +10,42 @@ interface LegalViewProps {
 
 type Tab = 'privacy' | 'terms' | 'transparency' | 'cookies';
 
-export default function LegalView({ onNavigate, initialTab = 'terms' }: LegalViewProps) {
-  const [activeTab, setActiveTab] = useState<Tab>(initialTab);
+export default function LegalView({ initialTab = 'terms' }: LegalViewProps) {
+  const content = {
+    terms: <TermsContent />,
+    privacy: <PrivacyContent />,
+    cookies: <CookiesContent />,
+    transparency: <TransparencyContent />,
+  };
 
-  // Scroll to top when tab changes
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [activeTab]);
+  const summary = {
+    terms: 'Al donar, aceptas que el voto es vinculante y el dinero no es reembolsable. El 100% del beneficio neto va a las causas elegidas.',
+    privacy: 'Tus datos son sagrados. Solo los usamos para procesar pagos y cumplir la ley. Jamás los vendemos.',
+    cookies: 'Solo usamos las cookies estrictamente necesarias para que la web funcione y sea segura.',
+    transparency: 'Somos una asociación sin ánimo de lucro. Cobramos solo lo necesario para cubrir costes operativos y pasarelas de pago.',
+  };
 
   return (
-    <div className="min-h-screen bg-bgMain font-sans text-textMain flex flex-col md:flex-row">
+    <div className="min-h-screen bg-bgMain font-sans text-textMain">
+      <div className="max-w-3xl mx-auto px-6 pt-32 pb-24">
 
-      {/* SIDEBAR NAVIGATION (Desktop) */}
-      <aside className="w-full md:w-1/4 bg-white border-r border-gray-200 md:h-screen md:sticky md:top-0 z-20 flex flex-col">
-        <div className="p-6 border-b border-gray-100 flex justify-between items-center md:block">
-          <div className="flex items-center gap-2 cursor-pointer mb-0 md:mb-6" onClick={() => onNavigate('landing')}>
-            <Logo className="w-6 h-6 text-primary" />
-            <span className="font-bold text-lg text-gray-900">Donify Legal</span>
-          </div>
-          <button onClick={() => onNavigate('landing')} className="md:hidden text-gray-500">
-            <ArrowLeft />
-          </button>
-        </div>
-
-        <nav className="flex-1 overflow-x-auto md:overflow-visible flex md:flex-col p-4 gap-2">
-          <button
-            onClick={() => setActiveTab('terms')}
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${activeTab === 'terms' ? 'bg-primary/10 text-primary' : 'text-gray-600 hover:bg-gray-50'}`}
-          >
-            <Scale size={18} /> Términos y Condiciones
-          </button>
-          <button
-            onClick={() => setActiveTab('privacy')}
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${activeTab === 'privacy' ? 'bg-primary/10 text-primary' : 'text-gray-600 hover:bg-gray-50'}`}
-          >
-            <Shield size={18} /> Política de Privacidad
-          </button>
-          <button
-            onClick={() => setActiveTab('cookies')}
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${activeTab === 'cookies' ? 'bg-primary/10 text-primary' : 'text-gray-600 hover:bg-gray-50'}`}
-          >
-            <Lock size={18} /> Política de Cookies
-          </button>
-          <button
-            onClick={() => setActiveTab('transparency')}
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${activeTab === 'transparency' ? 'bg-primary/10 text-primary' : 'text-gray-600 hover:bg-gray-50'}`}
-          >
-            <FileText size={18} /> Transparencia
-          </button>
-        </nav>
-
-        <div className="p-6 mt-auto hidden md:block">
-          <button
-            onClick={() => onNavigate('landing')}
-            className="flex items-center gap-2 text-sm text-gray-500 hover:text-primary transition-colors"
-          >
-            <ArrowLeft size={16} /> Volver a la App
-          </button>
-        </div>
-      </aside>
-
-      {/* CONTENT AREA */}
-      <main className="flex-1 p-6 md:p-12 md:max-w-4xl">
-
-        {/* Summary Section - redesign */}
+        {/* Summary callout */}
         <div className="mb-12 pl-6 border-l-4 border-primary/60 py-2">
-          <h4 className="text-gray-900 font-bold mb-2 text-lg flex items-center gap-2">
-            En Resumen
-          </h4>
-          <p className="text-gray-600 text-lg leading-relaxed italic">
-            {activeTab === 'terms' && "Al donar, aceptas que el voto es vinculante y el dinero no es reembolsable. El 100% del beneficio neto va a las causas elegidas."}
-            {activeTab === 'privacy' && "Tus datos son sagrados. Solo los usamos para procesar pagos y cumplir la ley. Jamás los vendemos."}
-            {activeTab === 'cookies' && "Solo usamos las cookies estrictamente necesarias para que la web funcione y sea segura."}
-            {activeTab === 'transparency' && "Somos una asociación sin ánimo de lucro. Cobramos solo lo necesario para cubrir costes operativos y pasarelas de pago."}
-          </p>
+          <h4 className="text-gray-900 font-bold mb-2 text-lg">En Resumen</h4>
+          <p className="text-gray-600 text-lg leading-relaxed italic">{summary[initialTab]}</p>
         </div>
 
+        {/* Main content */}
         <div className="prose prose-slate max-w-none">
-          {activeTab === 'terms' && <TermsContent />}
-          {activeTab === 'privacy' && <PrivacyContent />}
-          {activeTab === 'cookies' && <CookiesContent />}
-          {activeTab === 'transparency' && <TransparencyContent />}
+          {content[initialTab]}
         </div>
 
-      </main>
+      </div>
     </div>
   );
 }
 
-function InfoIcon() {
-  return <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>;
-}
-
-/* --- STATIC CONTENT COMPONENTS FROM TEXT DUMP --- */
+/* --- STATIC CONTENT COMPONENTS --- */
 
 const TermsContent = () => (
   <div>
