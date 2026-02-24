@@ -17,6 +17,7 @@ import Organizations from './components/public/Organizations';
 import VotingPage from './components/public/VotingPage';
 import Settings from './components/donor/Settings';
 import PublicNavbar from './components/public/PublicNavbar';
+import PublicFooter from './components/shared/PublicFooter';
 import PaymentWizard from './components/shared/PaymentWizard';
 import TierBenefitsModal from './components/shared/TierBenefitsModal';
 import RegistrationChoiceModal from './components/auth/RegistrationChoiceModal';
@@ -262,6 +263,7 @@ function AppContent() {
   };
 
   const showPublicNavbar = !['login', 'signup', 'app', 'admin', 'settings', 'ngo-dashboard', 'ngo-projects', 'ngo-finance', 'ngo-settings', 'dashboard-impact', 'dashboard-news', 'voting'].includes(currentView);
+  const showPublicFooter = !['login', 'signup', 'app', 'admin', 'settings', 'ngo-dashboard', 'ngo-projects', 'ngo-finance', 'ngo-settings', 'dashboard-impact', 'dashboard-news'].includes(currentView);
 
   return (
     <div className="min-h-screen bg-white">
@@ -274,6 +276,10 @@ function AppContent() {
       )}
 
       {renderView()}
+
+      {showPublicFooter && (
+        <PublicFooter onNavigate={setCurrentView} />
+      )}
 
       {/* GLOBAL MODALS */}
       {showPaymentWizard && (

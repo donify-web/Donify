@@ -435,21 +435,6 @@ export default function VotingPage({ onNavigate }: VotingPageProps) {
                     </div>
                 )}
             </div>
-
-            {/* Footer */}
-            <footer className="relative z-10 border-t border-gray-200/50 bg-white/50 backdrop-blur-md py-8 px-6">
-                <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-                    <div className="flex items-center gap-2 text-gray-400">
-                        <Logo className="w-5 h-5" />
-                        <span className="text-sm font-medium">Donify © 2026</span>
-                    </div>
-                    <div className="flex gap-6 text-xs text-gray-400">
-                        <button onClick={() => onNavigate('legal')} className="hover:text-gray-700 transition-colors">Términos</button>
-                        <button onClick={() => onNavigate('privacy')} className="hover:text-gray-700 transition-colors">Privacidad</button>
-                        <button onClick={() => onNavigate('contact')} className="hover:text-gray-700 transition-colors">Contacto</button>
-                    </div>
-                </div>
-            </footer>
         </div>
     );
 }
