@@ -57,7 +57,7 @@ export default function LegalView({ onNavigate, initialTab = 'terms' }: LegalVie
             onClick={() => setActiveTab('transparency')}
             className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${activeTab === 'transparency' ? 'bg-primary/10 text-primary' : 'text-gray-600 hover:bg-gray-50'}`}
           >
-            <FileText size={18} /> Transparencia de Tarifas
+            <FileText size={18} /> Transparencia
           </button>
         </nav>
 
@@ -135,7 +135,7 @@ const PrivacyContent = () => (
     <span className="text-xs text-gray-400 block mb-8">RGPD Compliant • Última actualización: Octubre 2024</span>
 
     <h3>1. Responsable del Tratamiento</h3>
-    <p>Asociación Juvenil Donify. Domicilio: Calle Nardo 42. Email: info@donify.org</p>
+    <p>Asociación Juvenil Donify. Domicilio: Calle Nardo 42. Email: contacto@donify.org</p>
 
     <h3>2. Finalidad y Uso de Datos</h3>
     <p>Solo recopilamos los datos personales mínimos necesarios para:</p>
@@ -156,7 +156,7 @@ const PrivacyContent = () => (
     </ul>
 
     <h3>5. Tus Derechos</h3>
-    <p>Tienes derecho a acceder, rectificar y suprimir tus datos en cualquier momento enviando un email a info@donify.org.</p>
+    <p>Tienes derecho a acceder, rectificar y suprimir tus datos en cualquier momento enviando un email a contacto@donify.org.</p>
   </div>
 );
 
@@ -208,8 +208,64 @@ const CookiesContent = () => (
 
 const TransparencyContent = () => (
   <div>
-    <h1 className="text-3xl font-bold text-gray-900 mb-2">Transparencia de Tarifas</h1>
-    <span className="text-xs text-gray-400 block mb-8">Cuentas Claras</span>
+    <h1 className="text-3xl font-bold text-gray-900 mb-2">Transparencia</h1>
+    <span className="text-xs text-gray-400 block mb-8">Estatutos, Información Fiscal y Gobernanza • Última actualización: Febrero 2026</span>
+
+    <h2 className="text-xl font-bold text-gray-900 mt-8 mb-4">I. Estatutos de la Asociación</h2>
+
+    <h3>1. Denominación y Naturaleza</h3>
+    <p>Donify es una <strong>Asociación Juvenil sin ánimo de lucro</strong>, inscrita en el Registro Nacional de Asociaciones con el número [pendiente de inscripción]. Su constitución se rige por la Ley Orgánica 1/2002, de 22 de marzo, reguladora del Derecho de Asociación.</p>
+
+    <h3>2. Objeto Social</h3>
+    <p>La asociación tiene como fin exclusivo <strong>canalizar micro-donaciones de sus socios hacia organizaciones no gubernamentales</strong> (ONGs) verificadas, mediante un sistema de votación democrático y transparente.</p>
+    <ul>
+      <li>Promover la cultura de la solidaridad entre jóvenes y ciudadanos.</li>
+      <li>Facilitar donaciones accesibles desde 0,99 € mediante tecnología digital.</li>
+      <li>Garantizar la transparencia absoluta en el destino de los fondos.</li>
+      <li>Empoderar a los donantes mediante un sistema de voto vinculante.</li>
+    </ul>
+
+    <h3>3. Domicilio Social</h3>
+    <p>Calle Nardo 42, España. Correo electrónico: contacto@donify.org</p>
+
+    <h3>4. Órganos de Gobierno</h3>
+    <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100 my-6 space-y-4">
+      <div>
+        <h4 className="font-bold text-gray-900">Asamblea General</h4>
+        <p className="text-sm text-gray-600">Órgano supremo de la asociación, compuesto por todos los socios. Se reúne al menos una vez al año de forma ordinaria para aprobar cuentas, memoria anual y presupuestos.</p>
+      </div>
+      <div>
+        <h4 className="font-bold text-gray-900">Junta Directiva</h4>
+        <p className="text-sm text-gray-600">Compuesta por Presidente, Secretario y Tesorero. Se encarga de la gestión ordinaria, la supervisión de la plataforma y la relación con las ONGs beneficiarias.</p>
+      </div>
+    </div>
+
+    <h3>5. Régimen de los Socios</h3>
+    <p>Los socios de Donify adquieren su condición al completar el proceso de suscripción. Todos los socios tienen derecho a voto, a recibir información sobre el destino de los fondos y a participar en las Asambleas Generales.</p>
+
+    <h2 className="text-xl font-bold text-gray-900 mt-12 mb-4">II. Información Fiscal</h2>
+
+    <h3>1. Régimen Fiscal Aplicable</h3>
+    <p>Donify opera bajo el régimen fiscal de las <strong>entidades sin fines lucrativos</strong> conforme a la Ley 49/2002 de régimen fiscal de las entidades sin fines lucrativos y de los incentivos fiscales al mecenazgo.</p>
+
+    <h3>2. Deducción Fiscal para Donantes</h3>
+    <div className="bg-primary/5 p-6 rounded-2xl border border-primary/20 my-6">
+      <h4 className="font-bold text-gray-900 mb-3">¿Puedo desgravarme las donaciones?</h4>
+      <p className="text-sm text-gray-700 mb-3">Sí. Las donaciones realizadas a través de Donify pueden dar derecho a deducción fiscal en tu declaración de la renta (IRPF), conforme a la normativa vigente:</p>
+      <ul className="text-sm text-gray-700 space-y-1">
+        <li><strong>Primeros 250 €:</strong> deducción del 80%.</li>
+        <li><strong>Resto:</strong> deducción del 40% (45% si se ha donado la misma cantidad o superior durante los 2 años anteriores).</li>
+      </ul>
+      <p className="text-xs text-gray-500 mt-3">* Porcentajes sujetos a la legislación fiscal vigente en cada ejercicio.</p>
+    </div>
+
+    <h3>3. CIF y Datos Registrales</h3>
+    <p>CIF: [Pendiente de asignación]. Registro Nacional de Asociaciones: [Pendiente de inscripción]. Donify emitirá certificados de donación anuales a todos los socios que lo soliciten para su inclusión en la declaración de la renta.</p>
+
+    <h3>4. Obligaciones Contables</h3>
+    <p>Donify lleva contabilidad conforme al Plan General de Contabilidad adaptado a las entidades sin fines lucrativos. Las cuentas anuales son auditadas y están disponibles para consulta por cualquier socio.</p>
+
+    <h2 className="text-xl font-bold text-gray-900 mt-12 mb-4">III. Transparencia de Tarifas</h2>
 
     <h3>1. Desglose de Costes</h3>
     <p>Donify deduce los costes de transacción antes de enviar el dinero a las ONGs. Estos costes no son beneficio para Donify, sino pagos a proveedores.</p>
@@ -224,5 +280,26 @@ const TransparencyContent = () => (
 
     <h3>2. Seguridad de Fondos</h3>
     <p>Donify no toca el dinero directamente. Los fondos se almacenan en una cuenta "Connect" de Stripe y se liberan automáticamente a las cuentas bancarias verificadas de las ONGs tras el periodo de retención de seguridad (7-14 días).</p>
+
+    <h2 className="text-xl font-bold text-gray-900 mt-12 mb-4">IV. Memoria Anual e Informes</h2>
+
+    <h3>1. Memoria de Actividades</h3>
+    <p>Donify publica anualmente una memoria de actividades que incluye:</p>
+    <ul>
+      <li>Total recaudado y distribución por ONG beneficiaria.</li>
+      <li>Número de socios activos y evolución.</li>
+      <li>Resultados de todas las votaciones del ejercicio.</li>
+      <li>Gastos operativos desglosados.</li>
+    </ul>
+
+    <h3>2. Acceso a Documentación</h3>
+    <p>Cualquier socio puede solicitar acceso a los siguientes documentos:</p>
+    <ul>
+      <li>Estatutos vigentes completos.</li>
+      <li>Actas de la Asamblea General.</li>
+      <li>Cuentas anuales auditadas.</li>
+      <li>Certificado de inscripción registral.</li>
+    </ul>
+    <p className="text-sm text-gray-500 mt-4">Para solicitar cualquier documento, escríbenos a <strong>contacto@donify.org</strong>.</p>
   </div>
 );

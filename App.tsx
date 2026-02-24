@@ -14,6 +14,7 @@ import LegalView from './components/public/LegalView';
 import AdminPanel from './components/admin/AdminPanel';
 import LaunchCountdown from './components/public/LaunchCountdown';
 import Organizations from './components/public/Organizations';
+import VotingPage from './components/public/VotingPage';
 import Settings from './components/donor/Settings';
 import PublicNavbar from './components/public/PublicNavbar';
 import PaymentWizard from './components/shared/PaymentWizard';
@@ -31,7 +32,16 @@ const LAUNCH_DATE = new Date('2026-01-01T00:00:00'); // Set to past for testing
 
 function AppContent() {
   const { user, loading } = useAuth();
-  const [currentView, setCurrentView] = useState<PageView>('landing');
+
+  // --- HASH-BASED ROUTING ---
+  // Read initial view from URL hash (e.g. #/voting)
+  const getViewFromHash = (): PageView => {
+    const hash = window.location.hash.replace('#/', '').replace('#', '');
+    if (hash === 'voting') return 'voting';
+    return 'landing'; // default
+  };
+
+  const [currentView, setCurrentView] = useState<PageView>(getViewFromHash());
 
   // Base State for Modals
   const [showPaymentWizard, setShowPaymentWizard] = useState(false);
@@ -46,7 +56,24 @@ function AppContent() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    // Sync hash with current view — only set hash for 'voting', clear for others
+    if (currentView === 'voting') {
+      window.location.hash = '#/voting';
+    } else if (window.location.hash.includes('voting')) {
+      // Clear the hash when navigating away from voting
+      history.replaceState(null, '', window.location.pathname);
+    }
   }, [currentView]);
+
+  // Listen for browser back/forward hash changes
+  useEffect(() => {
+    const handleHashChange = () => {
+      const view = getViewFromHash();
+      setCurrentView(view);
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
 
   // --- AUTO-REDIRECT LOGIC ---
   useEffect(() => {
@@ -161,6 +188,8 @@ function AppContent() {
         ) : <Login onNavigate={setCurrentView} initialState="login" />;
       case 'organizations':
         return <Organizations onNavigate={setCurrentView} />;
+      case 'voting':
+        return <VotingPage onNavigate={setCurrentView} />;
       case 'admin':
         return user?.isAdmin ? (
           <AdminPanel currentUser={user} onNavigate={setCurrentView} />
@@ -171,6 +200,8 @@ function AppContent() {
         return <LegalView onNavigate={setCurrentView} initialTab="privacy" />;
       case 'cookies':
         return <LegalView onNavigate={setCurrentView} initialTab="cookies" />;
+      case 'transparency':
+        return <LegalView onNavigate={setCurrentView} initialTab="transparency" />;
       case 'app':
       case 'dashboard-impact':
       case 'dashboard-news':
@@ -230,7 +261,7 @@ function AppContent() {
     }
   };
 
-  const showPublicNavbar = !['login', 'signup', 'app', 'admin', 'settings', 'ngo-dashboard', 'ngo-projects', 'ngo-finance', 'ngo-settings', 'dashboard-impact', 'dashboard-news'].includes(currentView);
+  const showPublicNavbar = !['login', 'signup', 'app', 'admin', 'settings', 'ngo-dashboard', 'ngo-projects', 'ngo-finance', 'ngo-settings', 'dashboard-impact', 'dashboard-news', 'voting'].includes(currentView);
 
   return (
     <div className="min-h-screen bg-white">

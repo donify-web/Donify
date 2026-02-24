@@ -20,6 +20,7 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       name: 'Bronce',
       price: pricingMode === 'simple' ? 0.99 : 1.99,
       period: 'mes',
+      frequency: 'Mensual',
       icon: ShieldCheck,
       description: 'Tu impacto empieza aquí',
       gradient: 'bg-gradient-bronze',
@@ -36,6 +37,7 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       name: 'Plata',
       price: pricingMode === 'simple' ? 0.99 : 1.99,
       period: '2 semanas',
+      frequency: 'Quincenal',
       icon: Star,
       description: 'Más compromiso, más ayuda',
       gradient: 'bg-gradient-silver',
@@ -52,6 +54,7 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       name: 'Oro',
       price: pricingMode === 'simple' ? 0.99 : 1.99,
       period: 'semana',
+      frequency: 'Semanal',
       icon: Zap,
       description: 'Lidera el cambio real',
       gradient: 'bg-gradient-gold',
@@ -69,6 +72,7 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       name: 'Diamante',
       price: pricingMode === 'simple' ? 0.99 : 1.99,
       period: '4 días',
+      frequency: 'Cada 4 días',
       icon: Crown,
       description: 'Impacto transformador',
       gradient: 'bg-gradient-diamond',
@@ -78,7 +82,8 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       features: [
         'Potestad de voto',
         'Certificado de donación (PDF Diamante)',
-        'Acceso exclusivo a informes mensuales de datos de donaciones'
+        'Acceso exclusivo a informes mensuales de datos de donaciones',
+        'Elegir la causa del primer mes',
       ]
     }
   ];
@@ -184,7 +189,8 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
                     <tier.icon size={28} />
                   </div>
 
-                  <h3 className={`text-2xl font-bold ${tier.text} mb-2`}>{tier.name}</h3>
+                  <h3 className={`text-2xl font-bold ${tier.text} mb-1`}>{tier.name}</h3>
+                  <span className={`text-lg font-extrabold ${tier.text} opacity-70 tracking-tight block mb-2`}>{tier.frequency}</span>
                   <p className="text-gray-600 text-sm mb-6 h-10">{tier.description}</p>
 
                   <div className="flex items-baseline gap-1 mb-8">
@@ -303,6 +309,7 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
             <div className="flex gap-8 text-sm text-gray-500">
               <button onClick={() => onNavigate('legal')} className="hover:text-gray-900">Términos</button>
               <button onClick={() => onNavigate('privacy')} className="hover:text-gray-900">Privacidad</button>
+              <button onClick={() => onNavigate('transparency')} className="hover:text-gray-900">Transparencia</button>
               <button onClick={() => onNavigate('cookies')} className="hover:text-gray-900">Cookies</button>
               <button onClick={() => onNavigate('contact')} className="hover:text-gray-900">Contacto</button>
             </div>

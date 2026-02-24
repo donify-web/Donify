@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { PageView, User, NgoUser } from '../../types';
+import { PageView, User, NgoUser, VotingOption } from '../../types';
 import { ArrowLeft, Users, TrendingUp, DollarSign, Vote, AlertTriangle, Download, CheckCircle, XCircle, Search, Building2 } from 'lucide-react';
 import { supabase } from '../../lib/supabaseClient';
 
@@ -23,9 +23,11 @@ export default function AdminPanel({ onNavigate, currentUser }: AdminPanelProps)
     votesCast: 0
   });
   const [activeProjects, setActiveProjects] = useState<any[]>([]);
-  const [activeTab, setActiveTab] = useState<'ngos' | 'projects' | 'active'>('ngos'); // Added 'active' tab
+  const [activeTab, setActiveTab] = useState<'ngos' | 'projects' | 'active' | 'voting-mgmt'>('ngos');
   const [pendingNgos, setPendingNgos] = useState<NgoUser[]>([]);
   const [pendingProjects, setPendingProjects] = useState<any[]>([]);
+  const [votingOptions, setVotingOptions] = useState<VotingOption[]>([]);
+  const [newOption, setNewOption] = useState({ title: '', description: '', image_url: '' });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -89,6 +91,14 @@ export default function AdminPanel({ onNavigate, currentUser }: AdminPanelProps)
         .order('current_votes', { ascending: false });
 
       if (activeProjs) setActiveProjects(activeProjs);
+
+      // 5. Fetch Voting Options
+      const { data: vOptions } = await supabase
+        .from('voting_options')
+        .select('*')
+        .order('votes', { ascending: false });
+
+      if (vOptions) setVotingOptions(vOptions as VotingOption[]);
 
     } catch (error) {
       console.error("Error fetching admin data:", error);
@@ -170,6 +180,9 @@ export default function AdminPanel({ onNavigate, currentUser }: AdminPanelProps)
               <button onClick={() => setActiveTab('active')} className={`pb-2 px-4 font-bold border-b-2 transition-colors whitespace-nowrap ${activeTab === 'active' ? 'border-primary text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>
                 Votación en Curso ({activeProjects.length})
               </button>
+              <button onClick={() => setActiveTab('voting-mgmt')} className={`pb-2 px-4 font-bold border-b-2 transition-colors whitespace-nowrap ${activeTab === 'voting-mgmt' ? 'border-primary text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>
+                Gestión Votaciones ({votingOptions.length})
+              </button>
             </div>
 
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -238,6 +251,127 @@ export default function AdminPanel({ onNavigate, currentUser }: AdminPanelProps)
                             </div>
                             <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
                               <div className="h-full bg-primary transition-all duration-500" style={{ width: `${percentage}%` }}></div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* VOTING OPTIONS MANAGEMENT TAB */}
+              {activeTab === 'voting-mgmt' && (
+                <>
+                  <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
+                    <Vote size={20} className="text-primary" /> Gestión de Opciones de Votación
+                  </h2>
+
+                  {/* Add new option form */}
+                  <div className="bg-gray-50 rounded-xl p-4 mb-6 border border-gray-200">
+                    <h3 className="font-bold text-sm mb-3">Añadir nueva opción</h3>
+                    <div className="grid md:grid-cols-3 gap-3 mb-3">
+                      <input
+                        type="text"
+                        placeholder="Título"
+                        value={newOption.title}
+                        onChange={(e) => setNewOption(prev => ({ ...prev, title: e.target.value }))}
+                        className="border border-gray-200 rounded-lg px-3 py-2 text-sm"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Descripción"
+                        value={newOption.description}
+                        onChange={(e) => setNewOption(prev => ({ ...prev, description: e.target.value }))}
+                        className="border border-gray-200 rounded-lg px-3 py-2 text-sm"
+                      />
+                      <input
+                        type="text"
+                        placeholder="URL de imagen"
+                        value={newOption.image_url}
+                        onChange={(e) => setNewOption(prev => ({ ...prev, image_url: e.target.value }))}
+                        className="border border-gray-200 rounded-lg px-3 py-2 text-sm"
+                      />
+                    </div>
+                    <button
+                      onClick={async () => {
+                        if (!newOption.title) return;
+                        const { error } = await supabase.from('voting_options').insert({
+                          title: newOption.title,
+                          description: newOption.description,
+                          image_url: newOption.image_url,
+                          votes: 0,
+                          is_active: true
+                        });
+                        if (!error) {
+                          setNewOption({ title: '', description: '', image_url: '' });
+                          fetchAdminData();
+                          alert('Opción añadida correctamente');
+                        }
+                      }}
+                      className="bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-primary/90"
+                    >
+                      Añadir Opción
+                    </button>
+                  </div>
+
+                  {/* Reset all votes */}
+                  <div className="flex gap-3 mb-6">
+                    <button
+                      onClick={async () => {
+                        if (confirm('¿Resetear todos los votos a 0? Esta acción no se puede deshacer.')) {
+                          await supabase.from('voting_options').update({ votes: 0 }).gte('votes', 0);
+                          fetchAdminData();
+                          alert('Votos reseteados');
+                        }
+                      }}
+                      className="bg-red-50 text-red-600 px-4 py-2 rounded-lg text-sm font-bold hover:bg-red-100 border border-red-200"
+                    >
+                      Resetear Todos los Votos
+                    </button>
+                  </div>
+
+                  {/* Options list */}
+                  {votingOptions.length === 0 ? (
+                    <p className="text-gray-500">No hay opciones de votación configuradas.</p>
+                  ) : (
+                    <div className="space-y-4">
+                      {votingOptions.map(opt => {
+                        const totalVotes = votingOptions.reduce((acc, o) => acc + (o.votes || 0), 0);
+                        const pct = totalVotes > 0 ? Math.round((opt.votes / totalVotes) * 100) : 0;
+                        return (
+                          <div key={opt.id} className={`border rounded-xl p-4 transition-all ${opt.is_active ? 'border-gray-200 bg-white' : 'border-gray-100 bg-gray-50 opacity-60'}`}>
+                            <div className="flex justify-between items-start mb-3">
+                              <div className="flex-1">
+                                <h4 className="font-bold text-gray-900">{opt.title}</h4>
+                                <p className="text-sm text-gray-500 line-clamp-1">{opt.description}</p>
+                              </div>
+                              <div className="flex items-center gap-2 ml-4">
+                                <span className="font-mono font-bold text-primary text-sm">{opt.votes} votos ({pct}%)</span>
+                                <button
+                                  onClick={async () => {
+                                    await supabase.from('voting_options').update({ is_active: !opt.is_active }).eq('id', opt.id);
+                                    fetchAdminData();
+                                  }}
+                                  className={`px-3 py-1 rounded-full text-xs font-bold ${opt.is_active ? 'bg-green-100 text-green-700 hover:bg-red-100 hover:text-red-700' : 'bg-gray-200 text-gray-600 hover:bg-green-100 hover:text-green-700'}`}
+                                >
+                                  {opt.is_active ? 'Activo' : 'Inactivo'}
+                                </button>
+                                <button
+                                  onClick={async () => {
+                                    if (confirm(`¿Eliminar la opción "${opt.title}"?`)) {
+                                      await supabase.from('voting_options').delete().eq('id', opt.id);
+                                      fetchAdminData();
+                                    }
+                                  }}
+                                  className="text-red-500 hover:text-red-700 text-xs font-bold"
+                                >
+                                  Eliminar
+                                </button>
+                              </div>
+                            </div>
+                            <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                              <div className="h-full bg-primary transition-all duration-500 rounded-full" style={{ width: `${pct}%` }}></div>
                             </div>
                           </div>
                         );

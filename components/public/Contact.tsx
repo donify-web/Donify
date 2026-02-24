@@ -59,7 +59,7 @@ export default function Contact({ onNavigate }: ContactProps) {
               <div>
                 <h3 className="font-bold text-gray-900">Soporte General</h3>
                 <p className="text-sm text-gray-500 mb-1">Dudas sobre pagos o cuenta.</p>
-                <a href="mailto:info@donify.org" className="text-primary font-medium hover:underline">info@donify.org</a>
+                <a href="mailto:contacto@donify.org" className="text-primary font-medium hover:underline">contacto@donify.org</a>
               </div>
             </div>
 

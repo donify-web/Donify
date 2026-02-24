@@ -164,7 +164,7 @@ export const PaymentWizard: React.FC<PaymentWizardProps> = ({ user, onClose, ini
             name: 'Diamante',
             priceSimple: 0.99,
             pricePro: 1.99,
-            frequency: 'Diario',
+            frequency: 'Cada 4 días',
             icon: <Crown className="text-indigo-400" size={24} />,
             desc: 'El máximo nivel de apoyo para fundadores.'
         },
@@ -177,7 +177,7 @@ export const PaymentWizard: React.FC<PaymentWizardProps> = ({ user, onClose, ini
     let displayPrice = basePrice;
 
     if (isYearly) {
-        const multiplier = (selectedTier === 'bronce' ? 12 : selectedTier === 'plata' ? 26 : selectedTier === 'oro' ? 52 : 365);
+        const multiplier = (selectedTier === 'bronce' ? 12 : selectedTier === 'plata' ? 26 : selectedTier === 'oro' ? 52 : 91);
         displayPrice = basePrice * multiplier;
     }
 

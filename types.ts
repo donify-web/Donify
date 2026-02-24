@@ -19,9 +19,22 @@ export type PageView =
   | 'organizations'
   | 'settings'
   | 'dashboard-impact'
-  | 'dashboard-news';
+  | 'dashboard-news'
+  | 'voting'
+  | 'transparency';
 
 export type SubscriptionTier = 'bronce' | 'plata' | 'oro' | 'diamante';
+
+export interface VotingOption {
+  id: string;
+  title: string;
+  description: string;
+  image_url: string;
+  votes: number;
+  is_active: boolean;
+  created_at: string;
+}
+
 export type SubscriptionType = 'simple' | 'pro';
 
 export interface User {
@@ -100,4 +113,3 @@ export interface NgoPayout {
     status: 'pending' | 'completed' | 'failed';
     payout_date?: string;
 }
-

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { User, OngCandidate, PageView, SubscriptionTier } from '../../types';
-import { Bell, LogOut, CheckCircle, AlertCircle, Heart, BellOff, Loader2, Shield, TrendingUp, X, Check, Settings as SettingsIcon } from 'lucide-react';
+import { Bell, LogOut, CheckCircle, AlertCircle, Heart, BellOff, Loader2, Shield, TrendingUp, X, Check, Settings as SettingsIcon, ArrowDownRightFromCircleIcon } from 'lucide-react';
 import { supabase } from '../../lib/supabaseClient';
 import { OneTimeDonationButton } from './OneTimeDonationButton'; // Imported new component
 
