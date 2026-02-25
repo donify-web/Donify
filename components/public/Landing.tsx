@@ -242,22 +242,62 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
           <VotingSection />
 
           {/* DONIFY STORY */}
-          <div className="py-20 border-t border-gray-200/50 max-w-3xl mx-auto text-center">
-            <span className="text-primary font-bold uppercase tracking-widest text-xs mb-4 block">Nuestra Historia</span>
-            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 leading-snug">
-              Nació de una pregunta simple:<br />
-              <span className="text-primary">¿Por qué donar tiene que ser complicado?</span>
-            </h3>
-            <p className="text-gray-500 text-lg leading-relaxed mb-6">
-              Donify empezó en 2024 cuando un grupo de amigos se dio cuenta de que querían ayudar
-              pero no sabían a quién, cómo ni cuánto. Las plataformas existentes eran opacas,
-              complicadas y nunca sabías si tu dinero llegaba de verdad.
-            </p>
-            <p className="text-gray-500 text-lg leading-relaxed">
-              Así que construimos lo que nos hubiera gustado encontrar: <strong className="text-gray-800">una suscripción mínima,
-                voto democrático y transparencia total</strong>. Sin trucos, sin comisiones ocultas,
-              sin grandes promesas vacías. Solo personas eligiendo juntas a quién ayudar.
-            </p>
+          <div className="py-20 border-t border-gray-200/50">
+            {/* Card with logo-repeat watermark */}
+            <div className="relative max-w-4xl mx-auto rounded-3xl overflow-hidden shadow-sm border border-gray-100">
+
+              {/* Logo watermark pattern */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  backgroundImage: 'url(/donify_logo.jpg)',
+                  backgroundSize: '72px 72px',
+                  backgroundRepeat: 'repeat',
+                  opacity: 0.045,
+                }}
+              />
+              {/* White overlay */}
+              <div className="absolute inset-0 bg-white/95" />
+
+              {/* Content */}
+              <div className="relative z-10 px-8 md:px-16 py-14 text-center">
+                <span className="text-primary font-bold uppercase tracking-widest text-xs mb-6 block">Nuestra Historia</span>
+
+                <p className="text-gray-700 text-lg md:text-xl leading-relaxed mb-10 max-w-2xl mx-auto">
+                  Donify nace de una idea de querer ayudar, querer marcar una diferencia en nuestra
+                  sociedad tan llena de injusticias.
+                </p>
+
+                {/* 3 Pillars */}
+                <p className="text-gray-500 text-sm font-semibold uppercase tracking-widest mb-5">La idea soluciona los grandes problemas modernos de la filantropía</p>
+                <div className="flex flex-col sm:flex-row justify-center gap-3 mb-10">
+                  <div className="flex items-center gap-2 bg-primary/5 border border-primary/15 px-5 py-3 rounded-full">
+                    <span className="text-primary font-black">①</span>
+                    <span className="font-bold text-gray-800 text-sm">Suscripciones al alcance de <span className="text-primary">TODOS</span></span>
+                  </div>
+                  <div className="flex items-center gap-2 bg-primary/5 border border-primary/15 px-5 py-3 rounded-full">
+                    <span className="text-primary font-black">②</span>
+                    <span className="font-bold text-gray-800 text-sm"><span className="text-primary">TRANSPARENCIA</span> radical</span>
+                  </div>
+                  <div className="flex items-center gap-2 bg-primary/5 border border-primary/15 px-5 py-3 rounded-full">
+                    <span className="text-primary font-black">③</span>
+                    <span className="font-bold text-gray-800 text-sm">Sistema <span className="text-primary">DEMOCRÁTICO</span></span>
+                  </div>
+                </div>
+
+                <p className="text-gray-600 text-base md:text-lg leading-relaxed max-w-2xl mx-auto mb-10">
+                  Flexibilidad en donaciones, transparencia radical con el único objetivo
+                  de ayudar, y <strong className="text-gray-800">la opinión de todos vosotros</strong> para decidir a quién ayudamos.
+                </p>
+
+                {/* Tagline */}
+                <div className="border-t border-gray-200 pt-8">
+                  <p className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">
+                    Tu donación, <span className="text-primary">tu decisión.</span>
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* VOICES OF IMPACT - TESTIMONIALS */}
