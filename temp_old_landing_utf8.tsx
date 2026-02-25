@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { PageView, SubscriptionTier, SubscriptionType } from '../../types';
 import { Coins, Heart, CheckCircle, ArrowRight, ShieldCheck, Globe, Star, Zap, Crown, Lock, PlayCircle, Users, Activity } from 'lucide-react';
 import { Logo } from '../shared/Logo';
@@ -48,14 +48,14 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       period: 'mes',
       frequency: 'Mensual',
       icon: ShieldCheck,
-      description: 'Tu impacto empieza aquí',
+      description: 'Tu impacto empieza aqu├¡',
       gradient: 'bg-gradient-bronze',
       border: 'border-orange-200',
       text: 'text-amber-800',
       button: 'bg-amber-100 text-amber-900 hover:bg-amber-200',
       features: [
         'Potestad de voto',
-        'Certificado de donación (PDF Bronce)'
+        'Certificado de donaci├│n (PDF Bronce)'
       ]
     },
     {
@@ -65,14 +65,14 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       period: '2 semanas',
       frequency: 'Quincenal',
       icon: Star,
-      description: 'Más compromiso, más ayuda',
+      description: 'M├ís compromiso, m├ís ayuda',
       gradient: 'bg-gradient-silver',
       border: 'border-gray-200',
       text: 'text-gray-800',
       button: 'bg-gray-200 text-gray-900 hover:bg-gray-300',
       features: [
         'Potestad de voto',
-        'Certificado de donación (PDF Plata)'
+        'Certificado de donaci├│n (PDF Plata)'
       ]
     },
     {
@@ -89,7 +89,7 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       button: 'bg-yellow-100 text-yellow-900 hover:bg-yellow-200',
       features: [
         'Potestad de voto',
-        'Certificado de donación (PDF Oro)',
+        'Certificado de donaci├│n (PDF Oro)',
         'Acceso exclusivo a informes mensuales de datos de donaciones'
       ]
     },
@@ -97,8 +97,8 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       id: 'diamante',
       name: 'Diamante',
       price: pricingMode === 'simple' ? 0.99 : 1.99,
-      period: '4 días',
-      frequency: 'Cada 4 días',
+      period: '4 d├¡as',
+      frequency: 'Cada 4 d├¡as',
       icon: Crown,
       description: 'Impacto transformador',
       gradient: 'bg-gradient-diamond',
@@ -107,7 +107,7 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       button: 'bg-cyan-100 text-cyan-900 hover:bg-cyan-200',
       features: [
         'Potestad de voto',
-        'Certificado de donación (PDF Diamante)',
+        'Certificado de donaci├│n (PDF Diamante)',
         'Acceso exclusivo a informes mensuales de datos de donaciones',
         'Elegir la causa del primer mes',
       ]
@@ -130,9 +130,9 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
               <span className="font-bold text-xl text-gray-800 tracking-tight">Donify</span>
             </div>
             <nav className="hidden md:flex items-center gap-8">
-              <button onClick={() => onNavigate('how-it-works')} className="text-gray-600 hover:text-primary font-medium transition-colors">Cómo funciona</button>
+              <button onClick={() => onNavigate('how-it-works')} className="text-gray-600 hover:text-primary font-medium transition-colors">C├│mo funciona</button>
               <button onClick={() => onNavigate('organizations')} className="text-gray-600 hover:text-primary font-medium transition-colors">Organizaciones</button>
-              <button onClick={() => onNavigate('login')} className="text-gray-600 hover:text-primary font-medium transition-colors">Iniciar Sesión</button>
+              <button onClick={() => onNavigate('login')} className="text-gray-600 hover:text-primary font-medium transition-colors">Iniciar Sesi├│n</button>
               <button
                 onClick={() => onShowPaymentWizard()}
                 className="bg-gray-900 text-white px-6 py-2.5 rounded-full font-semibold hover:bg-black transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
@@ -157,8 +157,8 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
 
             <div className="hidden lg:block absolute bottom-[15%] left-[12%] animate-float" style={{ animationDelay: '1.5s' }}>
               <div className="w-24 h-24 rounded-full border-4 border-white shadow-lg overflow-hidden relative group">
-                <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=200" alt="Educación" className="w-full h-full object-cover transition-transform group-hover:scale-110" />
-                <div className="absolute bottom-0 inset-x-0 bg-white/90 text-[9px] font-bold py-1 text-center">Educación</div>
+                <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=200" alt="Educaci├│n" className="w-full h-full object-cover transition-transform group-hover:scale-110" />
+                <div className="absolute bottom-0 inset-x-0 bg-white/90 text-[9px] font-bold py-1 text-center">Educaci├│n</div>
               </div>
             </div>
 
@@ -178,7 +178,7 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
 
             <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-gray-200 text-gray-600 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider mb-8 mx-auto animate-fade-in-up">
               <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-              Revolucionando la filantropía
+              Revolucionando la filantrop├¡a
             </div>
 
             <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 mb-6 tracking-tight leading-tight max-w-4xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
@@ -187,7 +187,7 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
             </h1>
 
             <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-              Donify democratiza las donaciones. Suscríbete por menos de lo que cuesta un café, vota por las causas que te importan y ve tu impacto en tiempo real.
+              Donify democratiza las donaciones. Suscr├¡bete por menos de lo que cuesta un caf├®, vota por las causas que te importan y ve tu impacto en tiempo real.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
@@ -221,7 +221,7 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
           </div>
         </div>
 
-        {/* CÓMO FUNCIONA - VÍDEO BANNERS */}
+        {/* C├ôMO FUNCIONA - V├ìDEO BANNERS */}
         <section
           ref={videoAnimation.ref}
           className={`max-w-7xl mx-auto px-6 py-20 lg:py-28 ${videoAnimation.isVisible ? 'animate-fade-in-up opacity-100' : 'opacity-0'}`}
@@ -229,15 +229,15 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
           <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
             <div className="flex-1 text-center lg:text-left">
               <span className="text-primary font-bold uppercase tracking-widest text-xs mb-3 block">Descubre Donify</span>
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">Que tu recaudación tenga el mayor éxito</h2>
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">Que tu recaudaci├│n tenga el mayor ├®xito</h2>
               <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                Empieza en solo unos minutos: regístrate, elige tu nivel de suscripción y obtén potestad inmediata de voto. Cada mes, tus fondos se unen a los de miles de personas para donar de forma contundente a la organización ganadora de las votaciones.
+                Empieza en solo unos minutos: reg├¡strate, elige tu nivel de suscripci├│n y obt├®n potestad inmediata de voto. Cada mes, tus fondos se unen a los de miles de personas para donar de forma contundente a la organizaci├│n ganadora de las votaciones.
               </p>
               <button
                 onClick={() => onNavigate('how-it-works')}
                 className="font-bold text-gray-900 border-2 border-gray-200 hover:border-gray-900 hover:bg-gray-50 rounded-full px-8 py-3 transition-colors shadow-sm"
               >
-                Saber más
+                Saber m├ís
               </button>
             </div>
             <div className="flex-1 w-full max-w-xl mx-auto">
@@ -245,7 +245,7 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
                 <img src="https://images.unsplash.com/photo-1593113563332-ce6b71026ce8?auto=format&fit=crop&q=80&w=1200" alt="Video tutorial cover" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors flex items-center justify-center">
                   <div className="bg-white text-gray-900 px-6 py-3 rounded-full font-bold flex items-center gap-2 shadow-lg hover:scale-105 transition-transform">
-                    <PlayCircle className="w-5 h-5 text-primary" /> Reproducir vídeo de 1 min
+                    <PlayCircle className="w-5 h-5 text-primary" /> Reproducir v├¡deo de 1 min
                   </div>
                 </div>
               </div>
@@ -254,12 +254,8 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
         </section>
 
         {/* PRICING SECTION */}
-        <section id="pricing" className="py-24 bg-slate-50 relative border-y border-gray-100">
-          {/* Subtle dotted pattern for the background */}
-          <div className="absolute inset-0 bg-pattern-dots opacity-[0.03] pointer-events-none mix-blend-multiply"></div>
-
-          <div className="text-center mb-12 relative z-10 px-6">
-            <span className="text-primary font-bold uppercase tracking-widest text-xs mb-3 block">Suscripciones</span>
+        <div id="pricing" className="mb-20">
+          <div className="text-center mb-8">
             <h2 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-4">Elige tu nivel de impacto</h2>
             <p className="text-xl text-gray-500 max-w-2xl mx-auto mb-8">
               Transparencia total. Cancela cuando quieras. El 100% de tu voto cuenta.
@@ -275,70 +271,65 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
                   onClick={() => setPricingMode('simple')}
                   className={`relative z-10 px-6 py-2 rounded-full font-bold text-sm transition-colors ${pricingMode === 'simple' ? 'text-gray-900' : 'text-gray-500'}`}
                 >
-                  Simple (0.99€)
+                  Simple (0.99Ôé¼)
                 </button>
                 <button
                   onClick={() => setPricingMode('pro')}
                   className={`relative z-10 px-6 py-2 rounded-full font-bold text-sm transition-colors ${pricingMode === 'pro' ? 'text-gray-900' : 'text-gray-500'}`}
                 >
-                  Pro (1.99€)
+                  Pro (1.99Ôé¼)
                 </button>
               </div>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 px-6 max-w-7xl mx-auto relative z-10">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
             {tiers.map((tier) => (
               <div
                 key={tier.id}
-                className="relative group rounded-[2rem] p-8 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.1)] transition-all duration-300 hover:-translate-y-2 flex flex-col overflow-hidden border border-gray-100"
+                className={`relative group rounded-3xl p-6 sm:p-8 border ${tier.border} ${tier.gradient} bg-opacity-50 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 flex flex-col`}
               >
-                {/* Soft gradient aura behind the content */}
-                <div className={`absolute inset-0 opacity-40 ${tier.gradient} pointer-events-none transition-opacity duration-300 group-hover:opacity-70`}></div>
-
-                <div className="relative z-10 flex flex-col h-full">
-                  <div className={`w-14 h-14 rounded-2xl ${tier.button} flex items-center justify-center mb-6 shadow-sm border border-white/50 backdrop-blur-sm`}>
-                    <tier.icon size={28} />
-                  </div>
-
-                  <h3 className={`text-2xl font-bold ${tier.text} mb-1`}>{tier.name}</h3>
-                  <span className={`text-lg font-extrabold ${tier.text} opacity-70 tracking-tight block mb-2`}>{tier.frequency}</span>
-                  <p className="text-gray-600 text-sm mb-6 h-10">{tier.description}</p>
-
-                  <div className="flex items-baseline gap-1 mb-8">
-                    <span className="text-4xl font-bold text-gray-900">€{tier.price}</span>
-                    <span className="text-gray-500 font-medium">/{tier.period}</span>
-                  </div>
-
-                  <ul className="space-y-4 mb-8 text-left flex-1">
-                    {tier.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-3 text-sm text-gray-700">
-                        <CheckCircle size={16} className={`shrink-0 mt-0.5 ${tier.text}`} />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <button
-                    onClick={() => onShowPaymentWizard(tier.id as SubscriptionTier, pricingMode)}
-                    className={`w-full py-4 rounded-xl font-bold shadow-sm transition-all hover:scale-105 active:scale-95 ${tier.button} border border-black/5 ring-1 ring-black/5 hover:ring-black/10`}
-                  >
-                    Suscribirse
-                  </button>
+                <div className={`w-14 h-14 rounded-2xl ${tier.button} flex items-center justify-center mb-6 shadow-inner`}>
+                  <tier.icon size={28} />
                 </div>
+
+                <h3 className={`text-2xl font-bold ${tier.text} mb-1`}>{tier.name}</h3>
+                <span className={`text-lg font-extrabold ${tier.text} opacity-70 tracking-tight block mb-2`}>{tier.frequency}</span>
+                <p className="text-gray-600 text-sm mb-6 h-10">{tier.description}</p>
+
+                <div className="flex items-baseline gap-1 mb-8">
+                  <span className="text-4xl font-bold text-gray-900">Ôé¼{tier.price}</span>
+                  <span className="text-gray-500 font-medium">/{tier.period}</span>
+                </div>
+
+                <ul className="space-y-4 mb-8 text-left flex-1">
+                  {tier.features.map((feature, i) => (
+                    <li key={i} className="flex items-start gap-3 text-sm text-gray-700">
+                      <CheckCircle size={16} className={`shrink-0 mt-0.5 ${tier.text}`} />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <button
+                  onClick={() => onShowPaymentWizard(tier.id as SubscriptionTier, pricingMode)}
+                  className={`w-full py-4 rounded-xl font-bold shadow-sm transition-all hover:scale-105 active:scale-95 ${tier.button} border border-black/5`}
+                >
+                  Suscribirse
+                </button>
               </div>
             ))}
           </div>
 
           <div className="mt-12 text-center">
             <button onClick={onShowBenefits} className="text-gray-500 hover:text-primary underline text-sm transition-colors mb-8">
-              Ver comparación detallada de beneficios
+              Ver comparaci├│n detallada de beneficios
             </button>
 
             <div className="flex flex-col items-center gap-3 opacity-70">
               <div className="flex items-center gap-4 text-gray-400">
                 <div className="flex items-center gap-1"><ShieldCheck size={16} /> <span className="text-xs font-semibold">Pago Seguro SSL</span></div>
-                <div className="flex items-center gap-1"><Lock size={16} /> <span className="text-xs font-semibold">Encriptación 256-bit</span></div>
+                <div className="flex items-center gap-1"><Lock size={16} /> <span className="text-xs font-semibold">Encriptaci├│n 256-bit</span></div>
               </div>
               <div className="flex items-center gap-2 text-gray-400 text-xs">
                 <span>Aceptamos:</span>
@@ -349,74 +340,61 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
               </div>
             </div>
           </div>
-        </section>
+        </div>
 
         {/* VOTING SECTION (Real Data) */}
         <VotingSection />
 
-        {/* DONIFY STORY (RESTORED FROM COMMIT, FULL WIDTH) */}
+        {/* NUESTRA HISTORIA / GARANT├ìA DE DONATIVOS */}
         <section
           ref={storyAnimation.ref}
-          className={`relative w-full py-24 border-y border-gray-200/50 transition-all duration-700 ${storyAnimation.isVisible ? 'animate-fade-in-up opacity-100' : 'opacity-0'}`}
+          className={`bg-primary-dark text-white py-24 px-6 md:px-12 relative overflow-hidden my-24 mx-4 md:mx-auto max-w-7xl rounded-3xl shadow-2xl ${storyAnimation.isVisible ? 'animate-fade-in-up opacity-100' : 'opacity-0'}`}
         >
-          {/* Logo watermark pattern */}
+          {/* Subtle logo pattern in background */}
           <div
-            className="absolute inset-0"
+            className="absolute inset-0 opacity-5 mix-blend-overlay"
             style={{
               backgroundImage: 'url(/donify_logo.jpg)',
-              backgroundSize: '72px 72px',
+              backgroundSize: '120px 120px',
               backgroundRepeat: 'repeat',
-              opacity: 0.045,
             }}
           />
-          {/* White overlay */}
-          <div className="absolute inset-0 bg-white/95" />
 
-          {/* Content */}
-          <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
-            <span className="text-primary font-bold uppercase tracking-widest text-xs mb-6 block">Nuestra Historia</span>
+          <div className="max-w-4xl mx-auto relative z-10 text-center">
+            <span className="text-secondary font-bold uppercase tracking-widest text-xs mb-6 block">Nuestra Identidad</span>
 
-            <p className="text-gray-700 text-lg md:text-xl leading-relaxed mb-6 max-w-3xl mx-auto">
-              Donify nace de una idea de querer ayudar, querer marcar una diferencia en nuestra sociedad tan llena de injusticias.
+            <h2 className="text-4xl md:text-5xl font-bold mb-8 text-white/95 leading-tight">Nuestra Historia y Compromiso</h2>
+
+            <p className="text-xl md:text-2xl text-white/90 leading-relaxed mb-14 font-light max-w-3xl mx-auto">
+              Donify nace de la simple idea de querer marcar una verdadera diferencia.
+              Creamos para solucionar los problemas modernos de la filantrop├¡a con:
             </p>
 
-            <p className="text-gray-700 text-lg md:text-xl leading-relaxed mb-10 max-w-3xl mx-auto font-medium">
-              La idea en mi opinión es brillante porque soluciona los problemas modernos que sufre la filantropía:
-            </p>
-
-            {/* 3 Pillars */}
-            <div className="flex flex-col sm:flex-row justify-center gap-3 mb-10">
-              <div className="flex items-center gap-2 bg-primary/5 border border-primary/15 px-5 py-3 rounded-full">
-                <span className="text-primary font-black">1.</span>
-                <span className="font-bold text-gray-800 text-sm">Suscripciones fuera del alcance de <span className="text-primary">TODOS</span></span>
+            <div className="grid sm:grid-cols-3 gap-6 mb-16 max-w-4xl mx-auto">
+              <div className="bg-white/10 backdrop-blur-md border border-white/10 px-6 py-8 rounded-2xl flex flex-col items-center gap-3 hover:bg-white/15 transition-colors">
+                <div className="w-14 h-14 bg-secondary/20 rounded-full flex items-center justify-center mb-2">
+                  <span className="text-2xl font-black text-white">1</span>
+                </div>
+                <span className="font-bold text-lg leading-tight">Suscripciones para todos</span>
               </div>
-              <div className="flex items-center gap-2 bg-primary/5 border border-primary/15 px-5 py-3 rounded-full">
-                <span className="text-primary font-black">2.</span>
-                <span className="font-bold text-gray-800 text-sm">Falta de <span className="text-primary">TRANSPARENCIA</span> en donaciones</span>
+              <div className="bg-white/10 backdrop-blur-md border border-white/10 px-6 py-8 rounded-2xl flex flex-col items-center gap-3 hover:bg-white/15 transition-colors">
+                <div className="w-14 h-14 bg-secondary/20 rounded-full flex items-center justify-center mb-2">
+                  <span className="text-2xl font-black text-white">2</span>
+                </div>
+                <span className="font-bold text-lg leading-tight">Transparencia radical</span>
               </div>
-              <div className="flex items-center gap-2 bg-primary/5 border border-primary/15 px-5 py-3 rounded-full">
-                <span className="text-primary font-black">3.</span>
-                <span className="font-bold text-gray-800 text-sm">No tener sistemas <span className="text-primary">DEMOCRÁTICOS</span></span>
+              <div className="bg-white/10 backdrop-blur-md border border-white/10 px-6 py-8 rounded-2xl flex flex-col items-center gap-3 hover:bg-white/15 transition-colors">
+                <div className="w-14 h-14 bg-secondary/20 rounded-full flex items-center justify-center mb-2">
+                  <span className="text-2xl font-black text-white">3</span>
+                </div>
+                <span className="font-bold text-lg leading-tight">Sistema democr├ítico</span>
               </div>
-            </div>
-
-            <p className="text-gray-600 text-base md:text-lg leading-relaxed max-w-3xl mx-auto mb-10">
-              Los 3 pilares claves de Donify son estos mismos, la flexibilidad y amplio rango de posibles donaciones,
-              la transparencia radical con el único objetivo en mente de ayudar, y la opinión de todos vosotros
-              para decidir qué ayudamos, de ahí el lema:
-            </p>
-
-            {/* Tagline */}
-            <div className="border-t border-gray-200 pt-8 mb-12">
-              <p className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">
-                Tu donación, <span className="text-primary">tu decisión.</span>
-              </p>
             </div>
 
             {/* Minimalistic Guarantee Link */}
-            <div className="inline-flex items-center gap-3 text-gray-600 hover:text-gray-900 transition-colors cursor-pointer group bg-white px-8 py-4 rounded-full border border-gray-200 shadow-sm hover:shadow-md">
-              <ShieldCheck className="w-6 h-6 text-primary" />
-              <span className="text-lg font-medium">Lee la <span className="underline decoration-1 underline-offset-[6px] group-hover:decoration-2 text-gray-900">Garantía de Donativos</span> de Donify</span>
+            <div className="inline-flex items-center gap-3 text-white/80 hover:text-white transition-colors cursor-pointer group bg-black/20 px-8 py-4 rounded-full border border-white/5">
+              <ShieldCheck className="w-6 h-6 text-secondary" />
+              <span className="text-lg font-medium">Lee la <span className="underline decoration-1 underline-offset-[6px] group-hover:decoration-2 text-white">Garant├¡a de Donativos</span> de Donify</span>
             </div>
           </div>
         </section>
@@ -436,21 +414,21 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
           <div className="grid md:grid-cols-3 gap-8 px-8 pb-12">
             {[
               {
-                name: "Laura Gómez",
+                name: "Laura G├│mez",
                 role: "Suscriptora Nivel Oro",
-                quote: "Nunca pensé que 2€ pudieran sentirse tan poderosos. Ver cómo mi voto ayuda a decidir el destino de los fondos es increíble.",
+                quote: "Nunca pens├® que 2Ôé¼ pudieran sentirse tan poderosos. Ver c├│mo mi voto ayuda a decidir el destino de los fondos es incre├¡ble.",
                 img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150"
               },
               {
                 name: "Carlos Ruiz",
                 role: "Suscriptor",
-                quote: "La transparencia lo es todo para mí. Aquí sé exactamente a dónde va cada céntimo. Es la forma más honesta de ayudar.",
+                quote: "La transparencia lo es todo para m├¡. Aqu├¡ s├® exactamente a d├│nde va cada c├®ntimo. Es la forma m├ís honesta de ayudar.",
                 img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150"
               },
               {
-                name: "Inés Cuevas",
+                name: "In├®s Cuevas",
                 role: "Voluntaria y Donante",
-                quote: "Me encanta la comunidad. No es solo dar dinero, es ser parte de un movimiento que elige qué problemas solucionar hoy.",
+                quote: "Me encanta la comunidad. No es solo dar dinero, es ser parte de un movimiento que elige qu├® problemas solucionar hoy.",
                 img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=150"
               }
             ].map((person, i) => (
