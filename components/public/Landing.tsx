@@ -354,70 +354,116 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
         {/* VOTING SECTION (Real Data) */}
         <VotingSection />
 
-        {/* DONIFY STORY (RESTORED FROM COMMIT, FULL WIDTH) */}
+        {/* DONIFY STORY (PREMIUM GOFUNDME STYLE) */}
         <section
           ref={storyAnimation.ref}
-          className={`relative w-full py-24 border-y border-gray-200/50 transition-all duration-700 ${storyAnimation.isVisible ? 'animate-fade-in-up opacity-100' : 'opacity-0'}`}
+          className={`relative w-full py-32 overflow-hidden transition-all duration-1000 ${storyAnimation.isVisible ? 'opacity-100' : 'opacity-0'}`}
         >
-          {/* Logo watermark pattern */}
+          {/* Beautiful very light warm background (like GoFundMe's beige sections) */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[#fcfbf9] to-[#f4f7f4] -z-20" />
+
+          {/* Abstract GoFundMe-like yellow/primary stripe or circle in the background */}
           <div
-            className="absolute inset-0"
+            className={`absolute top-0 right-0 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 transition-transform duration-1000 delay-500 -z-10 ${storyAnimation.isVisible ? 'scale-100' : 'scale-50'}`}
+          />
+          <div
+            className={`absolute bottom-0 left-0 w-[600px] h-[600px] bg-emerald-100/30 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/4 transition-transform duration-1000 delay-700 -z-10 ${storyAnimation.isVisible ? 'scale-100' : 'scale-50'}`}
+          />
+
+          {/* Logo watermark pattern (very subtle) */}
+          <div
+            className="absolute inset-0 -z-10"
             style={{
               backgroundImage: 'url(/donify_logo.jpg)',
-              backgroundSize: '72px 72px',
+              backgroundSize: '100px 100px',
               backgroundRepeat: 'repeat',
-              opacity: 0.045,
+              opacity: 0.02,
             }}
           />
-          {/* White overlay */}
-          <div className="absolute inset-0 bg-white/95" />
 
-          {/* Content */}
-          <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
-            <span className="text-primary font-bold uppercase tracking-widest text-xs mb-6 block">Nuestra Historia</span>
+          <div className="relative z-10 max-w-6xl mx-auto px-6">
 
-            <p className="text-gray-700 text-lg md:text-xl leading-relaxed mb-6 max-w-3xl mx-auto">
-              Donify nace de una idea de querer ayudar, querer marcar una diferencia en nuestra sociedad tan llena de injusticias.
-            </p>
+            {/* Header Area */}
+            <div className="text-center max-w-4xl mx-auto mb-20">
+              <span className="inline-block py-1.5 px-4 rounded-full bg-white shadow-sm border border-gray-100 text-primary font-bold uppercase tracking-widest text-xs mb-8">
+                Nuestra Historia
+              </span>
 
-            <p className="text-gray-700 text-lg md:text-xl leading-relaxed mb-10 max-w-3xl mx-auto font-medium">
-              La idea en mi opinión es brillante porque soluciona los problemas modernos que sufre la filantropía:
-            </p>
+              <h2 className={`text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 leading-tight mb-8 tracking-tight transition-all duration-1000 delay-100 ${storyAnimation.isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
+                Donify nace de la simple idea de querer ayudar.
+              </h2>
 
-            {/* 3 Pillars */}
-            <div className="flex flex-col sm:flex-row justify-center gap-3 mb-10">
-              <div className="flex items-center gap-2 bg-primary/5 border border-primary/15 px-5 py-3 rounded-full">
-                <span className="text-primary font-black">1.</span>
-                <span className="font-bold text-gray-800 text-sm">Suscripciones fuera del alcance de <span className="text-primary">TODOS</span></span>
-              </div>
-              <div className="flex items-center gap-2 bg-primary/5 border border-primary/15 px-5 py-3 rounded-full">
-                <span className="text-primary font-black">2.</span>
-                <span className="font-bold text-gray-800 text-sm">Falta de <span className="text-primary">TRANSPARENCIA</span> en donaciones</span>
-              </div>
-              <div className="flex items-center gap-2 bg-primary/5 border border-primary/15 px-5 py-3 rounded-full">
-                <span className="text-primary font-black">3.</span>
-                <span className="font-bold text-gray-800 text-sm">No tener sistemas <span className="text-primary">DEMOCRÁTICOS</span></span>
-              </div>
-            </div>
-
-            <p className="text-gray-600 text-base md:text-lg leading-relaxed max-w-3xl mx-auto mb-10">
-              Los 3 pilares claves de Donify son estos mismos, la flexibilidad y amplio rango de posibles donaciones,
-              la transparencia radical con el único objetivo en mente de ayudar, y la opinión de todos vosotros
-              para decidir qué ayudamos, de ahí el lema:
-            </p>
-
-            {/* Tagline */}
-            <div className="border-t border-gray-200 pt-8 mb-12">
-              <p className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">
-                Tu donación, <span className="text-primary">tu decisión.</span>
+              <p className={`text-xl md:text-2xl text-gray-600 leading-relaxed max-w-3xl mx-auto font-medium transition-all duration-1000 delay-200 ${storyAnimation.isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
+                Queremos marcar una diferencia en nuestra sociedad tan llena de injusticias. La idea, en nuestra opinión, es brillante porque soluciona los problemas modernos que sufre la filantropía:
               </p>
             </div>
 
-            {/* Minimalistic Guarantee Link */}
-            <div className="inline-flex items-center gap-3 text-gray-600 hover:text-gray-900 transition-colors cursor-pointer group bg-white px-8 py-4 rounded-full border border-gray-200 shadow-sm hover:shadow-md">
-              <ShieldCheck className="w-6 h-6 text-primary" />
-              <span className="text-lg font-medium">Lee la <span className="underline decoration-1 underline-offset-[6px] group-hover:decoration-2 text-gray-900">Garantía de Donativos</span> de Donify</span>
+            {/* The 3 Pillars as elegant floating cards */}
+            <div className={`grid md:grid-cols-3 gap-8 mb-24 transition-all duration-1000 delay-300 ${storyAnimation.isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
+
+              {/* Pillar 1 */}
+              <div className="bg-white rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110" />
+                <div className="w-14 h-14 bg-[#f0f9f4] text-primary rounded-2xl flex items-center justify-center mb-6 border border-primary/10">
+                  <Heart className="w-7 h-7" />
+                </div>
+                <div className="text-primary font-black text-4xl opacity-10 absolute bottom-6 right-6 pointer-events-none">01</div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Suscripciones fuera del alcance de <span className="text-primary">TODOS</span></h3>
+                <p className="text-gray-500 leading-relaxed">Hemos creado un sistema flexible y con un amplio rango de posibles donaciones para que cualquiera pueda participar.</p>
+              </div>
+
+              {/* Pillar 2 */}
+              <div className="bg-white rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110" />
+                <div className="w-14 h-14 bg-[#f0f9f4] text-primary rounded-2xl flex items-center justify-center mb-6 border border-primary/10">
+                  <ShieldCheck className="w-7 h-7" />
+                </div>
+                <div className="text-primary font-black text-4xl opacity-10 absolute bottom-6 right-6 pointer-events-none">02</div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Falta de <span className="text-primary">TRANSPARENCIA</span> en donaciones</h3>
+                <p className="text-gray-500 leading-relaxed">Transparencia radical con el único objetivo en mente de ayudar y saber exactamente a dónde va cada céntimo.</p>
+              </div>
+
+              {/* Pillar 3 */}
+              <div className="bg-white rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110" />
+                <div className="w-14 h-14 bg-[#f0f9f4] text-primary rounded-2xl flex items-center justify-center mb-6 border border-primary/10">
+                  <Users className="w-7 h-7" />
+                </div>
+                <div className="text-primary font-black text-4xl opacity-10 absolute bottom-6 right-6 pointer-events-none">03</div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">No tener sistemas <span className="text-primary">DEMOCRÁTICOS</span></h3>
+                <p className="text-gray-500 leading-relaxed">La opinión de todos vosotros es la que vale para decidir a quién ayudamos activamente cada mes.</p>
+              </div>
+
             </div>
+
+            {/* Tagline & Call to action */}
+            <div className={`text-center transition-all duration-1000 delay-500 ${storyAnimation.isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
+              <div className="inline-block relative">
+                {/* Decorative brackets */}
+                <div className="absolute -left-12 -top-8 text-[8rem] font-serif text-primary/10 leading-none select-none">"</div>
+                <div className="absolute -right-12 -bottom-16 text-[8rem] font-serif text-primary/10 leading-none select-none">"</div>
+
+                <p className="text-5xl md:text-7xl font-black text-gray-900 tracking-tighter mb-12 relative z-10">
+                  Tu donación, <br />
+                  <span className="text-primary relative inline-block mt-4">
+                    tu decisión.
+                    {/* Underline swoosh */}
+                    <svg className="absolute w-full h-4 -bottom-2 left-0 text-primary/30" viewBox="0 0 200 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M2.20312 9.42173C48.6946 3.90382 121.365 -0.662285 197.809 7.72898" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+                    </svg>
+                  </span>
+                </p>
+              </div>
+
+              {/* Minimalistic Guarantee Link - Elevated style */}
+              <div className="mt-8 flex justify-center">
+                <div onClick={() => window.open('/transparency', '_blank')} className="inline-flex items-center gap-3 text-gray-600 hover:text-gray-900 transition-colors cursor-pointer group px-8 py-4 rounded-full hover:bg-white/50 border border-transparent hover:border-gray-200">
+                  <ShieldCheck className="w-6 h-6 text-primary group-hover:scale-110 transition-transform" />
+                  <span className="text-lg font-medium">Lee la <span className="underline decoration-2 underline-offset-[6px] text-gray-900 group-hover:text-primary transition-colors">Garantía de Donativos</span> de Donify</span>
+                </div>
+              </div>
+            </div>
+
           </div>
         </section>
 
@@ -427,6 +473,7 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
           <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 via-transparent to-blue-50/50 rounded-3xl -z-10" />
           <div className="absolute -top-10 -right-10 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
           <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-blue-100/30 rounded-full blur-3xl" />
+
 
           <div className="text-center mb-12 pt-12">
             <span className="text-primary font-bold uppercase tracking-widest text-xs mb-2 block">Comunidad Donify</span>
