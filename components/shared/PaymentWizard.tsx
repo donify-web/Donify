@@ -18,7 +18,7 @@ interface PaymentWizardProps {
 export const PaymentWizard: React.FC<PaymentWizardProps> = ({ user, onClose, initialTier = 'bronce', initialType = 'simple' }) => {
     const [selectedTier, setSelectedTier] = useState<SubscriptionTier>(initialTier);
     const [selectedType, setSelectedType] = useState<SubscriptionType>(initialType);
-    const [isYearly, setIsYearly] = useState(false);
+    const isYearly = false; // One-time annual removed — always periodic
     const [showTierSelect, setShowTierSelect] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -322,30 +322,14 @@ export const PaymentWizard: React.FC<PaymentWizardProps> = ({ user, onClose, ini
                                     <p className="text-sm text-gray-500 font-medium">Hola {currentUser?.name || currentUser?.email}, configura tu donación.</p>
                                 </div>
 
-                                {/* FREQUENCY SELECTOR (ONE-TIME VS RECURRING) */}
-                                <div className="flex flex-col sm:flex-row items-center justify-between p-4 bg-white rounded-2xl border-2 border-gray-100 shadow-sm gap-4 mt-6">
-                                    <div className="flex items-center gap-3">
-                                        <div className={`p-2 rounded-xl ${isYearly ? 'bg-indigo-50 text-indigo-600' : 'bg-primary/10 text-primary'}`}>
-                                            {isYearly ? <Calendar size={20} /> : <RefreshCcw size={20} />}
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-black text-gray-900">{isYearly ? 'Pago Único (Anual)' : 'Suscripción Periódica'}</p>
-                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{isYearly ? 'Todo de una vez' : 'Cargo automático por periodo'}</p>
-                                        </div>
+                                {/* FREQUENCY BADGE — periodic only */}
+                                <div className="flex items-center gap-3 p-4 bg-white rounded-2xl border-2 border-gray-100 shadow-sm mt-6">
+                                    <div className="p-2 rounded-xl bg-primary/10 text-primary">
+                                        <RefreshCcw size={20} />
                                     </div>
-                                    <div className="flex bg-gray-100 p-1 rounded-xl w-full sm:w-auto">
-                                        <button
-                                            onClick={() => setIsYearly(false)}
-                                            className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-[10px] font-black uppercase transition-all ${!isYearly ? 'bg-white text-primary shadow-sm' : 'text-gray-400 hover:text-gray-600'}`}
-                                        >
-                                            Periódico
-                                        </button>
-                                        <button
-                                            onClick={() => setIsYearly(true)}
-                                            className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-[10px] font-black uppercase transition-all ${isYearly ? 'bg-white text-primary shadow-sm' : 'text-gray-400 hover:text-gray-600'}`}
-                                        >
-                                            Todo de una
-                                        </button>
+                                    <div>
+                                        <p className="text-sm font-black text-gray-900">Suscripción Periódica</p>
+                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Cargo automático · cancela cuando quieras</p>
                                     </div>
                                 </div>
 
@@ -399,61 +383,62 @@ export const PaymentWizard: React.FC<PaymentWizardProps> = ({ user, onClose, ini
                                         <div className="bg-white border-2 border-gray-100 p-1.5 rounded-2xl flex items-center gap-1.5 shadow-sm">
                                             <button
                                                 onClick={() => setSelectedType('simple')}
-                                                className={`flex-1 py-4 rounded-xl text-xs font-black transition-all ${selectedType === 'simple' ? 'bg-gray-900 text-white shadow-lg' : 'text-gray-400 hover:text-gray-600'}`}
+                                                className={`flex-1 py-3 rounded-xl text-sm font-black transition-all ${selectedType === 'simple' ? 'bg-gray-900 text-white shadow-lg' : 'text-gray-400 hover:text-gray-600'}`}
                                             >
-                                                Individual
+                                                Simple
                                             </button>
                                             <button
                                                 onClick={() => setSelectedType('pro')}
-                                                className={`flex-1 py-4 rounded-xl text-xs font-black transition-all ${selectedType === 'pro' ? 'bg-gray-900 text-white shadow-lg' : 'text-gray-400 hover:text-gray-600'}`}
+                                                className={`flex-1 py-3 rounded-xl text-sm font-black transition-all ${selectedType === 'pro' ? 'bg-gray-900 text-white shadow-lg' : 'text-gray-400 hover:text-gray-600'}`}
                                             >
-                                                Profesional
+                                                Pro
                                             </button>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* PRICE & ACTION */}
-                                <div className="bg-gray-900 rounded-3xl p-8 text-white relative overflow-hidden group mt-6">
-                                    <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none group-hover:scale-125 transition-transform duration-700">
-                                        <Zap size={80} fill="currentColor" className="text-primary" />
+                                <div className="bg-gray-900 rounded-3xl p-6 text-white relative overflow-hidden group mt-6">
+                                    <div className="absolute top-0 right-0 p-6 opacity-10 pointer-events-none group-hover:scale-125 transition-transform duration-700">
+                                        <Zap size={64} fill="currentColor" className="text-primary" />
                                     </div>
 
-                                    <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6">
-                                        <div className="text-center md:text-left">
-                                            <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-2 font-sans">Compromiso Seleccionado</p>
-                                            <div className="flex items-baseline justify-center md:justify-start gap-1">
-                                                <span className="text-5xl font-black">{displayPrice}€</span>
-                                                <span className="text-sm font-bold opacity-50">/{isYearly ? 'anual' : currentPlan?.frequency.toLowerCase()}</span>
+                                    <div className="relative z-10">
+                                        {/* Price row */}
+                                        <div className="flex items-center justify-between mb-5">
+                                            <div>
+                                                <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1">Total por periodo</p>
+                                                <div className="flex items-baseline gap-1">
+                                                    <span className="text-4xl font-black">{displayPrice}€</span>
+                                                    <span className="text-sm font-bold opacity-50">/{currentPlan?.frequency.toLowerCase()}</span>
+                                                </div>
                                             </div>
-                                            {isYearly && (
-                                                <p className="text-[10px] text-primary font-black uppercase tracking-widest mt-1">
-                                                    Ahorra gestiones periódicas
-                                                </p>
-                                            )}
+                                            <div className="text-right text-[10px] text-gray-500 font-bold uppercase leading-relaxed">
+                                                <span className="block">{currentPlan?.name}</span>
+                                                <span className="block text-primary">{selectedType === 'simple' ? 'Simple' : 'Pro'}</span>
+                                            </div>
                                         </div>
 
+                                        {/* CTA button — always full width */}
                                         <button
                                             onClick={handlePayment}
                                             disabled={isSubmitting}
-                                            className="w-full md:w-auto px-10 py-5 bg-primary text-white rounded-2xl font-black text-base shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3"
+                                            className="w-full py-4 bg-primary text-white rounded-2xl font-black text-base shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3"
                                         >
-                                            {isSubmitting ? <Loader2 className="animate-spin" size={24} /> : (
+                                            {isSubmitting ? <Loader2 className="animate-spin" size={22} /> : (
                                                 <>
-                                                    Pagar {isYearly ? 'Anual' : 'Suscripción'}
+                                                    Activar Suscripción
                                                     <ArrowRight size={20} />
                                                 </>
                                             )}
                                         </button>
-                                    </div>
 
-                                    <div className="mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-                                        <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                                            <Info size={14} className="text-primary" />
-                                            Sin permanencia • Cancela cuando quieras
-                                        </div>
-                                        <div className="flex gap-4 opacity-50">
-                                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" alt="Stripe" className="h-4 invert" />
+                                        <div className="mt-5 pt-4 border-t border-white/10 flex items-center justify-between gap-4">
+                                            <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                                                <Info size={13} className="text-primary shrink-0" />
+                                                Sin permanencia · cancela cuando quieras
+                                            </div>
+                                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" alt="Stripe" className="h-3.5 invert opacity-40" />
                                         </div>
                                     </div>
                                 </div>
