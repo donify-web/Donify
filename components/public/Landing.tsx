@@ -119,8 +119,8 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
 
       <div className="relative z-10">
 
-        {/* HERO SECTION - with offWhite background */}
-        <div className="bg-offWhite relative">
+        {/* HERO SECTION - with brand light blue background */}
+        <div className="bg-[#eef5fa] relative">
           {/* Subtle dotted pattern */}
           <div className="absolute inset-0 bg-pattern-dots opacity-30 mix-blend-multiply pointer-events-none"></div>
 
