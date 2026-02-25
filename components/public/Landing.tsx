@@ -212,19 +212,6 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
           </main>
         </div>
 
-        {/* STATS BANNER */}
-        <div
-          ref={statsAnimation.ref}
-          className={`bg-softYellow py-6 border-y border-yellow-100/50 transition-all duration-700 ${statsAnimation.isVisible ? 'animate-fade-in-up opacity-100' : 'opacity-0'}`}
-        >
-          <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-center items-center gap-6 md:gap-14 text-sm font-semibold text-gray-700">
-            <div className="flex items-center gap-2"><Zap className="text-yellow-600 w-5 h-5 flex-shrink-0" /> <span>Empezar a donar no tiene costes extra</span></div>
-            <div className="hidden md:block w-1 h-1 rounded-full bg-yellow-300"></div>
-            <div className="flex items-center gap-2"><Activity className="text-yellow-600 w-5 h-5 flex-shrink-0" /> <span>Impacto trackeado en tiempo real</span></div>
-            <div className="hidden md:block w-1 h-1 rounded-full bg-yellow-300"></div>
-            <div className="flex items-center gap-2"><Users className="text-yellow-600 w-5 h-5 flex-shrink-0" /> <span>El poder de miles de votos unidos</span></div>
-          </div>
-        </div>
 
         {/* CÓMO FUNCIONA - VÍDEO BANNERS */}
         <section
@@ -259,7 +246,7 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
         </section>
 
         {/* PRICING SECTION (Dark Brand Theme) */}
-        <section id="pricing" className="py-12 bg-gradient-to-br from-[#022b30] via-[#044c54] to-primary-dark relative shadow-inner overflow-hidden border-y border-[#086975]/30">
+        <section id="pricing" className="py-12 bg-gradient-to-br from-[#b5e3e8] via-[#044c54] to-primary-dark relative shadow-inner overflow-hidden border-y border-[#b5e3e8]/30">
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03] mix-blend-overlay"></div>
 
           <div className="mb-10 relative z-10 px-6 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">

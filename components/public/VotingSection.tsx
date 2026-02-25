@@ -83,7 +83,7 @@ export default function VotingSection() {
     return (
         <section className="py-24 bg-white relative overflow-hidden border-t border-gray-100">
             <div className="max-w-7xl mx-auto px-6">
-                <div className="text-left mb-12">
+                <div className="text-left mb-8">
                     <h2 className="text-3xl md:text-4xl font-black text-[#1c232f] mb-3 tracking-tight">
                         Tu donación,{' '}
                         <span className="relative inline-block text-primary z-10">
