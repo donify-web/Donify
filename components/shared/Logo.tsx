@@ -7,10 +7,9 @@ interface LogoProps {
 export const Logo: React.FC<LogoProps> = ({ className = "w-6 h-6" }) => {
   return (
     <img
-      src="/donify_logo.jpg"
+      src="/logo.svg"
       alt="Donify Logo"
-      className={className}
-      style={{ objectFit: 'contain' }}
+      className={`${className} object-contain`}
     />
   );
 };

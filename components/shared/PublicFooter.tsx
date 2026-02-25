@@ -28,9 +28,9 @@ export default function PublicFooter({ onNavigate }: PublicFooterProps) {
                 <div className="flex flex-col md:flex-row items-center gap-6">
                     <div className="flex items-center gap-2 pr-6 border-r border-slate-700 hidden md:flex">
                         <img
-                            src="/donify_logo.jpg"
+                            src="/logo.svg"
                             alt="Donify Logo"
-                            className="w-6 h-6 rounded-full object-cover opacity-70 group-hover:opacity-100 transition-opacity mix-blend-screen"
+                            className="w-6 h-6 object-contain opacity-70 group-hover:opacity-100 transition-opacity"
                         />
                         <span className="font-semibold text-slate-300 tracking-wide">Donify © 2026</span>
                     </div>
@@ -55,9 +55,9 @@ export default function PublicFooter({ onNavigate }: PublicFooterProps) {
                     </div>
                     <div className="flex items-center gap-2 md:hidden">
                         <img
-                            src="/donify_logo.jpg"
+                            src="/logo.svg"
                             alt="Donify Logo"
-                            className="w-6 h-6 rounded-full object-cover opacity-70 mix-blend-screen"
+                            className="w-6 h-6 object-contain opacity-70"
                         />
                         <span className="font-semibold text-slate-300 tracking-wide">Donify © 2026</span>
                     </div>
