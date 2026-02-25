@@ -13,10 +13,13 @@ export default {
                 primary: {
                     DEFAULT: '#0ca1b3',
                     hover: '#049db0',
+                    dark: '#086975',
                 },
                 secondary: '#7ab8de',
                 bgMain: '#edf6f7',
                 textMain: '#73797a',
+                offWhite: '#fbf8f6',
+                softYellow: '#fffdf0',
             },
             fontFamily: {
                 sans: ['Inter', 'sans-serif'],
@@ -32,11 +35,16 @@ export default {
             animation: {
                 'float': 'float 6s ease-in-out infinite',
                 'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
             },
             keyframes: {
                 float: {
                     '0%, 100%': { transform: 'translateY(0)' },
                     '50%': { transform: 'translateY(-10px)' },
+                },
+                fadeInUp: {
+                    '0%': { opacity: '0', transform: 'translateY(20px)' },
+                    '100%': { opacity: '1', transform: 'translateY(0)' },
                 }
             }
         }
