@@ -212,6 +212,19 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
           </main>
         </div>
 
+        {/* STATS BANNER */}
+        <div
+          ref={statsAnimation.ref}
+          className={`bg-teal-50 py-6 border-y border-teal-100/50 transition-all duration-700 ${statsAnimation.isVisible ? 'animate-fade-in-up opacity-100' : 'opacity-0'}`}
+        >
+          <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-center items-center gap-6 md:gap-14 text-sm font-semibold text-gray-700">
+            <div className="flex items-center gap-2"><Zap className="text-primary w-5 h-5 flex-shrink-0" /> <span>Empezar a donar no tiene costes extra</span></div>
+            <div className="hidden md:block w-1 h-1 rounded-full bg-teal-300"></div>
+            <div className="flex items-center gap-2"><Activity className="text-primary w-5 h-5 flex-shrink-0" /> <span>Impacto trackeado en tiempo real</span></div>
+            <div className="hidden md:block w-1 h-1 rounded-full bg-teal-300"></div>
+            <div className="flex items-center gap-2"><Users className="text-primary w-5 h-5 flex-shrink-0" /> <span>El poder de miles de votos unidos</span></div>
+          </div>
+        </div>
 
         {/* CÓMO FUNCIONA - VÍDEO BANNERS */}
         <section
@@ -245,34 +258,34 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
           </div>
         </section>
 
-        {/* PRICING SECTION (Dark Brand Theme) */}
-        <section id="pricing" className="py-12 bg-gradient-to-br from-[#b5e3e8] via-[#044c54] to-primary-dark relative shadow-inner overflow-hidden border-y border-[#b5e3e8]/30">
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03] mix-blend-overlay"></div>
+        {/* PRICING SECTION (Solid Brand Light Theme) */}
+        <section id="pricing" className="py-12 bg-[#b5e3e8] relative shadow-inner overflow-hidden border-y border-white/50">
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
 
           <div className="mb-10 relative z-10 px-6 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
             <div className="text-left max-w-2xl">
-              <span className="text-primary font-bold uppercase tracking-widest text-[10px] sm:text-xs mb-2 block drop-shadow-sm">Suscripciones</span>
-              <h2 className="text-3xl lg:text-4xl font-black text-white mb-2 tracking-tight drop-shadow-md">Elige tu nivel de impacto</h2>
-              <p className="text-base text-teal-50 font-medium opacity-90">
+              <span className="text-primary-dark font-bold uppercase tracking-widest text-[10px] sm:text-xs mb-2 block drop-shadow-sm">Suscripciones</span>
+              <h2 className="text-3xl lg:text-4xl font-black text-gray-900 mb-2 tracking-tight drop-shadow-sm">Elige tu nivel de impacto</h2>
+              <p className="text-base text-gray-700 font-medium opacity-90">
                 Transparencia total. Cancela cuando quieras. El 100% de tu voto cuenta.
               </p>
             </div>
 
             {/* TOGGLE */}
             <div className="flex-shrink-0 md:pb-2">
-              <div className="bg-[#022b30]/50 p-1 rounded-full flex relative shadow-inner border border-white/10 backdrop-blur-sm">
+              <div className="bg-white/60 p-1 rounded-full flex relative shadow-inner border border-white/40 backdrop-blur-sm">
                 <div
                   className={`absolute top-1 bottom-1 w-1/2 bg-white rounded-full shadow transition-transform duration-300 ease-in-out ${pricingMode === 'pro' ? 'translate-x-full' : 'translate-x-0'}`}
                 ></div>
                 <button
                   onClick={() => setPricingMode('simple')}
-                  className={`relative z-10 px-5 py-2 rounded-full font-bold text-sm transition-colors ${pricingMode === 'simple' ? 'text-[#044c54]' : 'text-teal-100 hover:text-white'}`}
+                  className={`relative z-10 px-5 py-2 rounded-full font-bold text-sm transition-colors ${pricingMode === 'simple' ? 'text-gray-900' : 'text-gray-600 hover:text-gray-900'}`}
                 >
                   Simple (0.99€)
                 </button>
                 <button
                   onClick={() => setPricingMode('pro')}
-                  className={`relative z-10 px-5 py-2 rounded-full font-bold text-sm transition-colors ${pricingMode === 'pro' ? 'text-[#044c54]' : 'text-teal-100 hover:text-white'}`}
+                  className={`relative z-10 px-5 py-2 rounded-full font-bold text-sm transition-colors ${pricingMode === 'pro' ? 'text-gray-900' : 'text-gray-600 hover:text-gray-900'}`}
                 >
                   Pro (1.99€)
                 </button>
