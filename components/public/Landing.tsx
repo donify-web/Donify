@@ -330,6 +330,12 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
               </div>
             ))}
           </div>
+          <div className="mt-12 text-center relative z-10">
+            <button onClick={onShowBenefits} className="text-teal-100/70 hover:text-white underline underline-offset-4 text-sm font-medium transition-colors flex items-center justify-center gap-2 mx-auto">
+              <Lock size={14} className="opacity-70" />
+              Seguridad y transparencia del pago garantizadas
+            </button>
+          </div>
 
         </section>
 
