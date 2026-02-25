@@ -241,14 +241,23 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
           {/* VOTING SECTION (Real Data) */}
           <VotingSection />
 
-          {/* TRUST INDICATORS */}
-          <div className="py-20 border-t border-gray-200/50">
-            <h3 className="text-gray-400 font-semibold uppercase tracking-widest text-sm mb-10">Con la confianza de</h3>
-            <div className="flex flex-wrap justify-center items-center gap-12 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-              <div className="text-2xl font-black text-gray-800 flex items-center gap-2"><Globe className="text-primary" /> GlobalGiving</div>
-              <div className="text-2xl font-black text-gray-800 flex items-center gap-2"><ShieldCheck className="text-primary" /> CharityWatch</div>
-              <div className="text-2xl font-black text-gray-800 flex items-center gap-2"><Heart className="text-primary" /> Benevity</div>
-            </div>
+          {/* DONIFY STORY */}
+          <div className="py-20 border-t border-gray-200/50 max-w-3xl mx-auto text-center">
+            <span className="text-primary font-bold uppercase tracking-widest text-xs mb-4 block">Nuestra Historia</span>
+            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 leading-snug">
+              Nació de una pregunta simple:<br />
+              <span className="text-primary">¿Por qué donar tiene que ser complicado?</span>
+            </h3>
+            <p className="text-gray-500 text-lg leading-relaxed mb-6">
+              Donify empezó en 2024 cuando un grupo de amigos se dio cuenta de que querían ayudar
+              pero no sabían a quién, cómo ni cuánto. Las plataformas existentes eran opacas,
+              complicadas y nunca sabías si tu dinero llegaba de verdad.
+            </p>
+            <p className="text-gray-500 text-lg leading-relaxed">
+              Así que construimos lo que nos hubiera gustado encontrar: <strong className="text-gray-800">una suscripción mínima,
+                voto democrático y transparencia total</strong>. Sin trucos, sin comisiones ocultas,
+              sin grandes promesas vacías. Solo personas eligiendo juntas a quién ayudar.
+            </p>
           </div>
 
           {/* VOICES OF IMPACT - TESTIMONIALS */}
