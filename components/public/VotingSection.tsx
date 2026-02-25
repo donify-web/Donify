@@ -84,8 +84,14 @@ export default function VotingSection() {
         <section className="py-24 bg-white relative overflow-hidden border-t border-gray-100">
             <div className="max-w-7xl mx-auto px-6">
                 <div className="text-left mb-12">
-                    <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-2 tracking-tight">
-                        Descubre el impacto que estás impulsando
+                    <h2 className="text-3xl md:text-4xl font-black text-[#1c232f] mb-3 tracking-tight">
+                        Tu donación,{' '}
+                        <span className="relative inline-block text-primary z-10">
+                            tu decisión.
+                            <svg className="absolute -bottom-2 left-0 w-full h-3 text-primary/30 z-[-1]" viewBox="0 0 200 12" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M2.5 9.5C50.5 3.5 150.5 3.5 197.5 9.5" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+                            </svg>
+                        </span>
                     </h2>
                     <p className="text-base text-gray-600 font-medium max-w-2xl">
                         Tu suscripción decide el destino de los fondos. Mira cómo votan los miembros en tiempo real.

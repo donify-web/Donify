@@ -181,9 +181,14 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
               Revolucionando la filantropía
             </div>
 
-            <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 mb-6 tracking-tight leading-tight max-w-4xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+            <h1 className="text-5xl lg:text-7xl font-bold text-[#1c232f] mb-6 tracking-tight leading-tight max-w-4xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
               Tu cambio suelto <br className="hidden md:block" />
-              <span className="text-gradient">cambia el mundo.</span>
+              <span className="relative inline-block text-primary z-10">
+                cambia el mundo.
+                <svg className="absolute -bottom-1 lg:-bottom-2 left-0 w-full h-3 lg:h-5 text-primary/30 z-[-1]" viewBox="0 0 200 12" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M2.5 9.5C50.5 3.5 150.5 3.5 197.5 9.5" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+                </svg>
+              </span>
             </h1>
 
             <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
@@ -329,12 +334,6 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
                 </div>
               </div>
             ))}
-          </div>
-          <div className="mt-12 text-center relative z-10">
-            <button onClick={onShowBenefits} className="text-teal-100/70 hover:text-white underline underline-offset-4 text-sm font-medium transition-colors flex items-center justify-center gap-2 mx-auto">
-              <Lock size={14} className="opacity-70" />
-              Seguridad y transparencia del pago garantizadas
-            </button>
           </div>
 
         </section>
