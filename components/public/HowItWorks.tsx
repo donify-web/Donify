@@ -7,8 +7,8 @@ import {
   Calculator,
   Users,
   Gift,
-  ChevronDown,
-  ChevronUp
+  HelpCircle,
+  ArrowRight
 } from 'lucide-react';
 
 interface HowItWorksProps {
@@ -20,25 +20,9 @@ export default function HowItWorks({ onNavigate }: HowItWorksProps) {
   const [donorCount, setDonorCount] = useState(1000);
   const [avgDonation, setAvgDonation] = useState(0.99); // Simple vs Pro
 
-  // FAQ State
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
-
-  const toggleFaq = (index: number) => {
-    setOpenFaq(openFaq === index ? null : index);
-  };
-
   const monthlyImpact = (donorCount * avgDonation).toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
 
-  const faqs = [
-    {
-      q: "¿Donify se queda con dinero?",
-      a: "No retenemos beneficios. Solo se descuentan las tarifas de procesamiento de pago (Stripe) y un coste operativo mínimo para mantener los servidores. El 100% del dinero restante llega a la causa."
-    },
-    {
-      q: "¿Quién elige las ONGs?",
-      a: "Un equipo de compliance verifica que las organizaciones sean legales, éticas y puedan emitir certificados de donación. Luego, TÚ y la comunidad decidís quién recibe los fondos mediante votación."
-    }
-  ];
+
 
   return (
     <div className="min-h-screen bg-white font-sans text-textMain animate-in fade-in duration-500">
@@ -177,29 +161,26 @@ export default function HowItWorks({ onNavigate }: HowItWorksProps) {
         </div>
       </section>
 
-      {/* FAQ SECTION */}
-      <section className="py-20 px-6 max-w-3xl mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-12">Preguntas Frecuentes</h2>
-        <div className="space-y-4">
-          {faqs.map((faq, idx) => (
-            <div
-              key={idx}
-              className="border border-gray-200 rounded-xl overflow-hidden hover:border-primary/50 transition-colors"
-            >
-              <button
-                onClick={() => toggleFaq(idx)}
-                className="w-full flex justify-between items-center p-6 text-left bg-white"
-              >
-                <span className="font-semibold text-lg">{faq.q}</span>
-                {openFaq === idx ? <ChevronUp className="text-primary" /> : <ChevronDown className="text-gray-400" />}
-              </button>
-              {openFaq === idx && (
-                <div className="p-6 pt-0 text-gray-600 bg-gray-50/50">
-                  {faq.a}
-                </div>
-              )}
+      {/* FAQ TEASER — Link to dedicated page */}
+      <section className="py-16 px-6">
+        <div className="max-w-3xl mx-auto">
+          <div className="bg-white border border-gray-100 rounded-3xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary shrink-0">
+                <HelpCircle size={24} />
+              </div>
+              <div>
+                <p className="font-bold text-gray-900">¿Tienes más preguntas?</p>
+                <p className="text-sm text-gray-500">Consulta nuestra sección de preguntas frecuentes.</p>
+              </div>
             </div>
-          ))}
+            <button
+              onClick={() => onNavigate('faq')}
+              className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-bold text-sm hover:scale-105 transition-all shrink-0"
+            >
+              Ver FAQ <ArrowRight size={16} />
+            </button>
+          </div>
         </div>
       </section>
 

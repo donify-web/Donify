@@ -54,20 +54,25 @@ export const PRICE_IDS = {
  */
 export const initiateCheckout = async (priceId: string, userId: string, mode: 'payment' | 'subscription' = 'subscription') => {
   try {
-    console.log(`[Stripe] Initiating checkout for ${priceId} (${mode}) for user ${userId}`);
+    console.log(`[Stripe] Creating checkout session for ${priceId} (${mode}), user ${userId}`);
 
-    // Call Supabase Edge Function
+    // Call Supabase Edge Function to create the session server-side
     const { data: session, error } = await supabase.functions.invoke('create-checkout-session', {
       body: { priceId, userId, mode, returnUrl: window.location.origin }
     });
 
-    if (error) throw error;
+    if (error) {
+      console.error('[Stripe] Edge function error:', error);
+      throw new Error(error.message || JSON.stringify(error));
+    }
 
-    const stripe = await stripePromise;
-    if (!stripe) throw new Error("Stripe failed to load");
+    if (!session?.url) {
+      console.error('[Stripe] No URL returned from edge function:', session);
+      throw new Error('No se recibió URL de checkout de Stripe.');
+    }
 
-    const { error: stripeError } = await stripe.redirectToCheckout({ sessionId: session.sessionId });
-    if (stripeError) throw stripeError;
+    // Redirect to Stripe Checkout hosted page (modern approach)
+    window.location.href = session.url;
 
     return { success: true };
 

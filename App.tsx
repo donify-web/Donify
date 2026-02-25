@@ -15,6 +15,7 @@ import AdminPanel from './components/admin/AdminPanel';
 import LaunchCountdown from './components/public/LaunchCountdown';
 import Organizations from './components/public/Organizations';
 import VotingPage from './components/public/VotingPage';
+import FAQ from './components/public/FAQ';
 import Settings from './components/donor/Settings';
 import PublicNavbar from './components/public/PublicNavbar';
 import PublicFooter from './components/shared/PublicFooter';
@@ -203,6 +204,8 @@ function AppContent() {
         return <LegalView onNavigate={setCurrentView} initialTab="cookies" />;
       case 'transparency':
         return <LegalView onNavigate={setCurrentView} initialTab="transparency" />;
+      case 'faq':
+        return <FAQ />;
       case 'app':
       case 'dashboard-impact':
       case 'dashboard-news':

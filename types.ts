@@ -21,7 +21,8 @@ export type PageView =
   | 'dashboard-impact'
   | 'dashboard-news'
   | 'voting'
-  | 'transparency';
+  | 'transparency'
+  | 'faq';
 
 export type SubscriptionTier = 'bronce' | 'plata' | 'oro' | 'diamante';
 

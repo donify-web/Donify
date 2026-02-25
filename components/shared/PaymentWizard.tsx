@@ -118,13 +118,17 @@ export const PaymentWizard: React.FC<PaymentWizardProps> = ({ user, onClose, ini
 
             if (!priceId) throw new Error("Tarifa no configurada correctamente.");
 
+            console.log('[PaymentWizard] Initiating checkout:', { priceId, userId: currentUser.id, tier: selectedTier, type: selectedType });
+
             const result = await initiateCheckout(priceId, currentUser.id);
             if (!result.success) {
-                alert(result.error);
+                const errMsg = (result.error as any)?.message || JSON.stringify(result.error) || 'Error desconocido';
+                console.error('[PaymentWizard] Checkout failed:', result.error);
+                alert("Error al conectar con Stripe: " + errMsg);
             }
         } catch (error: any) {
-            console.error(error);
-            alert("Error al iniciar el pago: " + error.message);
+            console.error('[PaymentWizard] Exception:', error);
+            alert("Error al iniciar el pago: " + (error?.message || JSON.stringify(error)));
         } finally {
             setIsSubmitting(false);
         }

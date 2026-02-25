@@ -20,6 +20,7 @@ export default function PublicFooter({ onNavigate }: PublicFooterProps) {
                     <button onClick={() => onNavigate('transparency')} className="hover:text-gray-900 transition-colors">Transparencia</button>
                     <button onClick={() => onNavigate('cookies')} className="hover:text-gray-900 transition-colors">Cookies</button>
                     <button onClick={() => onNavigate('contact')} className="hover:text-gray-900 transition-colors">Contacto</button>
+                    <button onClick={() => onNavigate('faq')} className="hover:text-gray-900 transition-colors">FAQ</button>
                 </div>
             </div>
         </footer>
