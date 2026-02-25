@@ -253,32 +253,34 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
           </div>
         </section>
 
-        {/* PRICING SECTION (Light Compact Theme) */}
-        <section id="pricing" className="py-12 bg-[#fafafa] relative border-y border-gray-200 shadow-inner overflow-hidden">
+        {/* PRICING SECTION (Blue Gradient Theme) */}
+        <section id="pricing" className="py-12 bg-gradient-to-br from-blue-700 via-blue-600 to-sky-500 relative shadow-inner overflow-hidden border-y border-blue-800/30">
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
+
           <div className="mb-10 relative z-10 px-6 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
             <div className="text-left max-w-2xl">
-              <span className="text-primary font-bold uppercase tracking-widest text-[10px] sm:text-xs mb-2 block">Suscripciones</span>
-              <h2 className="text-3xl lg:text-4xl font-black text-gray-900 mb-2 tracking-tight">Elige tu nivel de impacto</h2>
-              <p className="text-base text-gray-600 font-medium">
+              <span className="text-sky-300 font-bold uppercase tracking-widest text-[10px] sm:text-xs mb-2 block drop-shadow-sm">Suscripciones</span>
+              <h2 className="text-3xl lg:text-4xl font-black text-white mb-2 tracking-tight drop-shadow-md">Elige tu nivel de impacto</h2>
+              <p className="text-base text-blue-100 font-medium">
                 Transparencia total. Cancela cuando quieras. El 100% de tu voto cuenta.
               </p>
             </div>
 
             {/* TOGGLE */}
             <div className="flex-shrink-0 md:pb-2">
-              <div className="bg-gray-200 p-1 rounded-full flex relative shadow-inner border border-gray-300/50">
+              <div className="bg-blue-900/30 p-1 rounded-full flex relative shadow-inner border border-white/10 backdrop-blur-sm">
                 <div
                   className={`absolute top-1 bottom-1 w-1/2 bg-white rounded-full shadow transition-transform duration-300 ease-in-out ${pricingMode === 'pro' ? 'translate-x-full' : 'translate-x-0'}`}
                 ></div>
                 <button
                   onClick={() => setPricingMode('simple')}
-                  className={`relative z-10 px-5 py-2 rounded-full font-bold text-sm transition-colors ${pricingMode === 'simple' ? 'text-gray-900' : 'text-gray-500'}`}
+                  className={`relative z-10 px-5 py-2 rounded-full font-bold text-sm transition-colors ${pricingMode === 'simple' ? 'text-blue-900' : 'text-blue-100 hover:text-white'}`}
                 >
                   Simple (0.99€)
                 </button>
                 <button
                   onClick={() => setPricingMode('pro')}
-                  className={`relative z-10 px-5 py-2 rounded-full font-bold text-sm transition-colors ${pricingMode === 'pro' ? 'text-gray-900' : 'text-gray-500'}`}
+                  className={`relative z-10 px-5 py-2 rounded-full font-bold text-sm transition-colors ${pricingMode === 'pro' ? 'text-blue-900' : 'text-blue-100 hover:text-white'}`}
                 >
                   Pro (1.99€)
                 </button>
