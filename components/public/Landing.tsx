@@ -50,9 +50,9 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       icon: ShieldCheck,
       description: 'Tu impacto empieza aquí',
       gradient: 'bg-gradient-bronze',
-      border: 'border-amber-500/40 ring-1 ring-amber-500/20',
-      text: 'text-amber-400',
-      button: 'bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 border-amber-500/30',
+      border: 'border-orange-200',
+      text: 'text-amber-800',
+      button: 'bg-amber-100 text-amber-900 hover:bg-amber-200 border-amber-200/50',
       features: [
         'Potestad de voto',
         'Certificado de donación (PDF Bronce)'
@@ -67,9 +67,9 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       icon: Star,
       description: 'Más compromiso, más ayuda',
       gradient: 'bg-gradient-silver',
-      border: 'border-slate-300/40 ring-1 ring-slate-300/20',
-      text: 'text-slate-200',
-      button: 'bg-slate-400/10 text-slate-200 hover:bg-slate-400/20 border-slate-400/30',
+      border: 'border-gray-200',
+      text: 'text-gray-800',
+      button: 'bg-gray-200 text-gray-900 hover:bg-gray-300 border-gray-300/50',
       features: [
         'Potestad de voto',
         'Certificado de donación (PDF Plata)'
@@ -84,9 +84,9 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       icon: Zap,
       description: 'Lidera el cambio real',
       gradient: 'bg-gradient-gold',
-      border: 'border-yellow-400/40 ring-1 ring-yellow-400/20',
-      text: 'text-yellow-400',
-      button: 'bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500/20 border-yellow-500/30',
+      border: 'border-yellow-200',
+      text: 'text-yellow-800',
+      button: 'bg-yellow-100 text-yellow-900 hover:bg-yellow-200 border-yellow-200/50',
       features: [
         'Potestad de voto',
         'Certificado de donación (PDF Oro)',
@@ -102,9 +102,9 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       icon: Crown,
       description: 'Impacto transformador',
       gradient: 'bg-gradient-diamond',
-      border: 'border-cyan-400/40 ring-1 ring-cyan-400/20',
-      text: 'text-cyan-400',
-      button: 'bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 border-cyan-500/30',
+      border: 'border-cyan-200',
+      text: 'text-cyan-900',
+      button: 'bg-cyan-100 text-cyan-900 hover:bg-cyan-200 border-cyan-200/50',
       features: [
         'Potestad de voto',
         'Certificado de donación (PDF Diamante)',
@@ -253,36 +253,32 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
           </div>
         </section>
 
-        {/* PRICING SECTION (Dark Spotify Theme) */}
-        <section id="pricing" className="py-12 bg-slate-900 relative border-y border-slate-800 shadow-inner overflow-hidden">
-          {/* Subtle neon glow effects in background */}
-          <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] pointer-events-none"></div>
-          <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none"></div>
-
+        {/* PRICING SECTION (Light Compact Theme) */}
+        <section id="pricing" className="py-12 bg-[#fafafa] relative border-y border-gray-200 shadow-inner overflow-hidden">
           <div className="mb-10 relative z-10 px-6 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
             <div className="text-left max-w-2xl">
-              <span className="text-primary font-bold uppercase tracking-widest text-[10px] sm:text-xs mb-3 block">Suscripciones</span>
-              <h2 className="text-3xl lg:text-4xl font-black text-white mb-4 tracking-tight">Elige tu nivel de impacto</h2>
-              <p className="text-lg text-slate-400 font-medium">
+              <span className="text-primary font-bold uppercase tracking-widest text-[10px] sm:text-xs mb-2 block">Suscripciones</span>
+              <h2 className="text-3xl lg:text-4xl font-black text-gray-900 mb-2 tracking-tight">Elige tu nivel de impacto</h2>
+              <p className="text-base text-gray-600 font-medium">
                 Transparencia total. Cancela cuando quieras. El 100% de tu voto cuenta.
               </p>
             </div>
 
             {/* TOGGLE */}
             <div className="flex-shrink-0 md:pb-2">
-              <div className="bg-slate-800 p-1 rounded-full flex relative border border-slate-700 shadow-inner">
+              <div className="bg-gray-200 p-1 rounded-full flex relative shadow-inner border border-gray-300/50">
                 <div
-                  className={`absolute top-1 bottom-1 w-1/2 bg-slate-600 rounded-full shadow-sm transition-transform duration-300 ease-in-out ${pricingMode === 'pro' ? 'translate-x-full' : 'translate-x-0'}`}
+                  className={`absolute top-1 bottom-1 w-1/2 bg-white rounded-full shadow transition-transform duration-300 ease-in-out ${pricingMode === 'pro' ? 'translate-x-full' : 'translate-x-0'}`}
                 ></div>
                 <button
                   onClick={() => setPricingMode('simple')}
-                  className={`relative z-10 px-6 py-2.5 rounded-full font-bold text-sm transition-colors ${pricingMode === 'simple' ? 'text-white' : 'text-slate-400'}`}
+                  className={`relative z-10 px-5 py-2 rounded-full font-bold text-sm transition-colors ${pricingMode === 'simple' ? 'text-gray-900' : 'text-gray-500'}`}
                 >
                   Simple (0.99€)
                 </button>
                 <button
                   onClick={() => setPricingMode('pro')}
-                  className={`relative z-10 px-6 py-2.5 rounded-full font-bold text-sm transition-colors ${pricingMode === 'pro' ? 'text-white' : 'text-slate-400'}`}
+                  className={`relative z-10 px-5 py-2 rounded-full font-bold text-sm transition-colors ${pricingMode === 'pro' ? 'text-gray-900' : 'text-gray-500'}`}
                 >
                   Pro (1.99€)
                 </button>
@@ -294,37 +290,37 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
             {tiers.map((tier) => (
               <div
                 key={tier.id}
-                className={`relative group rounded-[2rem] p-8 bg-slate-800/80 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.3)] transition-all duration-300 hover:-translate-y-2 flex flex-col overflow-hidden border ${tier.border}`}
+                className={`relative group rounded-[1.5rem] p-6 bg-white shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col overflow-hidden border ${tier.border}`}
               >
                 {/* Soft gradient aura behind the content */}
-                <div className={`absolute inset-0 opacity-40 ${tier.gradient} pointer-events-none transition-opacity duration-300 group-hover:opacity-70`}></div>
+                <div className={`absolute inset-0 opacity-10 ${tier.gradient} pointer-events-none transition-opacity duration-300 group-hover:opacity-20`}></div>
 
                 <div className="relative z-10 flex flex-col h-full">
-                  <div className={`w-14 h-14 rounded-2xl ${tier.button} flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(255,255,255,0.1)] border border-white/10 backdrop-blur-sm`}>
-                    <tier.icon size={28} />
+                  <div className={`w-12 h-12 rounded-xl ${tier.button} flex items-center justify-center mb-4 shadow-sm border border-white/50 backdrop-blur-sm`}>
+                    <tier.icon size={24} />
                   </div>
 
-                  <h3 className={`text-2xl font-bold text-white mb-1`}>{tier.name}</h3>
-                  <span className={`text-lg font-extrabold ${tier.text} opacity-90 tracking-tight block mb-2 drop-shadow-md`}>{tier.frequency}</span>
-                  <p className="text-slate-400 text-sm mb-6 h-10">{tier.description}</p>
+                  <h3 className={`text-xl font-bold text-gray-900 mb-0.5`}>{tier.name}</h3>
+                  <span className={`text-base font-extrabold ${tier.text} tracking-tight block mb-1 drop-shadow-sm`}>{tier.frequency}</span>
+                  <p className="text-gray-500 text-xs mb-4">{tier.description}</p>
 
-                  <div className="flex items-baseline gap-1 mb-8">
-                    <span className="text-4xl font-bold text-white">€{tier.price}</span>
-                    <span className="text-slate-500 font-medium">/{tier.period}</span>
+                  <div className="flex items-baseline gap-1 mb-5">
+                    <span className="text-3xl font-bold text-gray-900">€{tier.price}</span>
+                    <span className="text-gray-500 font-medium text-sm">/{tier.period}</span>
                   </div>
 
-                  <ul className="space-y-3 mb-8 text-left flex-1">
+                  <ul className="space-y-2 mb-6 text-left flex-1">
                     {tier.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-3 text-sm text-slate-300">
-                        <CheckCircle size={16} className={`shrink-0 mt-0.5 ${tier.text}`} />
-                        <span>{feature}</span>
+                      <li key={i} className="flex items-start gap-2 text-xs text-gray-700 font-medium">
+                        <CheckCircle size={14} className={`shrink-0 mt-0.5 ${tier.text}`} />
+                        <span className="leading-snug">{feature}</span>
                       </li>
                     ))}
                   </ul>
 
                   <button
                     onClick={() => onShowPaymentWizard(tier.id as SubscriptionTier, pricingMode)}
-                    className={`w-full py-4 rounded-xl font-bold border transition-all hover:scale-105 active:scale-95 ${tier.button}`}
+                    className={`w-full py-2.5 rounded-lg font-bold border transition-all hover:scale-105 active:scale-95 text-sm ${tier.button}`}
                   >
                     Suscribirse
                   </button>
