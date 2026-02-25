@@ -81,91 +81,68 @@ export default function VotingSection() {
     ];
 
     return (
-        <section className="py-20 bg-white relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent"></div>
-
+        <section className="py-24 bg-white relative overflow-hidden border-t border-gray-100">
             <div className="max-w-7xl mx-auto px-6">
-                <div className="text-left mb-12 max-w-2xl">
-                    <span className="text-primary font-bold uppercase tracking-widest text-xs mb-3 flex items-center gap-2">
-                        <span className="relative flex h-2.5 w-2.5">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
-                        </span>
-                        Resultados en Tiempo Real
-                    </span>
-                    <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-4 tracking-tight">
-                        Impacto en Vivo
+                <div className="text-left mb-12">
+                    <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-2 tracking-tight">
+                        Descubre el impacto que estás impulsando
                     </h2>
-                    <p className="text-lg text-gray-600 font-medium">
-                        Tu suscripción decide el destino de los fondos. Mira cómo votan los miembros.
+                    <p className="text-base text-gray-600 font-medium max-w-2xl">
+                        Tu suscripción decide el destino de los fondos. Mira cómo votan los miembros en tiempo real.
                     </p>
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
                     {options.map((option, index) => {
                         const percentage = totalVotes > 0
                             ? Math.round(((option.votes || 0) / totalVotes) * 100)
                             : 0;
-                        const color = CARD_COLORS[index % CARD_COLORS.length];
                         const isLeading = index === 0 && totalVotes > 0;
 
                         return (
-                            <div key={option.id} className="group flex flex-col bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                                {/* Image Section */}
-                                <div className="h-48 overflow-hidden relative">
+                            <div key={option.id} className="group flex flex-col cursor-pointer">
+                                {/* Image Section (GoFundMe Style) */}
+                                <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden mb-4">
                                     <img
                                         src={option.image_url || 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&q=80&w=800'}
                                         alt={option.title}
                                         loading="lazy"
-                                        width="800"
-                                        height="600"
-                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60" />
+                                    <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-300" />
 
-                                    {/* Percentage Badge */}
-                                    <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold shadow-sm text-primary flex items-center gap-1">
-                                        <TrendingUp size={12} />
-                                        {percentage}%
+                                    {/* Floating Badges */}
+                                    <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md text-white px-3 py-1.5 rounded-full text-xs font-bold">
+                                        Opción {String.fromCharCode(65 + index)}
                                     </div>
 
-                                    {/* Option Badge */}
-                                    <div className={`absolute top-4 left-4 ${color.badge} backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold shadow-sm`}>
-                                        {color.icon} Opción {String.fromCharCode(65 + index)}
-                                    </div>
-
-                                    {/* Leader badge */}
                                     {isLeading && (
-                                        <div className="absolute bottom-4 left-4 bg-amber-400 text-amber-900 px-2.5 py-1 rounded-full text-xs font-black flex items-center gap-1 shadow-lg">
-                                            <Trophy size={10} /> Líder
+                                        <div className="absolute top-3 left-3 bg-white text-gray-900 px-3 py-1.5 rounded-full text-xs font-bold shadow-sm flex items-center gap-1.5">
+                                            <Trophy size={12} className="text-amber-500" /> Líder
                                         </div>
                                     )}
                                 </div>
 
                                 {/* Content Section */}
-                                <div className="p-6 flex-1 flex flex-col">
-                                    <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors line-clamp-1">
+                                <div className="flex flex-col">
+                                    <h3 className="text-base font-bold text-gray-900 mb-1 leading-snug line-clamp-2 group-hover:underline decoration-2 underline-offset-2">
                                         {option.title}
                                     </h3>
 
-                                    <p className="text-gray-500 text-sm mb-6 line-clamp-3 leading-relaxed flex-1">
+                                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">
                                         {option.description}
                                     </p>
 
-                                    {/* Progress Bar Section */}
+                                    {/* Minimalist Progress Bar */}
                                     <div className="mt-auto">
-                                        <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden mb-2">
+                                        <div className="text-sm font-bold text-gray-900 mb-2">
+                                            {option.votes} votos <span className="text-gray-500 font-normal">recibidos</span>
+                                        </div>
+                                        <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
                                             <div
-                                                className={`h-full ${color.bar} rounded-full transition-all duration-1000 ease-out`}
+                                                className="h-full bg-emerald-600 rounded-full transition-all duration-1000 ease-out"
                                                 style={{ width: `${percentage}%` }}
                                             />
-                                        </div>
-                                        <div className="flex justify-between items-center text-xs text-gray-500 font-medium">
-                                            <span className="flex items-center gap-1">
-                                                <Users size={12} />
-                                                {option.votes} votos
-                                            </span>
-                                            <span className="font-bold text-gray-700">{percentage}%</span>
                                         </div>
                                     </div>
                                 </div>

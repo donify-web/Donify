@@ -333,28 +333,6 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
 
         </section>
 
-        {/* TRUST BANNER - Moved outside dark pricing section */}
-        <section className="py-8 bg-white border-b border-gray-100 relative z-10 shadow-sm">
-          <div className="max-w-7xl mx-auto px-6 text-center">
-            <button onClick={onShowBenefits} className="text-gray-600 hover:text-primary font-semibold underline text-sm transition-colors mb-6">
-              Ver comparación detallada de beneficios
-            </button>
-
-            <div className="flex flex-col items-center gap-4">
-              <div className="flex flex-wrap items-center justify-center gap-6 text-gray-700">
-                <div className="flex items-center gap-1.5"><ShieldCheck size={18} className="text-green-600" /> <span className="text-sm font-bold">Pago Seguro SSL</span></div>
-                <div className="flex items-center gap-1.5"><Lock size={18} className="text-green-600" /> <span className="text-sm font-bold">Encriptación 256-bit</span></div>
-              </div>
-              <div className="flex flex-wrap items-center justify-center gap-3 text-gray-500 text-xs">
-                <span className="font-medium mr-1 uppercase tracking-wider text-[10px]">Aceptamos:</span>
-                <span className="font-bold border border-gray-200 px-3 py-1.5 rounded-md bg-white shadow-sm text-gray-800">VISA</span>
-                <span className="font-bold border border-gray-200 px-3 py-1.5 rounded-md bg-white shadow-sm text-gray-800">Mastercard</span>
-                <span className="font-bold border border-gray-200 px-3 py-1.5 rounded-md bg-white shadow-sm text-gray-800">Apple Pay</span>
-                <span className="font-bold border border-gray-200 px-3 py-1.5 rounded-md bg-white shadow-sm text-gray-800">G Pay</span>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* VOTING SECTION (Real Data) */}
         <VotingSection />
