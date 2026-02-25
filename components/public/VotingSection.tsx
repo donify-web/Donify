@@ -3,9 +3,30 @@ import { supabase } from '../../lib/supabaseClient';
 import { VotingOption } from '../../types';
 import { TrendingUp, Users, Trophy } from 'lucide-react';
 
+const INITIAL_MOCK_DATA: VotingOption[] = [
+    {
+        id: 'mock-1', title: 'Reforestación Galicia',
+        description: 'Plantación de 500 árboles nativos en zonas afectadas por incendios forestales.',
+        image_url: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=800',
+        votes: 245, is_active: true, created_at: ''
+    },
+    {
+        id: 'mock-2', title: 'Comedores Sociales Madrid',
+        description: 'Apoyo nutricional diario para 200 personas en situación de vulnerabilidad.',
+        image_url: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800',
+        votes: 189, is_active: true, created_at: ''
+    },
+    {
+        id: 'mock-3', title: 'Educación Digital Rural',
+        description: 'Tablets y conectividad para escuelas rurales en la España vaciada.',
+        image_url: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=800',
+        votes: 120, is_active: true, created_at: ''
+    }
+];
+
 export default function VotingSection() {
-    const [options, setOptions] = useState<VotingOption[]>([]);
-    const [loading, setLoading] = useState(true);
+    // Start with mock data instantly to avoid slow skeleton loading
+    const [options, setOptions] = useState<VotingOption[]>(INITIAL_MOCK_DATA);
 
     useEffect(() => {
         const fetchVotingOptions = async () => {
@@ -39,42 +60,10 @@ export default function VotingSection() {
                             created_at: p.created_at
                         }));
                         setOptions(mapped);
-                    } else {
-                        // Final fallback: mock data
-                        setOptions([
-                            {
-                                id: 'mock-1', title: 'Reforestación Galicia',
-                                description: 'Plantación de 500 árboles nativos en zonas afectadas por incendios forestales.',
-                                image_url: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=800',
-                                votes: 245, is_active: true, created_at: ''
-                            },
-                            {
-                                id: 'mock-2', title: 'Comedores Sociales Madrid',
-                                description: 'Apoyo nutricional diario para 200 personas en situación de vulnerabilidad.',
-                                image_url: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800',
-                                votes: 189, is_active: true, created_at: ''
-                            },
-                            {
-                                id: 'mock-3', title: 'Educación Digital Rural',
-                                description: 'Tablets y conectividad para escuelas rurales en la España vaciada.',
-                                image_url: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=800',
-                                votes: 120, is_active: true, created_at: ''
-                            }
-                        ]);
                     }
                 }
             } catch (error) {
                 console.error('Error fetching voting data:', error);
-                setOptions([
-                    {
-                        id: 'mock-err-1', title: 'Reforestación Galicia',
-                        description: 'Plantación de 500 árboles nativos en zonas afectadas.',
-                        image_url: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=800',
-                        votes: 245, is_active: true, created_at: ''
-                    },
-                ]);
-            } finally {
-                setLoading(false);
             }
         };
 
@@ -83,29 +72,7 @@ export default function VotingSection() {
 
     const totalVotes = options.reduce((acc, o) => acc + (o.votes || 0), 0);
 
-    if (loading) return (
-        <section className="py-20 bg-white relative overflow-hidden">
-            <div className="max-w-7xl mx-auto px-6">
-                <div className="text-center mb-16">
-                    <div className="h-4 w-32 bg-gray-200 rounded-full mx-auto mb-4 animate-pulse"></div>
-                    <div className="h-10 w-3/4 max-w-lg bg-gray-200 rounded-xl mx-auto mb-6 animate-pulse"></div>
-                    <div className="h-4 w-1/2 max-w-md bg-gray-200 rounded-full mx-auto animate-pulse"></div>
-                </div>
-                <div className="grid md:grid-cols-3 gap-8">
-                    {[1, 2, 3].map((i) => (
-                        <div key={i} className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden h-[320px] animate-pulse">
-                            <div className="h-48 bg-gray-200"></div>
-                            <div className="p-6">
-                                <div className="h-6 w-3/4 bg-gray-200 rounded mb-4"></div>
-                                <div className="h-4 w-full bg-gray-200 rounded mb-2"></div>
-                                <div className="h-3 w-full bg-gray-200 rounded-full mt-6"></div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </section>
-    );
+
 
     const CARD_COLORS = [
         { bar: 'bg-emerald-500', badge: 'bg-emerald-100 text-emerald-700', icon: '🌿' },
