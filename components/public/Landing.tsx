@@ -254,8 +254,12 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
         </section>
 
         {/* PRICING SECTION */}
-        <div id="pricing" className="mb-20">
-          <div className="text-center mb-8">
+        <section id="pricing" className="py-24 bg-slate-50 relative border-y border-gray-100">
+          {/* Subtle dotted pattern for the background */}
+          <div className="absolute inset-0 bg-pattern-dots opacity-[0.03] pointer-events-none mix-blend-multiply"></div>
+
+          <div className="text-center mb-12 relative z-10 px-6">
+            <span className="text-primary font-bold uppercase tracking-widest text-xs mb-3 block">Suscripciones</span>
             <h2 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-4">Elige tu nivel de impacto</h2>
             <p className="text-xl text-gray-500 max-w-2xl mx-auto mb-8">
               Transparencia total. Cancela cuando quieras. El 100% de tu voto cuenta.
@@ -283,40 +287,45 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 px-6 max-w-7xl mx-auto relative z-10">
             {tiers.map((tier) => (
               <div
                 key={tier.id}
-                className={`relative group rounded-3xl p-6 sm:p-8 border ${tier.border} ${tier.gradient} bg-opacity-50 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 flex flex-col`}
+                className="relative group rounded-[2rem] p-8 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.1)] transition-all duration-300 hover:-translate-y-2 flex flex-col overflow-hidden border border-gray-100"
               >
-                <div className={`w-14 h-14 rounded-2xl ${tier.button} flex items-center justify-center mb-6 shadow-inner`}>
-                  <tier.icon size={28} />
+                {/* Soft gradient aura behind the content */}
+                <div className={`absolute inset-0 opacity-40 ${tier.gradient} pointer-events-none transition-opacity duration-300 group-hover:opacity-70`}></div>
+
+                <div className="relative z-10 flex flex-col h-full">
+                  <div className={`w-14 h-14 rounded-2xl ${tier.button} flex items-center justify-center mb-6 shadow-sm border border-white/50 backdrop-blur-sm`}>
+                    <tier.icon size={28} />
+                  </div>
+
+                  <h3 className={`text-2xl font-bold ${tier.text} mb-1`}>{tier.name}</h3>
+                  <span className={`text-lg font-extrabold ${tier.text} opacity-70 tracking-tight block mb-2`}>{tier.frequency}</span>
+                  <p className="text-gray-600 text-sm mb-6 h-10">{tier.description}</p>
+
+                  <div className="flex items-baseline gap-1 mb-8">
+                    <span className="text-4xl font-bold text-gray-900">€{tier.price}</span>
+                    <span className="text-gray-500 font-medium">/{tier.period}</span>
+                  </div>
+
+                  <ul className="space-y-4 mb-8 text-left flex-1">
+                    {tier.features.map((feature, i) => (
+                      <li key={i} className="flex items-start gap-3 text-sm text-gray-700">
+                        <CheckCircle size={16} className={`shrink-0 mt-0.5 ${tier.text}`} />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <button
+                    onClick={() => onShowPaymentWizard(tier.id as SubscriptionTier, pricingMode)}
+                    className={`w-full py-4 rounded-xl font-bold shadow-sm transition-all hover:scale-105 active:scale-95 ${tier.button} border border-black/5 ring-1 ring-black/5 hover:ring-black/10`}
+                  >
+                    Suscribirse
+                  </button>
                 </div>
-
-                <h3 className={`text-2xl font-bold ${tier.text} mb-1`}>{tier.name}</h3>
-                <span className={`text-lg font-extrabold ${tier.text} opacity-70 tracking-tight block mb-2`}>{tier.frequency}</span>
-                <p className="text-gray-600 text-sm mb-6 h-10">{tier.description}</p>
-
-                <div className="flex items-baseline gap-1 mb-8">
-                  <span className="text-4xl font-bold text-gray-900">€{tier.price}</span>
-                  <span className="text-gray-500 font-medium">/{tier.period}</span>
-                </div>
-
-                <ul className="space-y-4 mb-8 text-left flex-1">
-                  {tier.features.map((feature, i) => (
-                    <li key={i} className="flex items-start gap-3 text-sm text-gray-700">
-                      <CheckCircle size={16} className={`shrink-0 mt-0.5 ${tier.text}`} />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <button
-                  onClick={() => onShowPaymentWizard(tier.id as SubscriptionTier, pricingMode)}
-                  className={`w-full py-4 rounded-xl font-bold shadow-sm transition-all hover:scale-105 active:scale-95 ${tier.button} border border-black/5`}
-                >
-                  Suscribirse
-                </button>
               </div>
             ))}
           </div>
@@ -340,7 +349,7 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* VOTING SECTION (Real Data) */}
         <VotingSection />
