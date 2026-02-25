@@ -104,7 +104,7 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
             <button onClick={() => onNavigate('organizations')} className="text-gray-600 hover:text-primary font-medium transition-colors">Organizaciones</button>
             <button onClick={() => onNavigate('login')} className="text-gray-600 hover:text-primary font-medium transition-colors">Iniciar Sesión</button>
             <button
-              onClick={onJoinClick}
+              onClick={() => onShowPaymentWizard()}
               className="bg-gray-900 text-white px-6 py-2.5 rounded-full font-semibold hover:bg-black transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
               Unirse Ahora
@@ -132,7 +132,7 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
             <button
-              onClick={onJoinClick}
+              onClick={() => onShowPaymentWizard()}
               className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-white text-lg px-8 py-4 rounded-full font-bold shadow-xl shadow-primary/30 transition-all hover:scale-105 flex items-center justify-center gap-2"
             >
               Empezar a Donar <ArrowRight size={20} />
