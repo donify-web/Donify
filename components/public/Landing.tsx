@@ -50,9 +50,9 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       icon: ShieldCheck,
       description: 'Tu impacto empieza aquí',
       gradient: 'bg-gradient-bronze',
-      border: 'border-orange-200',
-      text: 'text-amber-800',
-      button: 'bg-amber-100 text-amber-900 hover:bg-amber-200',
+      border: 'border-orange-500/30',
+      text: 'text-orange-400',
+      button: 'bg-orange-500/20 text-orange-400 hover:bg-orange-500/30',
       features: [
         'Potestad de voto',
         'Certificado de donación (PDF Bronce)'
@@ -67,9 +67,9 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       icon: Star,
       description: 'Más compromiso, más ayuda',
       gradient: 'bg-gradient-silver',
-      border: 'border-gray-200',
-      text: 'text-gray-800',
-      button: 'bg-gray-200 text-gray-900 hover:bg-gray-300',
+      border: 'border-slate-400/30',
+      text: 'text-slate-200',
+      button: 'bg-slate-700 text-slate-200 hover:bg-slate-600',
       features: [
         'Potestad de voto',
         'Certificado de donación (PDF Plata)'
@@ -84,9 +84,9 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       icon: Zap,
       description: 'Lidera el cambio real',
       gradient: 'bg-gradient-gold',
-      border: 'border-yellow-200',
-      text: 'text-yellow-800',
-      button: 'bg-yellow-100 text-yellow-900 hover:bg-yellow-200',
+      border: 'border-yellow-500/30',
+      text: 'text-yellow-400',
+      button: 'bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30',
       features: [
         'Potestad de voto',
         'Certificado de donación (PDF Oro)',
@@ -102,9 +102,9 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       icon: Crown,
       description: 'Impacto transformador',
       gradient: 'bg-gradient-diamond',
-      border: 'border-cyan-200',
-      text: 'text-cyan-900',
-      button: 'bg-cyan-100 text-cyan-900 hover:bg-cyan-200',
+      border: 'border-cyan-500/30',
+      text: 'text-cyan-400',
+      button: 'bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30',
       features: [
         'Potestad de voto',
         'Certificado de donación (PDF Diamante)',
@@ -292,7 +292,7 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
             {tiers.map((tier) => (
               <div
                 key={tier.id}
-                className="relative group rounded-[2rem] p-8 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.1)] transition-all duration-300 hover:-translate-y-2 flex flex-col overflow-hidden border border-gray-100"
+                className={`relative group rounded-[2rem] p-8 bg-slate-800/80 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.3)] transition-all duration-300 hover:-translate-y-2 flex flex-col overflow-hidden border ${tier.border}`}
               >
                 {/* Soft gradient aura behind the content */}
                 <div className={`absolute inset-0 opacity-40 ${tier.gradient} pointer-events-none transition-opacity duration-300 group-hover:opacity-70`}></div>
