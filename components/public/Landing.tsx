@@ -253,30 +253,34 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
           </div>
         </section>
 
-        {/* PRICING SECTION */}
-        <section id="pricing" className="py-16 bg-[#fafafa] relative border-y border-gray-200 shadow-inner">
+        {/* PRICING SECTION (Dark Spotify Theme) */}
+        <section id="pricing" className="py-12 bg-slate-900 relative border-y border-slate-800 shadow-inner overflow-hidden">
+          {/* Subtle neon glow effects in background */}
+          <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] pointer-events-none"></div>
+          <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+
           <div className="text-center mb-10 relative z-10 px-6">
             <span className="text-primary font-bold uppercase tracking-widest text-[10px] sm:text-xs mb-3 block">Suscripciones</span>
-            <h2 className="text-3xl lg:text-4xl font-black text-gray-900 mb-4 tracking-tight">Elige tu nivel de impacto</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8 font-medium">
+            <h2 className="text-3xl lg:text-4xl font-black text-white mb-4 tracking-tight">Elige tu nivel de impacto</h2>
+            <p className="text-lg text-slate-400 max-w-2xl mx-auto mb-8 font-medium">
               Transparencia total. Cancela cuando quieras. El 100% de tu voto cuenta.
             </p>
 
             {/* TOGGLE */}
-            <div className="flex items-center justify-center mb-10">
-              <div className="bg-gray-100 p-1 rounded-full flex relative">
+            <div className="flex items-center justify-center mb-8">
+              <div className="bg-slate-800 p-1 rounded-full flex relative border border-slate-700">
                 <div
-                  className={`absolute top-1 bottom-1 w-1/2 bg-white rounded-full shadow-sm transition-transform duration-300 ease-in-out ${pricingMode === 'pro' ? 'translate-x-full' : 'translate-x-0'}`}
+                  className={`absolute top-1 bottom-1 w-1/2 bg-slate-600 rounded-full shadow-sm transition-transform duration-300 ease-in-out ${pricingMode === 'pro' ? 'translate-x-full' : 'translate-x-0'}`}
                 ></div>
                 <button
                   onClick={() => setPricingMode('simple')}
-                  className={`relative z-10 px-6 py-2 rounded-full font-bold text-sm transition-colors ${pricingMode === 'simple' ? 'text-gray-900' : 'text-gray-500'}`}
+                  className={`relative z-10 px-6 py-2 rounded-full font-bold text-sm transition-colors ${pricingMode === 'simple' ? 'text-white' : 'text-slate-400'}`}
                 >
                   Simple (0.99€)
                 </button>
                 <button
                   onClick={() => setPricingMode('pro')}
-                  className={`relative z-10 px-6 py-2 rounded-full font-bold text-sm transition-colors ${pricingMode === 'pro' ? 'text-gray-900' : 'text-gray-500'}`}
+                  className={`relative z-10 px-6 py-2 rounded-full font-bold text-sm transition-colors ${pricingMode === 'pro' ? 'text-white' : 'text-slate-400'}`}
                 >
                   Pro (1.99€)
                 </button>
@@ -294,22 +298,22 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
                 <div className={`absolute inset-0 opacity-40 ${tier.gradient} pointer-events-none transition-opacity duration-300 group-hover:opacity-70`}></div>
 
                 <div className="relative z-10 flex flex-col h-full">
-                  <div className={`w-14 h-14 rounded-2xl ${tier.button} flex items-center justify-center mb-6 shadow-sm border border-white/50 backdrop-blur-sm`}>
+                  <div className={`w-14 h-14 rounded-2xl ${tier.button} flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(255,255,255,0.1)] border border-white/10 backdrop-blur-sm`}>
                     <tier.icon size={28} />
                   </div>
 
-                  <h3 className={`text-2xl font-bold ${tier.text} mb-1`}>{tier.name}</h3>
-                  <span className={`text-lg font-extrabold ${tier.text} opacity-70 tracking-tight block mb-2`}>{tier.frequency}</span>
-                  <p className="text-gray-600 text-sm mb-6 h-10">{tier.description}</p>
+                  <h3 className={`text-2xl font-bold text-white mb-1`}>{tier.name}</h3>
+                  <span className={`text-lg font-extrabold ${tier.text} opacity-90 tracking-tight block mb-2 drop-shadow-md`}>{tier.frequency}</span>
+                  <p className="text-slate-400 text-sm mb-6 h-10">{tier.description}</p>
 
                   <div className="flex items-baseline gap-1 mb-8">
-                    <span className="text-4xl font-bold text-gray-900">€{tier.price}</span>
-                    <span className="text-gray-500 font-medium">/{tier.period}</span>
+                    <span className="text-4xl font-bold text-white">€{tier.price}</span>
+                    <span className="text-slate-500 font-medium">/{tier.period}</span>
                   </div>
 
-                  <ul className="space-y-4 mb-8 text-left flex-1">
+                  <ul className="space-y-3 mb-8 text-left flex-1">
                     {tier.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-3 text-sm text-gray-700">
+                      <li key={i} className="flex items-start gap-3 text-sm text-slate-300">
                         <CheckCircle size={16} className={`shrink-0 mt-0.5 ${tier.text}`} />
                         <span>{feature}</span>
                       </li>
@@ -318,7 +322,7 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
 
                   <button
                     onClick={() => onShowPaymentWizard(tier.id as SubscriptionTier, pricingMode)}
-                    className={`w-full py-4 rounded-xl font-bold shadow-sm transition-all hover:scale-105 active:scale-95 ${tier.button} border border-black/5 ring-1 ring-black/5 hover:ring-black/10`}
+                    className={`w-full py-4 rounded-xl font-bold shadow-[0_0_20px_rgba(255,255,255,0.1)] transition-all hover:scale-105 active:scale-95 ${tier.button} border border-white/20 ring-1 ring-white/10 hover:ring-white/30`}
                   >
                     Suscribirse
                   </button>
@@ -327,22 +331,22 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
             ))}
           </div>
 
-          <div className="mt-12 text-center">
-            <button onClick={onShowBenefits} className="text-gray-500 hover:text-primary underline text-sm transition-colors mb-8">
+          <div className="mt-10 text-center relative z-10">
+            <button onClick={onShowBenefits} className="text-slate-400 hover:text-white underline text-sm transition-colors mb-6">
               Ver comparación detallada de beneficios
             </button>
 
-            <div className="flex flex-col items-center gap-3 opacity-70">
-              <div className="flex items-center gap-4 text-gray-400">
-                <div className="flex items-center gap-1"><ShieldCheck size={16} /> <span className="text-xs font-semibold">Pago Seguro SSL</span></div>
-                <div className="flex items-center gap-1"><Lock size={16} /> <span className="text-xs font-semibold">Encriptación 256-bit</span></div>
+            <div className="flex flex-col items-center gap-3 opacity-80">
+              <div className="flex items-center gap-4 text-slate-500">
+                <div className="flex items-center gap-1"><ShieldCheck size={16} className="text-emerald-500" /> <span className="text-xs font-semibold text-slate-400">Pago Seguro SSL</span></div>
+                <div className="flex items-center gap-1"><Lock size={16} className="text-emerald-500" /> <span className="text-xs font-semibold text-slate-400">Encriptación 256-bit</span></div>
               </div>
-              <div className="flex items-center gap-2 text-gray-400 text-xs">
+              <div className="flex items-center gap-2 text-slate-500 text-xs">
                 <span>Aceptamos:</span>
-                <span className="font-bold border border-gray-200 px-2 py-1 rounded bg-white">VISA</span>
-                <span className="font-bold border border-gray-200 px-2 py-1 rounded bg-white">Mastercard</span>
-                <span className="font-bold border border-gray-200 px-2 py-1 rounded bg-white">Apple Pay</span>
-                <span className="font-bold border border-gray-200 px-2 py-1 rounded bg-white">G Pay</span>
+                <span className="font-bold border border-slate-700 px-2 py-1 rounded bg-slate-800 text-slate-300">VISA</span>
+                <span className="font-bold border border-slate-700 px-2 py-1 rounded bg-slate-800 text-slate-300">Mastercard</span>
+                <span className="font-bold border border-slate-700 px-2 py-1 rounded bg-slate-800 text-slate-300">Apple Pay</span>
+                <span className="font-bold border border-slate-700 px-2 py-1 rounded bg-slate-800 text-slate-300">G Pay</span>
               </div>
             </div>
           </div>
