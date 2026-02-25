@@ -50,9 +50,9 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       icon: ShieldCheck,
       description: 'Tu impacto empieza aquí',
       gradient: 'bg-gradient-bronze',
-      border: 'border-orange-500/30',
-      text: 'text-orange-400',
-      button: 'bg-orange-500/20 text-orange-400 hover:bg-orange-500/30',
+      border: 'border-amber-500/40 ring-1 ring-amber-500/20',
+      text: 'text-amber-400',
+      button: 'bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 border-amber-500/30',
       features: [
         'Potestad de voto',
         'Certificado de donación (PDF Bronce)'
@@ -67,9 +67,9 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       icon: Star,
       description: 'Más compromiso, más ayuda',
       gradient: 'bg-gradient-silver',
-      border: 'border-slate-400/30',
+      border: 'border-slate-300/40 ring-1 ring-slate-300/20',
       text: 'text-slate-200',
-      button: 'bg-slate-700 text-slate-200 hover:bg-slate-600',
+      button: 'bg-slate-400/10 text-slate-200 hover:bg-slate-400/20 border-slate-400/30',
       features: [
         'Potestad de voto',
         'Certificado de donación (PDF Plata)'
@@ -84,9 +84,9 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       icon: Zap,
       description: 'Lidera el cambio real',
       gradient: 'bg-gradient-gold',
-      border: 'border-yellow-500/30',
+      border: 'border-yellow-400/40 ring-1 ring-yellow-400/20',
       text: 'text-yellow-400',
-      button: 'bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30',
+      button: 'bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500/20 border-yellow-500/30',
       features: [
         'Potestad de voto',
         'Certificado de donación (PDF Oro)',
@@ -102,9 +102,9 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       icon: Crown,
       description: 'Impacto transformador',
       gradient: 'bg-gradient-diamond',
-      border: 'border-cyan-500/30',
+      border: 'border-cyan-400/40 ring-1 ring-cyan-400/20',
       text: 'text-cyan-400',
-      button: 'bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30',
+      button: 'bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 border-cyan-500/30',
       features: [
         'Potestad de voto',
         'Certificado de donación (PDF Diamante)',
@@ -259,28 +259,30 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
           <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] pointer-events-none"></div>
           <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none"></div>
 
-          <div className="text-center mb-10 relative z-10 px-6">
-            <span className="text-primary font-bold uppercase tracking-widest text-[10px] sm:text-xs mb-3 block">Suscripciones</span>
-            <h2 className="text-3xl lg:text-4xl font-black text-white mb-4 tracking-tight">Elige tu nivel de impacto</h2>
-            <p className="text-lg text-slate-400 max-w-2xl mx-auto mb-8 font-medium">
-              Transparencia total. Cancela cuando quieras. El 100% de tu voto cuenta.
-            </p>
+          <div className="mb-10 relative z-10 px-6 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
+            <div className="text-left max-w-2xl">
+              <span className="text-primary font-bold uppercase tracking-widest text-[10px] sm:text-xs mb-3 block">Suscripciones</span>
+              <h2 className="text-3xl lg:text-4xl font-black text-white mb-4 tracking-tight">Elige tu nivel de impacto</h2>
+              <p className="text-lg text-slate-400 font-medium">
+                Transparencia total. Cancela cuando quieras. El 100% de tu voto cuenta.
+              </p>
+            </div>
 
             {/* TOGGLE */}
-            <div className="flex items-center justify-center mb-8">
-              <div className="bg-slate-800 p-1 rounded-full flex relative border border-slate-700">
+            <div className="flex-shrink-0 md:pb-2">
+              <div className="bg-slate-800 p-1 rounded-full flex relative border border-slate-700 shadow-inner">
                 <div
                   className={`absolute top-1 bottom-1 w-1/2 bg-slate-600 rounded-full shadow-sm transition-transform duration-300 ease-in-out ${pricingMode === 'pro' ? 'translate-x-full' : 'translate-x-0'}`}
                 ></div>
                 <button
                   onClick={() => setPricingMode('simple')}
-                  className={`relative z-10 px-6 py-2 rounded-full font-bold text-sm transition-colors ${pricingMode === 'simple' ? 'text-white' : 'text-slate-400'}`}
+                  className={`relative z-10 px-6 py-2.5 rounded-full font-bold text-sm transition-colors ${pricingMode === 'simple' ? 'text-white' : 'text-slate-400'}`}
                 >
                   Simple (0.99€)
                 </button>
                 <button
                   onClick={() => setPricingMode('pro')}
-                  className={`relative z-10 px-6 py-2 rounded-full font-bold text-sm transition-colors ${pricingMode === 'pro' ? 'text-white' : 'text-slate-400'}`}
+                  className={`relative z-10 px-6 py-2.5 rounded-full font-bold text-sm transition-colors ${pricingMode === 'pro' ? 'text-white' : 'text-slate-400'}`}
                 >
                   Pro (1.99€)
                 </button>
@@ -322,7 +324,7 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
 
                   <button
                     onClick={() => onShowPaymentWizard(tier.id as SubscriptionTier, pricingMode)}
-                    className={`w-full py-4 rounded-xl font-bold shadow-[0_0_20px_rgba(255,255,255,0.1)] transition-all hover:scale-105 active:scale-95 ${tier.button} border border-white/20 ring-1 ring-white/10 hover:ring-white/30`}
+                    className={`w-full py-4 rounded-xl font-bold border transition-all hover:scale-105 active:scale-95 ${tier.button}`}
                   >
                     Suscribirse
                   </button>
@@ -331,22 +333,26 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
             ))}
           </div>
 
-          <div className="mt-10 text-center relative z-10">
-            <button onClick={onShowBenefits} className="text-slate-400 hover:text-white underline text-sm transition-colors mb-6">
+        </section>
+
+        {/* TRUST BANNER - Moved outside dark pricing section */}
+        <section className="py-8 bg-white border-b border-gray-100 relative z-10 shadow-sm">
+          <div className="max-w-7xl mx-auto px-6 text-center">
+            <button onClick={onShowBenefits} className="text-gray-600 hover:text-primary font-semibold underline text-sm transition-colors mb-6">
               Ver comparación detallada de beneficios
             </button>
 
-            <div className="flex flex-col items-center gap-3 opacity-80">
-              <div className="flex items-center gap-4 text-slate-500">
-                <div className="flex items-center gap-1"><ShieldCheck size={16} className="text-emerald-500" /> <span className="text-xs font-semibold text-slate-400">Pago Seguro SSL</span></div>
-                <div className="flex items-center gap-1"><Lock size={16} className="text-emerald-500" /> <span className="text-xs font-semibold text-slate-400">Encriptación 256-bit</span></div>
+            <div className="flex flex-col items-center gap-4">
+              <div className="flex flex-wrap items-center justify-center gap-6 text-gray-700">
+                <div className="flex items-center gap-1.5"><ShieldCheck size={18} className="text-green-600" /> <span className="text-sm font-bold">Pago Seguro SSL</span></div>
+                <div className="flex items-center gap-1.5"><Lock size={18} className="text-green-600" /> <span className="text-sm font-bold">Encriptación 256-bit</span></div>
               </div>
-              <div className="flex items-center gap-2 text-slate-500 text-xs">
-                <span>Aceptamos:</span>
-                <span className="font-bold border border-slate-700 px-2 py-1 rounded bg-slate-800 text-slate-300">VISA</span>
-                <span className="font-bold border border-slate-700 px-2 py-1 rounded bg-slate-800 text-slate-300">Mastercard</span>
-                <span className="font-bold border border-slate-700 px-2 py-1 rounded bg-slate-800 text-slate-300">Apple Pay</span>
-                <span className="font-bold border border-slate-700 px-2 py-1 rounded bg-slate-800 text-slate-300">G Pay</span>
+              <div className="flex flex-wrap items-center justify-center gap-3 text-gray-500 text-xs">
+                <span className="font-medium mr-1 uppercase tracking-wider text-[10px]">Aceptamos:</span>
+                <span className="font-bold border border-gray-200 px-3 py-1.5 rounded-md bg-white shadow-sm text-gray-800">VISA</span>
+                <span className="font-bold border border-gray-200 px-3 py-1.5 rounded-md bg-white shadow-sm text-gray-800">Mastercard</span>
+                <span className="font-bold border border-gray-200 px-3 py-1.5 rounded-md bg-white shadow-sm text-gray-800">Apple Pay</span>
+                <span className="font-bold border border-gray-200 px-3 py-1.5 rounded-md bg-white shadow-sm text-gray-800">G Pay</span>
               </div>
             </div>
           </div>
