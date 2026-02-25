@@ -259,17 +259,17 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
         </section>
 
         {/* PRICING SECTION (Premium Translucent Light Theme) */}
-        <section id="pricing" className="py-16 md:py-24 bg-white relative overflow-hidden border-y border-gray-100">
+        <section id="pricing" className="py-16 md:py-24 bg-[#f8fdfd] relative overflow-hidden border-y border-gray-100/50">
           {/* Base translucent gradient layer */}
           <div className="absolute inset-0 bg-gradient-to-br from-[#b5e3e8]/40 via-[#b5e3e8]/10 to-transparent"></div>
 
           {/* Floating glowing orbs for depth */}
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#b5e3e8]/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
           <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#b5e3e8]/20 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4"></div>
-          <div className="absolute top-1/2 left-1/2 w-[800px] h-[800px] bg-white/40 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
+          <div className="absolute top-1/2 left-1/2 w-[800px] h-[800px] bg-[#f8fdfd]/60 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
 
           {/* Dotted texture overlay */}
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.04] mix-blend-overlay"></div>
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03] mix-blend-overlay"></div>
 
           <div className="mb-14 relative z-10 px-6 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
             <div className="text-left max-w-2xl">

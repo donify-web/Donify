@@ -177,14 +177,10 @@ const PrivacyContent = () => (
 
     <Section title="4. Destinatarios">
       <p>No cedemos tus datos a terceros con fines comerciales. Solo compartimos datos con:</p>
-      <div className="mt-4 grid sm:grid-cols-2 gap-3">
+      <div className="mt-4">
         <div className="bg-bgMain rounded-xl p-4 border border-gray-100">
           <p className="font-bold text-gray-900 text-sm mb-1">Stripe</p>
           <p className="text-xs text-gray-500">Para procesar los cobros de forma segura.</p>
-        </div>
-        <div className="bg-bgMain rounded-xl p-4 border border-gray-100">
-          <p className="font-bold text-gray-900 text-sm mb-1">Administración Tributaria</p>
-          <p className="text-xs text-gray-500">Para que puedas desgravar tu donación.</p>
         </div>
       </div>
     </Section>
@@ -321,21 +317,6 @@ const TransparencyContent = () => (
           <p>Donify opera bajo el régimen de <strong>entidades sin fines lucrativos</strong> conforme a la Ley 49/2002 de régimen fiscal de las entidades sin fines lucrativos y los incentivos fiscales al mecenazgo.</p>
         </div>
 
-        <div className="bg-primary/5 border border-primary/20 rounded-2xl p-6">
-          <p className="text-xs font-bold text-primary uppercase tracking-widest mb-3">¿Puedo desgravarme las donaciones?</p>
-          <p className="mb-4 text-gray-700">Sí. Las donaciones pueden dar derecho a deducción fiscal en tu declaración de la renta (IRPF):</p>
-          <div className="grid sm:grid-cols-2 gap-3">
-            <div className="bg-white rounded-xl p-4 border border-primary/10 text-center">
-              <div className="text-3xl font-black text-primary">80%</div>
-              <div className="text-xs text-gray-500 mt-1">sobre los primeros 250 €</div>
-            </div>
-            <div className="bg-white rounded-xl p-4 border border-primary/10 text-center">
-              <div className="text-3xl font-black text-primary">40%</div>
-              <div className="text-xs text-gray-500 mt-1">sobre el resto (hasta 45% si repites)</div>
-            </div>
-          </div>
-          <p className="text-xs text-gray-400 mt-3">* Porcentajes sujetos a la legislación fiscal vigente en cada ejercicio.</p>
-        </div>
 
         <div>
           <h3 className="font-bold text-gray-900 mb-1">3. CIF y Datos Registrales</h3>
