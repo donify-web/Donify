@@ -26,13 +26,15 @@ export default function PublicFooter({ onNavigate }: PublicFooterProps) {
 
             <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 relative z-10">
                 <div className="flex flex-col md:flex-row items-center gap-6">
-                    <div className="flex items-center gap-2 pr-6 border-r border-slate-700 hidden md:flex">
-                        <img
-                            src="/logo.svg"
-                            alt="Donify Logo"
-                            className="w-6 h-6 object-contain opacity-70 group-hover:opacity-100 transition-opacity"
-                        />
-                        <span className="font-semibold text-slate-300 tracking-wide">Donify © 2026</span>
+                    <div className="flex items-center gap-3 pr-8 border-r border-slate-700 hidden md:flex">
+                        <div className="bg-white p-2.5 rounded-2xl shadow-sm group cursor-pointer transition-transform hover:scale-105">
+                            <img
+                                src="/logo.svg"
+                                alt="Donify Logo"
+                                className="w-8 h-8 object-contain"
+                            />
+                        </div>
+                        <span className="font-bold text-slate-300 tracking-wide text-lg">Donify <span className="text-slate-500 font-medium text-sm ml-1">© 2026</span></span>
                     </div>
                     {/* Social Media Links */}
                     <div className="flex items-center gap-4">
@@ -53,13 +55,15 @@ export default function PublicFooter({ onNavigate }: PublicFooterProps) {
                             <TikTokIcon className="w-5 h-5" />
                         </a>
                     </div>
-                    <div className="flex items-center gap-2 md:hidden">
-                        <img
-                            src="/logo.svg"
-                            alt="Donify Logo"
-                            className="w-6 h-6 object-contain opacity-70"
-                        />
-                        <span className="font-semibold text-slate-300 tracking-wide">Donify © 2026</span>
+                    <div className="flex items-center gap-3 md:hidden">
+                        <div className="bg-white p-2.5 rounded-2xl shadow-sm">
+                            <img
+                                src="/logo.svg"
+                                alt="Donify Logo"
+                                className="w-8 h-8 object-contain"
+                            />
+                        </div>
+                        <span className="font-bold text-slate-300 tracking-wide text-lg">Donify <span className="text-slate-500 font-medium text-sm ml-1">© 2026</span></span>
                     </div>
                 </div>
                 <div className="flex flex-wrap justify-center md:justify-end gap-x-8 gap-y-4 text-sm font-medium text-slate-400">
