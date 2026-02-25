@@ -254,14 +254,11 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
         </section>
 
         {/* PRICING SECTION */}
-        <section id="pricing" className="py-24 bg-slate-50 relative border-y border-gray-100">
-          {/* Subtle dotted pattern for the background */}
-          <div className="absolute inset-0 bg-pattern-dots opacity-[0.03] pointer-events-none mix-blend-multiply"></div>
-
-          <div className="text-center mb-12 relative z-10 px-6">
-            <span className="text-primary font-bold uppercase tracking-widest text-xs mb-3 block">Suscripciones</span>
-            <h2 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-4">Elige tu nivel de impacto</h2>
-            <p className="text-xl text-gray-500 max-w-2xl mx-auto mb-8">
+        <section id="pricing" className="py-16 bg-[#fafafa] relative border-y border-gray-200 shadow-inner">
+          <div className="text-center mb-10 relative z-10 px-6">
+            <span className="text-primary font-bold uppercase tracking-widest text-[10px] sm:text-xs mb-3 block">Suscripciones</span>
+            <h2 className="text-3xl lg:text-4xl font-black text-gray-900 mb-4 tracking-tight">Elige tu nivel de impacto</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8 font-medium">
               Transparencia total. Cancela cuando quieras. El 100% de tu voto cuenta.
             </p>
 

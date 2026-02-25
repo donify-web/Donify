@@ -118,17 +118,19 @@ export default function VotingSection() {
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent"></div>
 
             <div className="max-w-7xl mx-auto px-6">
-                <div className="text-center mb-16">
-                    <span className="text-primary font-bold uppercase tracking-widest text-sm mb-2 flex items-center justify-center gap-2">
-                        <span className="relative flex h-3 w-3">
+                <div className="text-left mb-12 max-w-2xl">
+                    <span className="text-primary font-bold uppercase tracking-widest text-xs mb-3 flex items-center gap-2">
+                        <span className="relative flex h-2.5 w-2.5">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
                         </span>
-                        En Vivo
+                        Resultados en Tiempo Real
                     </span>
-                    <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Resultados en Tiempo Real</h2>
-                    <p className="text-xl text-gray-500 max-w-2xl mx-auto">
-                        Tu suscripción decide el destino de los fondos. Mira cómo votan los miembros en tiempo real.
+                    <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-4 tracking-tight">
+                        Impacto en Vivo
+                    </h2>
+                    <p className="text-lg text-gray-600 font-medium">
+                        Tu suscripción decide el destino de los fondos. Mira cómo votan los miembros.
                     </p>
                 </div>
 

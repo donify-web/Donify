@@ -20,20 +20,23 @@ const TikTokIcon = ({ className }: { className?: string }) => (
 
 export default function PublicFooter({ onNavigate }: PublicFooterProps) {
     return (
-        <footer className="bg-white/80 backdrop-blur-md border-t border-gray-200 py-12 px-6">
-            <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+        <footer className="bg-gray-900 py-16 px-6 relative overflow-hidden">
+            {/* Very faint abstract background glow */}
+            <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -translate-y-1/2 pointer-events-none"></div>
+
+            <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 relative z-10">
                 <div className="flex flex-col md:flex-row items-center gap-6">
-                    <div className="flex items-center gap-2 pr-6 border-r border-gray-200 hidden md:flex">
-                        <Logo className="w-6 h-6 text-gray-400" />
-                        <span className="font-semibold text-gray-500">Donify © 2026</span>
+                    <div className="flex items-center gap-2 pr-6 border-r border-gray-700 hidden md:flex">
+                        <Logo className="w-6 h-6 text-gray-400 group-hover:text-primary transition-colors" />
+                        <span className="font-semibold text-gray-400 tracking-wide">Donify © 2026</span>
                     </div>
                     {/* Social Media Links */}
-                    <div className="flex items-center gap-5">
+                    <div className="flex items-center gap-4">
                         <a
                             href="https://www.instagram.com/donifyworld?igsh=MWtqd2Y1Y2doMGQ3MA%3D%3D"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-gray-400 hover:text-pink-600 transition-colors bg-gray-50 hover:bg-pink-50 p-2.5 rounded-full"
+                            className="text-gray-400 hover:text-white transition-colors bg-gray-800 hover:bg-gray-700 p-3 rounded-full shadow-sm"
                         >
                             <Instagram size={20} />
                         </a>
@@ -41,23 +44,23 @@ export default function PublicFooter({ onNavigate }: PublicFooterProps) {
                             href="https://www.tiktok.com/@donifyworld?_r=1&_t=ZN-94E0lzMZLcc"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-gray-400 hover:text-black transition-colors bg-gray-50 hover:bg-gray-100 p-2.5 rounded-full"
+                            className="text-gray-400 hover:text-white transition-colors bg-gray-800 hover:bg-gray-700 p-3 rounded-full shadow-sm"
                         >
                             <TikTokIcon className="w-5 h-5" />
                         </a>
                     </div>
                     <div className="flex items-center gap-2 md:hidden">
                         <Logo className="w-6 h-6 text-gray-400" />
-                        <span className="font-semibold text-gray-500">Donify © 2026</span>
+                        <span className="font-semibold text-gray-400 tracking-wide">Donify © 2026</span>
                     </div>
                 </div>
-                <div className="flex flex-wrap justify-center md:justify-end gap-x-8 gap-y-4 text-sm text-gray-500">
-                    <button onClick={() => onNavigate('legal')} className="hover:text-gray-900 transition-colors">Términos</button>
-                    <button onClick={() => onNavigate('privacy')} className="hover:text-gray-900 transition-colors">Privacidad</button>
-                    <button onClick={() => onNavigate('transparency')} className="hover:text-gray-900 transition-colors">Transparencia</button>
-                    <button onClick={() => onNavigate('cookies')} className="hover:text-gray-900 transition-colors">Cookies</button>
-                    <button onClick={() => onNavigate('contact')} className="hover:text-gray-900 transition-colors">Contacto</button>
-                    <button onClick={() => onNavigate('faq')} className="hover:text-gray-900 transition-colors">FAQ</button>
+                <div className="flex flex-wrap justify-center md:justify-end gap-x-8 gap-y-4 text-sm font-medium text-gray-400">
+                    <button onClick={() => onNavigate('legal')} className="hover:text-white transition-colors">Términos</button>
+                    <button onClick={() => onNavigate('privacy')} className="hover:text-white transition-colors">Privacidad</button>
+                    <button onClick={() => onNavigate('transparency')} className="hover:text-white transition-colors">Transparencia</button>
+                    <button onClick={() => onNavigate('cookies')} className="hover:text-white transition-colors">Cookies</button>
+                    <button onClick={() => onNavigate('contact')} className="hover:text-white transition-colors">Contacto</button>
+                    <button onClick={() => onNavigate('faq')} className="hover:text-white transition-colors">FAQ</button>
                 </div>
             </div>
         </footer>
