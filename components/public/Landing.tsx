@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { PageView, SubscriptionTier, SubscriptionType } from '../../types';
-import { Coins, Heart, CheckCircle, ArrowRight, ShieldCheck, Globe, Star, Zap, Crown, Lock, PlayCircle, Users, Activity } from 'lucide-react';
+import { Coins, Heart, CheckCircle, ArrowRight, ShieldCheck, Globe, Star, Zap, Crown, Lock, PlayCircle, Users, Activity, Loader2 } from 'lucide-react';
 import { Logo } from '../shared/Logo';
 import VotingSection from './VotingSection';
+import { PRICE_IDS, initiateCheckout } from '../../lib/stripeClient';
+import { supabase } from '../../lib/supabaseClient';
 
 // Custom hook for scroll animations on solid sections
 function useScrollAnimation() {
@@ -35,6 +37,24 @@ interface LandingProps {
 
 export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefits, onJoinClick }: LandingProps) {
   const [pricingMode, setPricingMode] = useState<SubscriptionType>('simple');
+  const [isDonating, setIsDonating] = useState(false);
+
+  const handleDonate5 = async () => {
+    setIsDonating(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      const userId = user?.id || 'anonymous';
+      const result = await initiateCheckout(PRICE_IDS.DONATION_5, userId, 'payment');
+      if (!result.success) {
+        alert('Error al iniciar el pago. Por favor, inténtalo de nuevo.');
+      }
+    } catch (err) {
+      console.error('[Donate5] Error:', err);
+      alert('Error al iniciar el pago. Por favor, inténtalo de nuevo.');
+    } finally {
+      setIsDonating(false);
+    }
+  };
 
   const statsAnimation = useScrollAnimation();
   const videoAnimation = useScrollAnimation();
@@ -343,6 +363,27 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* DONATION BANNER — potencia la organización con 5€ */}
+          <div className="relative z-10 px-6 max-w-7xl mx-auto mt-10 mb-4">
+            <button
+              onClick={handleDonate5}
+              disabled={isDonating}
+              className="w-full flex items-center justify-center gap-3 px-8 py-5 rounded-2xl font-bold text-lg transition-all duration-200 border-2 border-dashed border-rose-300 bg-rose-50 text-rose-600 hover:bg-rose-100 hover:border-rose-400 hover:scale-[1.01] active:scale-[0.99] shadow-sm hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed group"
+            >
+              {isDonating ? (
+                <Loader2 className="animate-spin" size={22} />
+              ) : (
+                <Heart size={22} className="fill-rose-400 text-rose-400 group-hover:scale-110 transition-transform" />
+              )}
+              <span>
+                {isDonating ? 'Procesando...' : 'Donar 5€ y potenciar a la organización'}
+              </span>
+              {!isDonating && (
+                <span className="ml-1 text-rose-400 text-xl">❤️</span>
+              )}
+            </button>
           </div>
 
         </section>
