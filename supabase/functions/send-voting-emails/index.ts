@@ -57,7 +57,7 @@ serve(async (req) => {
   // ── 2. Fetch subscribers ──────────────────────────────────────────────────────
   const { data: users, error: usersError } = await supabase
     .from("profiles")
-    .select("id, email, full_name");
+    .select("id, email, full_name, subscription_tier");
 
   if (usersError) return json({ error: usersError.message }, 500);
   if (!users || users.length === 0) return json({ message: "No users found.", sent: 0 });
@@ -95,7 +95,8 @@ serve(async (req) => {
     const name = user.full_name || "Donante";
 
     // Send email with dynamic cause cards
-    const htmlContent = buildVotingEmail(name, finalToken, currentMonth, causes);
+    const tier = user.subscription_tier || 'oro/diamante';
+    const htmlContent = buildVotingEmail(name, finalToken, currentMonth, causes, tier);
 
     const res = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
@@ -190,8 +191,9 @@ function buildCauseCards(token: string, causes: VotingOption[]): string {
   }).join('');
 }
 
-function buildVotingEmail(name: string, token: string, month: string, causes: VotingOption[]): string {
+function buildVotingEmail(name: string, token: string, month: string, causes: VotingOption[], tier: string): string {
   const causeCards = buildCauseCards(token, causes);
+  const displayTier = tier.charAt(0).toUpperCase() + tier.slice(1);
 
   return `
 <!DOCTYPE html>
@@ -222,11 +224,10 @@ function buildVotingEmail(name: string, token: string, month: string, causes: Vo
 
           <!-- Premium Header -->
           <tr>
-            <td style="background:#022c22;padding:40px 40px 32px;text-align:center;">
-              <!-- Leaf Icon (SVG as inline style block or image, using emoji for compatibility) -->
-              <div style="font-size:32px;margin-bottom:12px;">🌱</div>
+            <td style="background:#023047;padding:40px 40px 32px;text-align:center;">
+              <img src="https://wsrv.nl/?url=donify.world/logo.svg&output=png" alt="Donify" width="60" height="60" style="border-radius:14px;margin-bottom:12px;display:inline-block;" />
               <h1 style="margin:0;color:#ffffff;font-size:28px;font-weight:900;letter-spacing:-1px;">Donify</h1>
-              <p style="margin:12px 0 0;color:#34d399;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:3px;">
+              <p style="margin:12px 0 0;color:#0ca1b3;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:3px;">
                 Votación Mensual &bull; ${formatMonth(month)}
               </p>
             </td>
@@ -239,7 +240,7 @@ function buildVotingEmail(name: string, token: string, month: string, causes: Vo
                 Hola, ${name}.<br/>Tu voto hace el cambio real.
               </h2>
               <p style="margin:0 0 24px;font-size:16px;color:#475569;line-height:1.6;">
-                Como suscriptor oro/diamante de Donify, tienes la responsabilidad y el privilegio de elegir qué organización recibe nuestro apoyo financiero este mes.
+                Como suscriptor <strong>${displayTier}</strong> de Donify, tienes la responsabilidad y el privilegio de elegir qué organización recibe nuestro apoyo financiero este mes.
               </p>
               
               <!-- Divider -->
@@ -254,7 +255,7 @@ function buildVotingEmail(name: string, token: string, month: string, causes: Vo
           <!-- Causes Section -->
           <tr>
             <td style="padding:20px 40px 40px;">
-              <p style="margin:0 0 24px;font-size:12px;font-weight:800;color:#10b981;text-transform:uppercase;letter-spacing:1.5px;">
+              <p style="margin:0 0 24px;font-size:12px;font-weight:800;color:#0ca1b3;text-transform:uppercase;letter-spacing:1.5px;">
                 Explora las causas candidatas:
               </p>
               
@@ -287,12 +288,25 @@ function buildVotingEmail(name: string, token: string, month: string, causes: Vo
           <!-- Footer -->
           <tr>
             <td style="background:#0f172a;padding:32px 40px;text-align:center;">
-              <p style="margin:0 0 16px;font-size:18px;font-weight:800;color:#ffffff;letter-spacing:-0.5px;">Donify</p>
+              <p style="margin:0 0 12px;font-size:18px;font-weight:800;color:#ffffff;letter-spacing:-0.5px;">Donify</p>
+              
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
+                <tr>
+                  <td align="center">
+                    <a href="https://www.instagram.com/donifyworld?igsh=MWtqd2Y1Y2doMGQ3MA%3D%3D" style="display:inline-block;margin:0 8px;background:#1e293b;border-radius:50%;width:36px;height:36px;text-align:center;line-height:44px;text-decoration:none;">
+                      <img src="https://img.icons8.com/ios-filled/50/94a3b8/instagram-new.png" alt="Instagram" width="18" height="18" style="display:inline-block;vertical-align:middle;border:0;">
+                    </a>
+                    <a href="https://www.tiktok.com/@donifyworld?_r=1&_t=ZN-94E0lzMZLcc" style="display:inline-block;margin:0 8px;background:#1e293b;border-radius:50%;width:36px;height:36px;text-align:center;line-height:44px;text-decoration:none;">
+                      <img src="https://img.icons8.com/ios-filled/50/94a3b8/tiktok.png" alt="TikTok" width="18" height="18" style="display:inline-block;vertical-align:middle;border:0;">
+                    </a>
+                  </td>
+                </tr>
+              </table>
               <p style="margin:0 0 16px;font-size:13px;color:#94a3b8;line-height:1.6;">
                 Revolucionando la transparencia en las donaciones.<br/>100% de tu suscripción va a la causa ganadora.
               </p>
               <p style="margin:0;font-size:12px;color:#475569;">
-                © ${new Date().getFullYear()} Donify &nbsp;&bull;&nbsp; <a href="${BASE_URL}" style="color:#34d399;text-decoration:none;">donify.world</a>
+                © ${new Date().getFullYear()} Donify &nbsp;&bull;&nbsp; <a href="${BASE_URL}" style="color:#0ca1b3;text-decoration:none;">donify.world</a>
               </p>
             </td>
           </tr>
