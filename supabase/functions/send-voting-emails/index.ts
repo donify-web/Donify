@@ -73,25 +73,23 @@ serve(async (req) => {
       new Date().getFullYear(), new Date().getMonth() + 1, 5
     ).toISOString();
 
-    // Upsert token
-    const { data: tokenData, error: insertError } = await supabase
-      .from("vote_tokens")
-      .upsert(
-        { token: tokenUuid, email: user.email, month: currentMonth, expires_at },
-        { onConflict: "email,month", ignoreDuplicates: false }
-      )
-      .select("token")
-      .single();
+    // Try to INSERT a fresh token for this month.
+    // If one already exists (unique constraint on email+month), fetch it instead.
+    let finalToken = tokenUuid;
 
-    let finalToken = tokenData?.token ?? tokenUuid;
+    const { error: insertError } = await supabase
+      .from("vote_tokens")
+      .insert({ token: tokenUuid, email: user.email, month: currentMonth, expires_at });
+
     if (insertError) {
+      // Row already exists — fetch the token that's actually in the DB
       const { data: existing } = await supabase
         .from("vote_tokens")
         .select("token")
         .eq("email", user.email)
         .eq("month", currentMonth)
         .single();
-      if (existing) finalToken = existing.token;
+      if (existing?.token) finalToken = existing.token;
     }
 
     const name = user.full_name || "Donante";
@@ -147,40 +145,53 @@ function formatMonth(month: string): string {
 }
 
 function buildCauseCards(token: string, causes: VotingOption[]): string {
-  return causes.map(cause => {
+  return causes.map((cause, index) => {
     const voteLink = `${BASE_URL}/#/quick-vote?token=${token}&cause=${cause.id}`;
+    // Margin bottom for all except the last card
+    const marginAttr = index === causes.length - 1 ? '' : 'padding-bottom:24px;';
+    
     return `
-      <td width="${Math.floor(100 / causes.length)}%" valign="top" style="padding:0 8px;">
-        <table width="100%" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:14px;overflow:hidden;border:1px solid #e5e7eb;">
-          <!-- Cause image -->
-          <tr>
-            <td style="padding:0;height:160px;overflow:hidden;">
-              <img src="${cause.image_url}"
-                   alt="${cause.title}"
-                   width="100%"
-                   style="width:100%;height:160px;object-fit:cover;display:block;" />
-            </td>
-          </tr>
-          <!-- Cause content -->
-          <tr>
-            <td style="padding:16px 16px 20px;">
-              <p style="margin:0 0 6px;font-size:14px;font-weight:800;color:#111827;line-height:1.3;">${cause.title}</p>
-              <p style="margin:0 0 14px;font-size:12px;color:#6b7280;line-height:1.6;">${cause.description}</p>
-              <p style="margin:0 0 14px;font-size:11px;color:#9ca3af;font-weight:600;">👥 ${cause.votes} votos recibidos</p>
-              <a href="${voteLink}"
-                 style="display:block;text-align:center;background:#1a7a5e;color:#ffffff;text-decoration:none;font-size:13px;font-weight:800;padding:11px 16px;border-radius:10px;">
-                Vota esta causa
-              </a>
-            </td>
-          </tr>
-        </table>
-      </td>`;
+      <tr>
+        <td style="${marginAttr}">
+          <table width="100%" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #e5e7eb;box-shadow:0 4px 12px rgba(0,0,0,0.03);">
+            <tr>
+              <!-- Desktop: Image on left, Content on right -->
+              <!-- Mobile: Requires responsive CSS in <head> but we use a stackable approach -->
+              <td class="card-image-col" width="40%" style="overflow:hidden;">
+                <img src="${cause.image_url}"
+                     alt="${cause.title}"
+                     width="100%"
+                     style="width:100%;height:100%;min-height:180px;object-fit:cover;display:block;" />
+              </td>
+              <td class="card-content-col" width="60%" valign="middle" style="padding:24px;">
+                <p style="margin:0 0 8px;font-size:18px;font-weight:800;color:#111827;line-height:1.3;letter-spacing:-0.3px;">${cause.title}</p>
+                <p style="margin:0 0 16px;font-size:14px;color:#4b5563;line-height:1.6;">${cause.description}</p>
+                
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td width="55%" valign="middle">
+                      <p style="margin:0;font-size:12px;color:#059669;font-weight:700;display:inline-block;background:#ecfdf5;padding:4px 10px;border-radius:20px;">
+                        ❤️ ${cause.votes} votos
+                      </p>
+                    </td>
+                    <td width="45%" align="right" valign="middle">
+                      <a href="${voteLink}"
+                         style="display:inline-block;background:#1a7a5e;color:#ffffff;text-decoration:none;font-size:14px;font-weight:700;padding:10px 20px;border-radius:8px;box-shadow:0 2px 4px rgba(26,122,94,0.2);transition:all 0.2s;">
+                        Votar &rarr;
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>`;
   }).join('');
 }
 
 function buildVotingEmail(name: string, token: string, month: string, causes: VotingOption[]): string {
   const causeCards = buildCauseCards(token, causes);
-  const totalVoters = causes.reduce((sum, c) => sum + (c.votes || 0), 0);
 
   return `
 <!DOCTYPE html>
@@ -189,86 +200,110 @@ function buildVotingEmail(name: string, token: string, month: string, causes: Vo
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vota en Donify</title>
+  <style>
+    @media only screen and (max-width: 600px) {
+      .card-image-col, .card-content-col {
+        display: block !important;
+        width: 100% !important;
+      }
+      .card-image-col img {
+        height: 200px !important;
+      }
+    }
+  </style>
 </head>
-<body style="margin:0;padding:0;background:#f4f7f4;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+<body style="margin:0;padding:0;background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
 
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f7f4;padding:32px 16px;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;padding:40px 16px;">
     <tr>
       <td align="center">
-        <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+        <!-- Main Container -->
+        <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;border-radius:20px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,0.06);background:#ffffff;">
 
-          <!-- Header -->
+          <!-- Premium Header -->
           <tr>
-            <td style="background:#1a7a5e;border-radius:16px 16px 0 0;padding:28px 40px;text-align:center;">
-              <h1 style="margin:0;color:#ffffff;font-size:26px;font-weight:900;letter-spacing:-0.5px;">Donify</h1>
-              <p style="margin:6px 0 0;color:rgba(255,255,255,0.7);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;">
-                Sistema de Votación · ${formatMonth(month)}
+            <td style="background:#022c22;padding:40px 40px 32px;text-align:center;">
+              <!-- Leaf Icon (SVG as inline style block or image, using emoji for compatibility) -->
+              <div style="font-size:32px;margin-bottom:12px;">🌱</div>
+              <h1 style="margin:0;color:#ffffff;font-size:28px;font-weight:900;letter-spacing:-1px;">Donify</h1>
+              <p style="margin:12px 0 0;color:#34d399;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:3px;">
+                Votación Mensual &bull; ${formatMonth(month)}
               </p>
             </td>
           </tr>
 
           <!-- Intro -->
           <tr>
-            <td style="background:#ffffff;padding:32px 40px 24px;">
-              <p style="margin:0 0 6px;font-size:12px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:1px;">
-                Hola, ${name} 👋
-              </p>
-              <h2 style="margin:0 0 14px;font-size:22px;font-weight:900;color:#111827;line-height:1.3;">
-                ¡Elige la causa que recibirá los fondos de ${formatMonth(month)}!
+            <td style="padding:40px 40px 10px;">
+              <h2 style="margin:0 0 16px;font-size:24px;font-weight:800;color:#0f172a;line-height:1.2;letter-spacing:-0.5px;">
+                Hola, ${name}.<br/>Tu voto hace el cambio real.
               </h2>
-              <p style="margin:0 0 10px;font-size:14px;color:#4b5563;line-height:1.7;">
-                Como suscriptor de Donify, tu voto decide qué organización recibe los fondos este mes.
-                Más de <strong>${totalVoters} votos</strong> ya han sido emitidos. El tuyo puede marcar la diferencia.
+              <p style="margin:0 0 24px;font-size:16px;color:#475569;line-height:1.6;">
+                Como suscriptor oro/diamante de Donify, tienes la responsabilidad y el privilegio de elegir qué organización recibe nuestro apoyo financiero este mes.
               </p>
-              <p style="margin:0;font-size:13px;color:#6b7280;">
-                🔒 Enlace personal · Un solo uso · Expira el 5 del mes siguiente
-              </p>
-            </td>
-          </tr>
-
-          <!-- Section title -->
-          <tr>
-            <td style="background:#ffffff;padding:0 40px 20px;">
-              <p style="margin:0;font-size:13px;font-weight:800;color:#1a7a5e;text-transform:uppercase;letter-spacing:1.5px;">
-                Causas destacadas de este mes en Donify
-              </p>
-            </td>
-          </tr>
-
-          <!-- Cause cards row -->
-          <tr>
-            <td style="background:#ffffff;padding:0 32px 32px;">
+              
+              <!-- Divider -->
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
-                  ${causeCards}
+                  <td style="border-bottom:2px dashed #e2e8f0;padding-bottom:10px;"></td>
                 </tr>
               </table>
             </td>
           </tr>
 
-          <!-- Info strip -->
+          <!-- Causes Section -->
           <tr>
-            <td style="background:#f0f9f4;padding:18px 40px;border-top:1px solid #d1fae5;">
-              <p style="margin:0;font-size:12px;color:#374151;line-height:1.7;text-align:center;">
-                💡 <strong>¿Cómo funciona?</strong> Haz clic en el botón de la causa que prefieras. Tu voto se registra automáticamente —
-                no necesitas iniciar sesión. Cada suscriptor tiene un solo voto al mes.
+            <td style="padding:20px 40px 40px;">
+              <p style="margin:0 0 24px;font-size:12px;font-weight:800;color:#10b981;text-transform:uppercase;letter-spacing:1.5px;">
+                Explora las causas candidatas:
               </p>
+              
+              <!-- Cards -->
+              <table width="100%" cellpadding="0" cellspacing="0">
+                ${causeCards}
+              </table>
+              
+            </td>
+          </tr>
+
+          <!-- Security Notice -->
+          <tr>
+            <td style="background:#f8fafc;padding:24px 40px;border-top:1px solid #e2e8f0;">
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td width="24" valign="top">
+                    <span style="font-size:16px;">🔒</span>
+                  </td>
+                  <td style="padding-left:12px;">
+                    <p style="margin:0;font-size:13px;color:#64748b;line-height:1.5;">
+                      <strong>Este es tu enlace seguro.</strong> Tu voto no requiere iniciar sesión, es secreto y de un solo uso. La votación se cierra el día 5 del próximo mes.
+                    </p>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
 
           <!-- Footer -->
           <tr>
-            <td style="background:#f9fafb;border-radius:0 0 16px 16px;padding:20px 40px;border-top:1px solid #e5e7eb;text-align:center;">
-              <p style="margin:0;font-size:11px;color:#9ca3af;">
-                © ${new Date().getFullYear()} Donify · La democracia de la donación<br />
-                <a href="${BASE_URL}" style="color:#1a7a5e;text-decoration:none;">donify.world</a>
-                &nbsp;·&nbsp;
-                <a href="${BASE_URL}/#/legal" style="color:#9ca3af;text-decoration:none;">Política de privacidad</a>
+            <td style="background:#0f172a;padding:32px 40px;text-align:center;">
+              <p style="margin:0 0 16px;font-size:18px;font-weight:800;color:#ffffff;letter-spacing:-0.5px;">Donify</p>
+              <p style="margin:0 0 16px;font-size:13px;color:#94a3b8;line-height:1.6;">
+                Revolucionando la transparencia en las donaciones.<br/>100% de tu suscripción va a la causa ganadora.
+              </p>
+              <p style="margin:0;font-size:12px;color:#475569;">
+                © ${new Date().getFullYear()} Donify &nbsp;&bull;&nbsp; <a href="${BASE_URL}" style="color:#34d399;text-decoration:none;">donify.world</a>
               </p>
             </td>
           </tr>
 
         </table>
+        
+        <!-- View in browser / Unsubscribe (Optional standard footer text) -->
+        <p style="margin:24px 0 0;font-size:12px;color:#94a3b8;text-align:center;">
+          Recibes esto porque eres suscriptor de Donify.<br/>
+          Si tienes problemas técnicos, contáctanos en soporte@donify.world.
+        </p>
       </td>
     </tr>
   </table>
