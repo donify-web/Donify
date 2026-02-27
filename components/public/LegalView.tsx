@@ -267,7 +267,7 @@ const TransparencyContent = () => (
       <div className="px-8 py-6 space-y-6 text-sm text-gray-600 leading-relaxed">
         <div>
           <h3 className="font-bold text-gray-900 mb-1">1. Denominación y Naturaleza</h3>
-          <p>Donify es una <strong>Asociación Juvenil sin ánimo de lucro</strong>, inscrita en el Registro Nacional de Asociaciones con el número [pendiente de inscripción]. Su constitución se rige por la Ley Orgánica 1/2002 reguladora del Derecho de Asociación.</p>
+          <p>Donify es una <strong>Asociación Juvenil sin ánimo de lucro</strong>, inscrita en el Registro Autonómico de Asociaciones de Canarias con número <strong>28230</strong> (G1 / S1 / 28230-26 / GC). Su constitución se rige por la Ley Orgánica 1/2002 reguladora del Derecho de Asociación.</p>
         </div>
         <div>
           <h3 className="font-bold text-gray-900 mb-2">2. Objeto Social</h3>
@@ -319,8 +319,20 @@ const TransparencyContent = () => (
 
 
         <div>
-          <h3 className="font-bold text-gray-900 mb-1">3. CIF y Datos Registrales</h3>
-          <p>CIF: [Pendiente de asignación]. Registro Nacional de Asociaciones: [Pendiente]. Donify emitirá certificados de donación anuales a todos los socios que lo soliciten.</p>
+          <h3 className="font-bold text-gray-900 mb-1">3. NIF y Datos Registrales</h3>
+          <div className="space-y-2 mt-2">
+            <div className="flex flex-wrap gap-3">
+              <div className="bg-bgMain rounded-xl px-4 py-3 border border-gray-100 flex-1 min-w-[200px]">
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-0.5">NIF</p>
+                <p className="text-gray-900 font-semibold">G26733998</p>
+              </div>
+              <div className="bg-bgMain rounded-xl px-4 py-3 border border-gray-100 flex-1 min-w-[200px]">
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-0.5">Registro Autonómico de Canarias</p>
+                <p className="text-gray-900 font-semibold">G1 / S1 / 28230-26 / GC</p>
+              </div>
+            </div>
+            <p className="text-gray-500 mt-2">Donify emitirá certificados de donación anuales a todos los socios que lo soliciten.</p>
+          </div>
         </div>
         <div>
           <h3 className="font-bold text-gray-900 mb-1">4. Obligaciones Contables</h3>
