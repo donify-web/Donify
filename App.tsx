@@ -174,7 +174,7 @@ function AppContent() {
       case 'pricing':
         return <PricingPage onNavigate={setCurrentView} />;
       case 'how-it-works':
-        return <HowItWorks onNavigate={setCurrentView} />;
+        return <HowItWorks onNavigate={setCurrentView} onLoginClick={() => setCurrentView('login')} onJoinClick={handleRegistrationClick} />;
       case 'contact':
         return <Contact onNavigate={setCurrentView} />;
       case 'ngo-apply':

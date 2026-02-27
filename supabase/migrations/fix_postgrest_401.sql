@@ -59,7 +59,3 @@ CREATE POLICY "Public projects are viewable by everyone"
 INSERT INTO public.voting_options (title, description, image_url, votes, is_active)
 SELECT 'Causa Medioambiental [Ejemplo]', 'Plantación de árboles...', 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=800', 0, true
 WHERE NOT EXISTS (SELECT 1 FROM public.voting_options);
-
-INSERT INTO public.voting_options (title, description, image_url, votes, is_active)
-SELECT 'Acción Social [Ejemplo]', 'Apoyo humanitario...', 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800', 0, true
-WHERE NOT EXISTS (SELECT 1 FROM public.voting_options WHERE title = 'Acción Social [Ejemplo]');

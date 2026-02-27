@@ -10,13 +10,15 @@ import {
   HelpCircle,
   ArrowRight,
 } from 'lucide-react';
-import { Logo } from '../shared/Logo';
+import PublicNavbar from './PublicNavbar';
 
 interface HowItWorksProps {
   onNavigate: (view: PageView) => void;
+  onLoginClick: () => void;
+  onJoinClick: () => void;
 }
 
-export default function HowItWorks({ onNavigate }: HowItWorksProps) {
+export default function HowItWorks({ onNavigate, onLoginClick, onJoinClick }: HowItWorksProps) {
   const [donorCount, setDonorCount] = useState(1000);
   const [pricingMode, setPricingMode] = useState<'simple' | 'pro'>('simple');
   const [selectedTier, setSelectedTier] = useState<'bronze' | 'silver' | 'gold' | 'diamond'>('bronze');
@@ -35,13 +37,7 @@ export default function HowItWorks({ onNavigate }: HowItWorksProps) {
   return (
     <div className="min-h-screen bg-white font-sans text-textMain animate-in fade-in duration-500 overflow-hidden">
 
-      {/* HEADER OVERLAY */}
-      <header className="absolute top-0 w-full px-6 lg:px-12 py-5 flex items-center max-w-7xl mx-auto left-0 right-0 z-50">
-        <div className="flex items-center gap-2 cursor-pointer px-4 py-2 rounded-full border border-white/50 shadow-sm bg-white/70 backdrop-blur-md hover:bg-white/90 transition-colors" onClick={() => onNavigate('landing')}>
-          <Logo className="w-7 h-7 text-primary" />
-          <span className="font-bold text-lg text-gray-800 tracking-tight">Donify</span>
-        </div>
-      </header>
+      <PublicNavbar onNavigate={onNavigate} onLoginClick={onLoginClick} onJoinClick={onJoinClick} />
 
       {/* ── HERO SECTION ── */}
       <section className="relative pt-36 pb-14 px-6 flex flex-col justify-center overflow-hidden">

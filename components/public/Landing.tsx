@@ -70,9 +70,10 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       icon: ShieldCheck,
       description: 'Tu impacto empieza aquí',
       gradient: 'bg-gradient-bronze',
+      cardBg: '#FFF4EE',
       border: 'border-orange-200',
-      text: 'text-amber-800',
-      button: 'bg-amber-100 text-amber-900 hover:bg-amber-200 border-amber-200/50',
+      text: 'text-orange-700',
+      button: 'bg-orange-100 text-orange-900 hover:bg-orange-200 border-orange-200/50',
       features: [
         'Potestad de voto',
         'Certificado de donación (PDF Bronce)'
@@ -87,12 +88,14 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       icon: Star,
       description: 'Más compromiso, más ayuda',
       gradient: 'bg-gradient-silver',
-      border: 'border-gray-200',
-      text: 'text-gray-800',
-      button: 'bg-gray-200 text-gray-900 hover:bg-gray-300 border-gray-300/50',
+      cardBg: '#F0F4F8',
+      border: 'border-slate-200',
+      text: 'text-slate-700',
+      button: 'bg-slate-100 text-slate-900 hover:bg-slate-200 border-slate-200/50',
       features: [
         'Potestad de voto',
-        'Certificado de donación (PDF Plata)'
+        'Certificado de donación (PDF Plata)',
+        'Acceso anticipado a votaciones'
       ]
     },
     {
@@ -104,13 +107,15 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       icon: Zap,
       description: 'Lidera el cambio real',
       gradient: 'bg-gradient-gold',
+      cardBg: '#FFFBEA',
       border: 'border-yellow-200',
-      text: 'text-yellow-800',
+      text: 'text-yellow-700',
       button: 'bg-yellow-100 text-yellow-900 hover:bg-yellow-200 border-yellow-200/50',
       features: [
         'Potestad de voto',
         'Certificado de donación (PDF Oro)',
-        'Acceso exclusivo a informes mensuales de datos de donaciones'
+        'Mención en la web oficial',
+        'Acceso exclusivo a informes mensuales'
       ]
     },
     {
@@ -122,13 +127,14 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
       icon: Crown,
       description: 'Impacto transformador',
       gradient: 'bg-gradient-diamond',
+      cardBg: '#EAF7F9',
       border: 'border-cyan-200',
-      text: 'text-cyan-900',
+      text: 'text-cyan-700',
       button: 'bg-cyan-100 text-cyan-900 hover:bg-cyan-200 border-cyan-200/50',
       features: [
         'Potestad de voto',
         'Certificado de donación (PDF Diamante)',
-        'Acceso exclusivo a informes mensuales de datos de donaciones',
+        'Participación en comité asesor',
         'Elegir la causa del primer mes',
       ]
     }
@@ -171,28 +177,25 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
             <div className="hidden lg:block absolute top-[10%] left-[5%] animate-float" style={{ animationDelay: '0s' }}>
               <div className="w-32 h-32 rounded-full border-4 border-white shadow-xl overflow-hidden relative group">
                 <img src="https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?auto=format&fit=crop&q=80&w=200" alt="Salud" className="w-full h-full object-cover transition-transform group-hover:scale-110" />
-                <div className="absolute bottom-0 inset-x-0 bg-white/90 text-[10px] font-bold py-1 text-center">Salud</div>
+
               </div>
             </div>
 
             <div className="hidden lg:block absolute bottom-[15%] left-[12%] animate-float" style={{ animationDelay: '1.5s' }}>
               <div className="w-24 h-24 rounded-full border-4 border-white shadow-lg overflow-hidden relative group">
                 <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=200" alt="Educación" className="w-full h-full object-cover transition-transform group-hover:scale-110" />
-                <div className="absolute bottom-0 inset-x-0 bg-white/90 text-[9px] font-bold py-1 text-center">Educación</div>
               </div>
             </div>
 
             <div className="hidden lg:block absolute top-[20%] right-[8%] animate-float" style={{ animationDelay: '0.8s' }}>
               <div className="w-40 h-40 rounded-full border-4 border-white shadow-xl overflow-hidden relative group">
                 <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=300" alt="Medio Ambiente" className="w-full h-full object-cover transition-transform group-hover:scale-110" />
-                <div className="absolute bottom-0 inset-x-0 bg-white/90 text-xs font-bold py-1 text-center">Medio Ambiente</div>
               </div>
             </div>
 
             <div className="hidden lg:block absolute bottom-[10%] right-[15%] animate-float" style={{ animationDelay: '2s' }}>
               <div className="w-20 h-20 rounded-full border-4 border-white shadow-md overflow-hidden relative group">
                 <img src="https://images.unsplash.com/photo-1518398046578-8cca57782e17?auto=format&fit=crop&q=80&w=150" alt="Animales" className="w-full h-full object-cover transition-transform group-hover:scale-110" />
-                <div className="absolute bottom-0 inset-x-0 bg-white/90 text-[8px] font-bold py-1 text-center">Animales</div>
               </div>
             </div>
 
@@ -326,7 +329,8 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
             {tiers.map((tier) => (
               <div
                 key={tier.id}
-                className={`relative group rounded-[1.5rem] p-6 bg-white shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col overflow-hidden border ${tier.border}`}
+                style={{ backgroundColor: tier.cardBg }}
+                className={`relative group rounded-[1.5rem] p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col overflow-hidden border ${tier.border}`}
               >
                 {/* Soft gradient aura behind the content */}
                 <div className={`absolute inset-0 opacity-10 ${tier.gradient} pointer-events-none transition-opacity duration-300 group-hover:opacity-20`}></div>

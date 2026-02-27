@@ -13,6 +13,7 @@ export default function PublicNavbar({ onNavigate, onLoginClick, onJoinClick }: 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const navItems = [
+        { label: 'Inicio', view: 'landing' as PageView },
         { label: 'Cómo funciona', view: 'how-it-works' as PageView },
         { label: 'Organizaciones', view: 'organizations' as PageView },
         { label: 'Transparencia', view: 'transparency' as PageView },
