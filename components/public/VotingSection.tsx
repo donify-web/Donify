@@ -5,22 +5,22 @@ import { TrendingUp, Users, Trophy } from 'lucide-react';
 
 const INITIAL_MOCK_DATA: VotingOption[] = [
     {
-        id: 'mock-1', title: 'Reforestación Galicia',
-        description: 'Plantación de 500 árboles nativos en zonas afectadas por incendios forestales.',
+        id: 'mock-1', title: 'Causa Medioambiental [Ejemplo]',
+        description: 'Aquí se mostraría la descripción detallada de un proyecto de impacto ambiental que las ONGs podrían proponer.',
         image_url: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=800',
-        votes: 245, is_active: true, created_at: ''
+        votes: 0, is_active: true, created_at: ''
     },
     {
-        id: 'mock-2', title: 'Comedores Sociales Madrid',
-        description: 'Apoyo nutricional diario para 200 personas en situación de vulnerabilidad.',
+        id: 'mock-2', title: 'Acción de Rescate Social [Ejemplo]',
+        description: 'Ejemplo de iniciativa solidaria enfocada en el apoyo humanitario directo a comunidades en situación de necesidad.',
         image_url: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800',
-        votes: 189, is_active: true, created_at: ''
+        votes: 0, is_active: true, created_at: ''
     },
     {
-        id: 'mock-3', title: 'Educación Digital Rural',
-        description: 'Tablets y conectividad para escuelas rurales en la España vaciada.',
+        id: 'mock-3', title: 'Proyecto Educativo [Ejemplo]',
+        description: 'Esta tarjeta simularía un proyecto destinado a proveer recursos y educación en áreas vulnerables.',
         image_url: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=800',
-        votes: 120, is_active: true, created_at: ''
+        votes: 0, is_active: true, created_at: ''
     }
 ];
 
@@ -141,15 +141,23 @@ export default function VotingSection() {
 
                                     {/* Minimalist Progress Bar */}
                                     <div className="mt-auto">
-                                        <div className="text-sm font-bold text-gray-900 mb-2">
-                                            {option.votes} votos <span className="text-gray-500 font-normal">recibidos</span>
-                                        </div>
-                                        <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                                            <div
-                                                className="h-full bg-emerald-600 rounded-full transition-all duration-1000 ease-out"
-                                                style={{ width: `${percentage}%` }}
-                                            />
-                                        </div>
+                                        {!option.id.startsWith('mock-') ? (
+                                            <>
+                                                <div className="text-sm font-bold text-gray-900 mb-2">
+                                                    {option.votes} votos <span className="text-gray-500 font-normal">recibidos</span>
+                                                </div>
+                                                <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                                                    <div
+                                                        className="h-full bg-emerald-600 rounded-full transition-all duration-1000 ease-out"
+                                                        style={{ width: `${percentage}%` }}
+                                                    />
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <div className="text-sm font-bold text-gray-400 italic mb-2 border-t border-gray-100 pt-3">
+                                                Ejemplo de visualización
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>

@@ -35,6 +35,6 @@ CREATE POLICY "Allow deletes for admins"
 
 -- Insert 3 default voting options for demo
 INSERT INTO voting_options (title, description, image_url, votes) VALUES
-  ('Reforestación Galicia', 'Plantación de 500 árboles nativos en zonas afectadas por incendios forestales. Tu voto apoya la recuperación de ecosistemas.', 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=800', 245),
-  ('Comedores Sociales Madrid', 'Apoyo nutricional diario para 200 personas en situación de vulnerabilidad en comedores comunitarios.', 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800', 189),
-  ('Educación Digital Rural', 'Tablets y conectividad para escuelas rurales en la España vaciada. Cerremos la brecha digital.', 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=800', 120);
+  ('Causa Medioambiental [Ejemplo]', 'Plantación y cuidado de árboles nativos. Este texto sirve como ejemplo de cómo se vería un proyecto medioambiental real.', 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=800', 0),
+  ('Acción de Rescate Social [Ejemplo]', 'Apoyo nutricional en zona en riesgo de exclusión socioeconómica. Espacio para describir el impacto de la iniciativa.', 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800', 0),
+  ('Proyecto Educativo [Ejemplo]', 'Material didáctico para niños en situación de pobreza. Aquí la ONG explicaría el uso pormenorizado de los fondos asignados.', 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=800', 0);

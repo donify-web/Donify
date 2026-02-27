@@ -88,7 +88,7 @@ export default function HowItWorks({ onNavigate }: HowItWorksProps) {
 
       {/* CALCULATOR SECTION */}
       <section className="py-20 bg-bgMain px-6">
-        <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+        <div className="max-w-5xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
           <div className="grid md:grid-cols-2">
             <div className="p-8 md:p-12 space-y-8">
               <div className="flex items-center gap-3 text-primary font-bold">
@@ -100,10 +100,10 @@ export default function HowItWorks({ onNavigate }: HowItWorksProps) {
                 Juega con los números y mira lo que pasa cuando nos unimos. Un pequeño esfuerzo individual se convierte en una fuerza imparable.
               </p>
 
-              <div className="space-y-6">
+              <div className="space-y-8">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Si fuéramos <span className="text-primary font-bold">{donorCount.toLocaleString()}</span> donantes
+                  <label className="block text-sm font-medium text-gray-700 mb-4">
+                    Si fuéramos <span className="text-primary font-bold">{donorCount.toLocaleString()}</span> donantes uniendo fuerzas
                   </label>
                   <input
                     type="range"
@@ -116,44 +116,76 @@ export default function HowItWorks({ onNavigate }: HowItWorksProps) {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Donando <span className="text-primary font-bold">{avgDonation}€</span> al mes
+                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                    Con un nivel de compromiso de:
                   </label>
-                  <div className="flex gap-4">
+                  <div className="grid grid-cols-2 gap-3">
                     <button
                       onClick={() => setAvgDonation(0.99)}
-                      className={`px-4 py-2 rounded-lg border ${avgDonation === 0.99 ? 'bg-primary/10 border-primary text-primary' : 'border-gray-200 text-gray-500'}`}
+                      className={`px-3 py-3 rounded-xl border text-sm font-bold transition-all ${avgDonation === 0.99 ? 'bg-primary/10 border-primary text-primary shadow-sm' : 'border-gray-200 text-gray-500 hover:border-gray-300'}`}
                     >
-                      Bronce (0.99€)
+                      Bronce <span className="block text-[10px] font-normal mt-0.5">0.99€ / mes</span>
                     </button>
                     <button
-                      onClick={() => setAvgDonation(4.99)}
-                      className={`px-4 py-2 rounded-lg border ${avgDonation === 4.99 ? 'bg-primary/10 border-primary text-primary' : 'border-gray-200 text-gray-500'}`}
+                      onClick={() => setAvgDonation(2.00)} // (0.99 * (365/15) / 12) ~ 2.00
+                      className={`px-3 py-3 rounded-xl border text-sm font-bold transition-all ${avgDonation === 2.00 ? 'bg-primary/10 border-primary text-primary shadow-sm' : 'border-gray-200 text-gray-500 hover:border-gray-300'}`}
                     >
-                      Oro (4.99€)
+                      Plata <span className="block text-[10px] font-normal mt-0.5">0.99€ / quincenal</span>
+                    </button>
+                    <button
+                      onClick={() => setAvgDonation(4.30)} // (0.99 * (365/7) / 12) ~ 4.30
+                      className={`px-3 py-3 rounded-xl border text-sm font-bold transition-all ${avgDonation === 4.30 ? 'bg-primary/10 border-primary text-primary shadow-sm' : 'border-gray-200 text-gray-500 hover:border-gray-300'}`}
+                    >
+                      Oro <span className="block text-[10px] font-normal mt-0.5">0.99€ / semanal</span>
+                    </button>
+                    <button
+                      onClick={() => setAvgDonation(7.50)} // (0.99 * (365/4) / 12) ~ 7.50
+                      className={`px-3 py-3 rounded-xl border text-sm font-bold transition-all ${avgDonation === 7.50 ? 'bg-primary/10 border-primary text-primary shadow-sm' : 'border-gray-200 text-gray-500 hover:border-gray-300'}`}
+                    >
+                      Diamante <span className="block text-[10px] font-normal mt-0.5">0.99€ / 4 días</span>
                     </button>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-primary text-white p-8 md:p-12 flex flex-col justify-center items-center text-center">
-              <div className="text-blue-100 font-medium mb-2">Generaríamos</div>
-              <div className="text-5xl font-bold mb-2">{monthlyImpact}</div>
-              <div className="text-blue-100 mb-8">cada mes para una causa</div>
+            <div className="bg-primary text-white p-8 md:p-12 flex flex-col justify-center items-center text-center relative overflow-hidden">
+              {/* Decorative background element */}
+              <div className="absolute top-0 right-0 p-8 opacity-10 rotate-12 pointer-events-none">
+                <Calculator size={120} />
+              </div>
 
-              <div className="bg-white/10 rounded-xl p-4 w-full backdrop-blur-sm text-sm text-left space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-white/20 rounded-full"><Users size={16} /></div>
-                  <span>Escuela en Kenia (construcción completa)</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-white/20 rounded-full"><Gift size={16} /></div>
-                  <span>3.000 Comidas calientes</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-white/20 rounded-full"><ShieldCheck size={16} /></div>
-                  <span>Refugio para 50 animales</span>
+              <div className="relative z-10 w-full">
+                <div className="text-blue-100 font-medium mb-2 uppercase tracking-widest text-xs">Juntos generaríamos</div>
+                <div className="text-5xl md:text-6xl font-black mb-2 tracking-tight">{(donorCount * avgDonation).toLocaleString('es-ES', { maximumFractionDigits: 0 })}€</div>
+                <div className="text-blue-100 mb-8 font-bold">cada mes para transformar realidades</div>
+
+                <div className="bg-white/10 rounded-2xl p-5 w-full backdrop-blur-md text-sm text-left space-y-4 shadow-xl border border-white/20">
+                  <div className="text-xs font-bold text-blue-200 uppercase tracking-widest mb-2 border-b border-white/10 pb-2">Equivale aproximadamente a:</div>
+
+                  <div className="flex items-center gap-4">
+                    <div className="p-2.5 bg-white/20 rounded-xl shrink-0"><Gift size={18} /></div>
+                    <div>
+                      <span className="font-bold text-lg block">{Math.floor((donorCount * avgDonation) / 2).toLocaleString('es-ES')}</span>
+                      <span className="text-blue-100 text-xs">Comidas calientes (aprox 2€/ud)</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    <div className="p-2.5 bg-white/20 rounded-xl shrink-0"><Users size={18} /></div>
+                    <div>
+                      <span className="font-bold text-lg block">{Math.floor((donorCount * avgDonation) / 15).toLocaleString('es-ES')}</span>
+                      <span className="text-blue-100 text-xs">Días de educación infantil (aprox 15€/día)</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    <div className="p-2.5 bg-white/20 rounded-xl shrink-0"><ShieldCheck size={18} /></div>
+                    <div>
+                      <span className="font-bold text-lg block">{Math.floor((donorCount * avgDonation) / 50).toLocaleString('es-ES')}</span>
+                      <span className="text-blue-100 text-xs">Familias con agua potable (aprox 50€/mes)</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

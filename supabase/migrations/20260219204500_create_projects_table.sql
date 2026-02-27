@@ -18,23 +18,28 @@ alter table projects enable row level security;
 
 -- Policies
 -- Public read access for voting/completed projects
+DROP POLICY IF EXISTS "Public projects are viewable by everyone" ON projects;
 create policy "Public projects are viewable by everyone"
   on projects for select
   using (status in ('voting', 'completed'));
 
 -- NGO read/write own projects
+DROP POLICY IF EXISTS "NGOs can view own projects" ON projects;
 create policy "NGOs can view own projects"
   on projects for select
   using (auth.uid() = ngo_id);
 
+DROP POLICY IF EXISTS "NGOs can insert own projects" ON projects;
 create policy "NGOs can insert own projects"
   on projects for insert
   with check (auth.uid() = ngo_id);
 
+DROP POLICY IF EXISTS "NGOs can update own projects" ON projects;
 create policy "NGOs can update own projects"
   on projects for update
   using (auth.uid() = ngo_id);
 
+DROP POLICY IF EXISTS "NGOs can delete own projects" ON projects;
 create policy "NGOs can delete own projects"
   on projects for delete
   using (auth.uid() = ngo_id);

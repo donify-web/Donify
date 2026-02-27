@@ -1,0 +1,41 @@
+﻿supabase/functions/create-checkout-session/index.ts(1,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/create-checkout-session/index.ts(2,20): error TS2307: Cannot find module 'https://esm.sh/stripe@14.21.0?target=deno' or its corresponding type declarations.
+supabase/functions/create-checkout-session/index.ts(4,27): error TS2304: Cannot find name 'Deno'.
+supabase/functions/create-portal-session/index.ts(1,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/create-portal-session/index.ts(2,20): error TS2307: Cannot find module 'https://esm.sh/stripe@14.21.0?target=deno' or its corresponding type declarations.
+supabase/functions/create-portal-session/index.ts(4,27): error TS2304: Cannot find name 'Deno'.
+supabase/functions/get-payment-history/index.ts(1,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/get-payment-history/index.ts(2,20): error TS2307: Cannot find module 'https://esm.sh/stripe@14.21.0?target=deno' or its corresponding type declarations.
+supabase/functions/get-payment-history/index.ts(4,27): error TS2304: Cannot find name 'Deno'.
+supabase/functions/get-payment-methods/index.ts(1,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/get-payment-methods/index.ts(2,20): error TS2307: Cannot find module 'https://esm.sh/stripe@14.21.0?target=deno' or its corresponding type declarations.
+supabase/functions/get-payment-methods/index.ts(4,27): error TS2304: Cannot find name 'Deno'.
+supabase/functions/handle-events/index.ts(2,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/handle-events/index.ts(4,24): error TS2304: Cannot find name 'Deno'.
+supabase/functions/modify-subscription/index.ts(1,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/modify-subscription/index.ts(2,20): error TS2307: Cannot find module 'https://esm.sh/stripe@14.21.0?target=deno' or its corresponding type declarations.
+supabase/functions/modify-subscription/index.ts(3,30): error TS2307: Cannot find module 'https://esm.sh/@supabase/supabase-js@2' or its corresponding type declarations.
+supabase/functions/modify-subscription/index.ts(5,27): error TS2304: Cannot find name 'Deno'.
+supabase/functions/modify-subscription/index.ts(44,7): error TS2304: Cannot find name 'Deno'.
+supabase/functions/modify-subscription/index.ts(45,7): error TS2304: Cannot find name 'Deno'.
+supabase/functions/stripe-webhook/index.ts(2,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/stripe-webhook/index.ts(3,30): error TS2307: Cannot find module 'https://esm.sh/@supabase/supabase-js@2' or its corresponding type declarations.
+supabase/functions/stripe-webhook/index.ts(4,20): error TS2307: Cannot find module 'https://esm.sh/stripe@12.0.0' or its corresponding type declarations.
+supabase/functions/stripe-webhook/index.ts(6,27): error TS2304: Cannot find name 'Deno'.
+supabase/functions/stripe-webhook/index.ts(7,24): error TS2304: Cannot find name 'Deno'.
+supabase/functions/stripe-webhook/index.ts(8,21): error TS2304: Cannot find name 'Deno'.
+supabase/functions/stripe-webhook/index.ts(9,21): error TS2304: Cannot find name 'Deno'.
+supabase/functions/stripe-webhook/index.ts(16,67): error TS2304: Cannot find name 'Deno'.
+supabase/functions/webhook/index.ts(1,23): error TS2307: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+supabase/functions/webhook/index.ts(2,20): error TS2307: Cannot find module 'https://esm.sh/stripe@14.21.0?target=deno' or its corresponding type declarations.
+supabase/functions/webhook/index.ts(3,30): error TS2307: Cannot find module 'https://esm.sh/@supabase/supabase-js@2' or its corresponding type declarations.
+supabase/functions/webhook/index.ts(5,27): error TS2304: Cannot find name 'Deno'.
+supabase/functions/webhook/index.ts(10,23): error TS2304: Cannot find name 'Deno'.
+supabase/functions/webhook/index.ts(37,7): error TS2304: Cannot find name 'Deno'.
+supabase/functions/webhook/index.ts(38,7): error TS2304: Cannot find name 'Deno'.
+temp_commit_landing.tsx(2,62): error TS2307: Cannot find module '../../types' or its corresponding type declarations.
+temp_commit_landing.tsx(4,22): error TS2307: Cannot find module '../shared/Logo' or its corresponding type declarations.
+temp_commit_landing.tsx(5,27): error TS2307: Cannot find module './VotingSection' or its corresponding type declarations.
+temp_commit_landing_utf8.tsx(2,62): error TS2307: Cannot find module '../../types' or its corresponding type declarations.
+temp_commit_landing_utf8.tsx(4,22): error TS2307: Cannot find module '../shared/Logo' or its corresponding type declarations.
+temp_commit_landing_utf8.tsx(5,27): error TS2307: Cannot find module './VotingSection' or its corresponding type declarations.

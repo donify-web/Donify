@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { PRICE_IDS, initiateCheckout } from '../../lib/stripeClient';
 import { supabase } from '../../lib/supabaseClient';
+import { Logo } from './Logo';
 
 interface PaymentWizardProps {
     user?: User | null;
@@ -23,7 +24,7 @@ export const PaymentWizard: React.FC<PaymentWizardProps> = ({ user, onClose, ini
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Auth / Registration State
-    const [step, setStep] = useState<'register' | 'payment'>(user ? 'payment' : 'register');
+    const [step, setStep] = useState<'register' | 'payment' | 'login'>(user ? 'payment' : 'register');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [fullName, setFullName] = useState('');
@@ -74,6 +75,42 @@ export const PaymentWizard: React.FC<PaymentWizardProps> = ({ user, onClose, ini
             setIsSubmitting(false);
         }
     };
+
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setAuthError(null);
+
+        try {
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email,
+                password,
+            });
+
+            if (error) throw error;
+
+            if (data.user) {
+                const { data: profile } = await supabase.from('profiles').select('*').eq('id', data.user.id).single();
+
+                const loggedUser: User = {
+                    id: data.user.id,
+                    email: data.user.email!,
+                    name: profile?.full_name || data.user.user_metadata?.full_name || '',
+                    isSubscribed: profile?.subscription_tier != null,
+                    subscriptionTier: profile?.subscription_tier,
+                    hasVotedThisMonth: false
+                };
+                setCurrentUser(loggedUser);
+                setStep('payment');
+            }
+        } catch (error: any) {
+            console.error('Login error:', error);
+            setAuthError('Correo o contraseña incorrectos.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
 
     const handlePayment = async () => {
         if (!currentUser) return;
@@ -188,85 +225,81 @@ export const PaymentWizard: React.FC<PaymentWizardProps> = ({ user, onClose, ini
     return (
         <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 sm:p-6">
             <div
-                className="absolute inset-0 bg-gray-900/60 backdrop-blur-md animate-in fade-in duration-500"
+                className="absolute inset-0 bg-gray-900/60 backdrop-blur-md animate-in fade-in duration-300"
                 onClick={!isSubmitting ? onClose : undefined}
             />
 
             <div className="relative bg-white w-full max-w-4xl max-h-[90vh] md:max-h-[85vh] rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row animate-in zoom-in-95 duration-500 border border-white/20">
-                {/* Visual Sidebar */}
-                <div className="hidden md:flex md:w-80 bg-gray-900 p-10 flex-col justify-between relative overflow-hidden">
-                    <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-                        <div className="absolute top-[-50px] left-[-20px] w-64 h-64 border-2 border-white rounded-full"></div>
-                        <div className="absolute bottom-[-100px] right-[-50px] w-96 h-96 border-[16px] border-primary/20 rounded-full"></div>
-                    </div>
-
+                {/* Visual Sidebar (Brand & Trust) */}
+                <div className="hidden md:flex md:w-80 bg-gray-50 p-10 flex-col justify-between border-r border-gray-100 relative overflow-hidden">
                     <div className="relative z-10">
-                        <div className="bg-primary/20 text-primary p-3 rounded-2xl inline-block mb-8 border border-primary/30">
-                            <CreditCard size={24} />
+                        {/* Logo & Brand */}
+                        <div className="flex items-center gap-2 mb-8">
+                            <Logo className="w-10 h-10 text-primary" />
+                            <span className="font-black text-2xl text-gray-900 tracking-tight">Donify</span>
                         </div>
-                        <h1 className="text-2xl font-black text-white leading-tight mb-3 tracking-tighter italic">
-                            Gestiona tu <br /><span className="text-primary not-italic">Compromiso</span>.
+
+                        <h1 className="text-2xl font-black text-gray-900 leading-tight mb-3 italic">
+                            Tu donación <br /><span className="text-primary not-italic">impulsa el cambio</span>.
                         </h1>
-                        <p className="text-[11px] text-gray-500 font-bold uppercase tracking-widest leading-relaxed">
+                        <p className="text-[11px] text-gray-500 font-bold uppercase tracking-widest leading-relaxed mb-8">
                             Seguridad Stripe • Transparencia Donify
                         </p>
-                    </div>
 
-                    <div className="relative z-10">
-                        <div className="p-5 bg-white/5 rounded-2xl border border-white/5 space-y-3">
-                            <div className="flex items-center gap-2 text-primary">
-                                <ShieldCheck size={16} />
-                                <span className="text-[10px] font-black uppercase tracking-widest">Pago Seguro</span>
+                        <div className="space-y-4">
+                            <div className="flex items-start gap-3">
+                                <ShieldCheck className="text-green-500 shrink-0 mt-0.5" size={18} />
+                                <div>
+                                    <h4 className="font-bold text-gray-900 text-sm">Garantía Donify</h4>
+                                    <p className="text-[11px] text-gray-500 mt-0.5">Tu donativo está protegido.</p>
+                                </div>
                             </div>
-                            <p className="text-[9px] text-gray-400 font-medium leading-relaxed">
-                                Utilizamos Stripe para procesar todos los pagos. Donify nunca almacena tus datos bancarios.
-                            </p>
+                            <div className="flex items-start gap-3">
+                                <Lock className="text-blue-500 shrink-0 mt-0.5" size={18} />
+                                <div>
+                                    <h4 className="font-bold text-gray-900 text-sm">Pago 100% Seguro</h4>
+                                    <p className="text-[11px] text-gray-500 mt-0.5">Encriptación nivel bancario.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Content Area */}
-                <div className="flex-1 p-6 md:p-12 relative flex flex-col bg-gray-50/30 overflow-y-auto">
+                <div className="flex-1 p-6 md:p-12 relative flex flex-col bg-white overflow-y-auto w-full">
                     {!isSubmitting && (
                         <button
                             onClick={onClose}
-                            className="absolute top-4 right-4 md:top-6 md:right-6 p-2 md:p-3 text-gray-300 hover:text-gray-900 bg-white rounded-2xl shadow-sm transition-all z-10"
+                            className="absolute top-4 right-4 md:top-6 md:right-6 p-2 text-gray-400 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 rounded-full transition-all z-10"
                         >
                             <X size={20} />
                         </button>
                     )}
 
-                    <div className="max-w-xl mx-auto w-full space-y-6">
-
-                        {/* Steps Indicator */}
-                        <div className="flex items-center gap-2 mb-4">
-                            <div className={`h-1 flex-1 rounded-full ${step === 'register' ? 'bg-primary' : 'bg-green-500'}`}></div>
-                            <div className={`h-1 flex-1 rounded-full ${step === 'payment' ? 'bg-primary' : 'bg-gray-200'}`}></div>
-                        </div>
-
+                    <div className="max-w-md mx-auto w-full flex-1 flex flex-col justify-center space-y-6">
 
                         {step === 'register' ? (
                             <div className="animate-in slide-in-from-right-4 duration-300">
                                 <div className="text-center md:text-left mb-6">
                                     <h2 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight mb-2">Crea tu cuenta</h2>
-                                    <p className="text-sm text-gray-500 font-medium">Solo necesitamos unos datos para procesar tu donación.</p>
+                                    <p className="text-sm text-gray-500 font-medium">Solo necesitamos unos datos básicos.</p>
                                 </div>
 
                                 {authError && (
-                                    <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm mb-4">
+                                    <div className="bg-red-50 text-red-600 p-3 rounded-xl text-sm mb-4">
                                         {authError}
                                     </div>
                                 )}
 
                                 <form onSubmit={handleRegistration} className="space-y-4">
                                     <div>
-                                        <label className="block text text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Nombre Completo</label>
+                                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Nombre Completo</label>
                                         <div className="relative">
                                             <UserIcon className="absolute left-3 top-3 text-gray-400" size={18} />
                                             <input
                                                 type="text"
                                                 required
-                                                className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none"
+                                                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none"
                                                 placeholder="Tu nombre"
                                                 value={fullName}
                                                 onChange={e => setFullName(e.target.value)}
@@ -275,13 +308,13 @@ export const PaymentWizard: React.FC<PaymentWizardProps> = ({ user, onClose, ini
                                     </div>
 
                                     <div>
-                                        <label className="block text text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Correo Electrónico</label>
+                                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Correo Electrónico</label>
                                         <div className="relative">
                                             <Mail className="absolute left-3 top-3 text-gray-400" size={18} />
                                             <input
                                                 type="email"
                                                 required
-                                                className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none"
+                                                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none"
                                                 placeholder="tu@email.com"
                                                 value={email}
                                                 onChange={e => setEmail(e.target.value)}
@@ -290,14 +323,14 @@ export const PaymentWizard: React.FC<PaymentWizardProps> = ({ user, onClose, ini
                                     </div>
 
                                     <div>
-                                        <label className="block text text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Contraseña</label>
+                                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Contraseña</label>
                                         <div className="relative">
                                             <Lock className="absolute left-3 top-3 text-gray-400" size={18} />
                                             <input
                                                 type="password"
                                                 required
                                                 minLength={6}
-                                                className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none"
+                                                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none"
                                                 placeholder="••••••••"
                                                 value={password}
                                                 onChange={e => setPassword(e.target.value)}
@@ -308,72 +341,119 @@ export const PaymentWizard: React.FC<PaymentWizardProps> = ({ user, onClose, ini
                                     <button
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className="w-full py-4 bg-gray-900 text-white rounded-xl font-bold hover:bg-black transition-colors flex items-center justify-center gap-2 mt-4"
+                                        className="w-full py-4 bg-gray-900 text-white rounded-xl font-bold hover:bg-black transition-colors flex items-center justify-center gap-2 mt-4 shadow-lg"
                                     >
                                         {isSubmitting ? <Loader2 className="animate-spin" /> : <>Continuar al Pago <ArrowRight size={18} /></>}
                                     </button>
                                 </form>
                                 <div className="mt-4 text-center">
-                                    <button onClick={() => setStep('payment')} className="text-xs text-primary font-bold hover:underline">
-                                        ¿Ya tienes cuenta? Iniciar Sesión (Mock: Skip)
+                                    <button onClick={() => setStep('login')} className="text-xs text-primary font-bold hover:underline">
+                                        ¿Ya tienes cuenta? Iniciar Sesión aquí
+                                    </button>
+                                </div>
+                            </div>
+                        ) : step === 'login' ? (
+                            <div className="animate-in slide-in-from-left-4 duration-300">
+                                <div className="text-center md:text-left mb-6">
+                                    <h2 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight mb-2">Iniciar Sesión</h2>
+                                    <p className="text-sm text-gray-500 font-medium">Bienvenido de nuevo a Donify.</p>
+                                </div>
+
+                                {authError && (
+                                    <div className="bg-red-50 text-red-600 p-3 rounded-xl text-sm mb-4">
+                                        {authError}
+                                    </div>
+                                )}
+
+                                <form onSubmit={handleLogin} className="space-y-4">
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Correo Electrónico</label>
+                                        <div className="relative">
+                                            <Mail className="absolute left-3 top-3 text-gray-400" size={18} />
+                                            <input
+                                                type="email"
+                                                required
+                                                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none"
+                                                placeholder="tu@email.com"
+                                                value={email}
+                                                onChange={e => setEmail(e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Contraseña</label>
+                                        <div className="relative">
+                                            <Lock className="absolute left-3 top-3 text-gray-400" size={18} />
+                                            <input
+                                                type="password"
+                                                required
+                                                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none"
+                                                placeholder="••••••••"
+                                                value={password}
+                                                onChange={e => setPassword(e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        disabled={isSubmitting}
+                                        className="w-full py-4 bg-gray-900 text-white rounded-xl font-bold hover:bg-black transition-colors flex items-center justify-center gap-2 mt-4 shadow-lg"
+                                    >
+                                        {isSubmitting ? <Loader2 className="animate-spin" /> : <>Entrar y Continuar <ArrowRight size={18} /></>}
+                                    </button>
+                                </form>
+                                <div className="mt-4 text-center">
+                                    <button onClick={() => setStep('register')} className="text-xs text-primary font-bold hover:underline">
+                                        ¿No tienes cuenta? Regístrate aquí
                                     </button>
                                 </div>
                             </div>
                         ) : (
                             <div className="animate-in slide-in-from-right-4 duration-300">
-                                <div className="text-center md:text-left">
+                                <div className="text-center md:text-left mb-6">
                                     <h2 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight mb-2">Activar Suscripción</h2>
-                                    <p className="text-sm text-gray-500 font-medium">Hola {currentUser?.name || currentUser?.email}, configura tu donación.</p>
+                                    <p className="text-sm text-gray-500 font-medium">Configura tu donación periódica.</p>
                                 </div>
 
-                                {/* FREQUENCY BADGE — periodic only */}
-                                <div className="flex items-center gap-3 p-4 bg-white rounded-2xl border-2 border-gray-100 shadow-sm mt-6">
-                                    <div className="p-2 rounded-xl bg-primary/10 text-primary">
-                                        <RefreshCcw size={20} />
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-black text-gray-900">Suscripción Periódica</p>
-                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Cargo automático · cancela cuando quieras</p>
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-1 gap-6 mt-6">
-                                    {/* THE FORMAL DROPDOWN */}
-                                    <div className="space-y-3">
+                                <div className="grid grid-cols-1 gap-5">
+                                    {/* DROPDOWN */}
+                                    <div className="space-y-2">
                                         <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Nivel de Suscripción</label>
                                         <div className="relative">
                                             <button
                                                 onClick={() => setShowTierSelect(!showTierSelect)}
-                                                className="w-full bg-white border-2 border-gray-100 rounded-2xl p-5 flex items-center justify-between group hover:border-primary transition-all duration-300 shadow-sm"
+                                                className="w-full bg-gray-50 border border-gray-200 rounded-2xl p-4 flex items-center justify-between group hover:border-primary transition-all duration-300"
                                             >
                                                 <div className="flex items-center gap-4">
-                                                    <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                                                    <div className="w-10 h-10 bg-white shadow-sm rounded-xl flex items-center justify-center text-primary">
                                                         {currentPlan?.icon}
                                                     </div>
                                                     <div className="text-left">
-                                                        <p className="font-black text-gray-900 text-base">{currentPlan?.name}</p>
-                                                        <p className="text-[11px] font-bold text-gray-400">{isYearly ? 'Anual' : currentPlan?.frequency}</p>
+                                                        <p className="font-black text-gray-900 text-sm">{currentPlan?.name}</p>
+                                                        <p className="text-[11px] font-bold text-gray-500">{currentPlan?.frequency}</p>
                                                     </div>
                                                 </div>
-                                                <ChevronDown size={24} className={`text-gray-300 group-hover:text-primary transition-transform ${showTierSelect ? 'rotate-180' : ''}`} />
+                                                <ChevronDown size={20} className={`text-gray-400 group-hover:text-primary transition-transform ${showTierSelect ? 'rotate-180' : ''}`} />
                                             </button>
 
                                             {showTierSelect && (
-                                                <div className="absolute w-full mt-3 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-[130] animate-in slide-in-from-top-2 duration-200">
+                                                <div className="absolute w-full mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-[130] animate-in slide-in-from-top-2 duration-200">
                                                     {tiers.map((t) => (
                                                         <button
                                                             key={t.id}
                                                             onClick={() => { setSelectedTier(t.id as SubscriptionTier); setShowTierSelect(false); }}
-                                                            className={`w-full p-5 flex items-center gap-5 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0 ${selectedTier === t.id ? 'bg-primary/5' : ''}`}
+                                                            className={`w-full p-4 flex items-center gap-4 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0 ${selectedTier === t.id ? 'bg-primary/5' : ''}`}
                                                         >
-                                                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${selectedTier === t.id ? 'bg-primary text-white' : 'bg-gray-100 text-gray-400'}`}>
+                                                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${selectedTier === t.id ? 'bg-primary text-white' : 'bg-gray-100 text-gray-400'}`}>
                                                                 {t.icon}
                                                             </div>
                                                             <div className="text-left flex-1">
-                                                                <p className="font-black text-gray-900 text-sm">{t.name}</p>
-                                                                <p className="text-[10px] font-bold text-gray-400">{t.desc}</p>
+                                                                <p className="font-bold text-gray-900 text-sm">{t.name}</p>
+                                                                <p className="text-[10px] text-gray-500">{t.desc}</p>
                                                             </div>
-                                                            {selectedTier === t.id && <Check size={18} className="text-primary" />}
+                                                            {selectedTier === t.id && <Check size={16} className="text-primary" />}
                                                         </button>
                                                     ))}
                                                 </div>
@@ -382,68 +462,51 @@ export const PaymentWizard: React.FC<PaymentWizardProps> = ({ user, onClose, ini
                                     </div>
 
                                     {/* TYPE SELECTOR */}
-                                    <div className="space-y-3">
-                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Modalidad de Perfil</label>
-                                        <div className="bg-white border-2 border-gray-100 p-1.5 rounded-2xl flex items-center gap-1.5 shadow-sm">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Modalidad</label>
+                                        <div className="bg-gray-100 p-1 rounded-xl flex items-center gap-1">
                                             <button
                                                 onClick={() => setSelectedType('simple')}
-                                                className={`flex-1 py-3 rounded-xl text-sm font-black transition-all ${selectedType === 'simple' ? 'bg-gray-900 text-white shadow-lg' : 'text-gray-400 hover:text-gray-600'}`}
+                                                className={`flex-1 py-2.5 rounded-lg text-sm font-bold transition-all ${selectedType === 'simple' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
                                             >
-                                                Simple
+                                                Simple (1,99€/mes)
                                             </button>
                                             <button
                                                 onClick={() => setSelectedType('pro')}
-                                                className={`flex-1 py-3 rounded-xl text-sm font-black transition-all ${selectedType === 'pro' ? 'bg-gray-900 text-white shadow-lg' : 'text-gray-400 hover:text-gray-600'}`}
+                                                className={`flex-1 py-2.5 rounded-lg text-sm font-bold transition-all ${selectedType === 'pro' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
                                             >
-                                                Pro
+                                                Pro (1,99€/mes)
                                             </button>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* PRICE & ACTION */}
-                                <div className="bg-gray-900 rounded-3xl p-6 text-white relative overflow-hidden group mt-6">
-                                    <div className="absolute top-0 right-0 p-6 opacity-10 pointer-events-none group-hover:scale-125 transition-transform duration-700">
-                                        <Zap size={64} fill="currentColor" className="text-primary" />
+                                <div className="mt-8">
+                                    <div className="flex items-center justify-between mb-4">
+                                        <span className="text-sm font-bold text-gray-500">Total:</span>
+                                        <div className="flex items-baseline gap-1">
+                                            <span className="text-3xl font-black text-gray-900">{displayPrice.toFixed(2)}€</span>
+                                            <span className="text-xs font-bold text-gray-400">/{currentPlan?.frequency.toLowerCase()}</span>
+                                        </div>
                                     </div>
 
-                                    <div className="relative z-10">
-                                        {/* Price row */}
-                                        <div className="flex items-center justify-between mb-5">
-                                            <div>
-                                                <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1">Total por periodo</p>
-                                                <div className="flex items-baseline gap-1">
-                                                    <span className="text-4xl font-black">{displayPrice}€</span>
-                                                    <span className="text-sm font-bold opacity-50">/{currentPlan?.frequency.toLowerCase()}</span>
-                                                </div>
-                                            </div>
-                                            <div className="text-right text-[10px] text-gray-500 font-bold uppercase leading-relaxed">
-                                                <span className="block">{currentPlan?.name}</span>
-                                                <span className="block text-primary">{selectedType === 'simple' ? 'Simple' : 'Pro'}</span>
-                                            </div>
-                                        </div>
+                                    <button
+                                        onClick={handlePayment}
+                                        disabled={isSubmitting}
+                                        className="w-full py-4 bg-primary text-white rounded-xl font-bold text-lg shadow-lg shadow-primary/20 hover:bg-primary-dark transition-all flex items-center justify-center gap-2"
+                                    >
+                                        {isSubmitting ? <Loader2 className="animate-spin" size={22} /> : (
+                                            <>
+                                                Donar ahora
+                                                <ArrowRight size={18} />
+                                            </>
+                                        )}
+                                    </button>
 
-                                        {/* CTA button — always full width */}
-                                        <button
-                                            onClick={handlePayment}
-                                            disabled={isSubmitting}
-                                            className="w-full py-4 bg-primary text-white rounded-2xl font-black text-base shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3"
-                                        >
-                                            {isSubmitting ? <Loader2 className="animate-spin" size={22} /> : (
-                                                <>
-                                                    Activar Suscripción
-                                                    <ArrowRight size={20} />
-                                                </>
-                                            )}
-                                        </button>
-
-                                        <div className="mt-5 pt-4 border-t border-white/10 flex items-center justify-between gap-4">
-                                            <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                                                <Info size={13} className="text-primary shrink-0" />
-                                                Sin permanencia · cancela cuando quieras
-                                            </div>
-                                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" alt="Stripe" className="h-3.5 invert opacity-40" />
-                                        </div>
+                                    <div className="mt-4 flex items-center justify-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                                        <Lock size={12} className="text-gray-400" />
+                                        Pagos seguros con Stripe
                                     </div>
                                 </div>
                             </div>

@@ -21,6 +21,7 @@ export type PageView =
   | 'dashboard-impact'
   | 'dashboard-news'
   | 'voting'
+  | 'quick-vote'
   | 'transparency'
   | 'faq';
 

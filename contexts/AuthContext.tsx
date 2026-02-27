@@ -27,19 +27,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             const nameFromEmail = email.includes('@') ? email.split('@')[0] : email;
 
             if (data) {
-                // Use account_type field from profile
-                const accountType = data.account_type || 'donor';
+                // Determine user type from account_type or fallback to metadata or default
+                const accountType = data.account_type || authMetadata?.account_type || 'donor';
+                const isAdmin = data.is_admin === true || accountType === 'admin';
+                const isNgo = accountType === 'ngo';
+
                 return {
                     id: data.id,
                     email: data.email || email,
-                    name: data.full_name || nameFromEmail,
-                    isSubscribed: data.is_subscribed,
+                    name: data.full_name || data.username || data.ngo_name || nameFromEmail, // Map to whichever name is available
+                    isSubscribed: data.subscription_tier != null && data.subscription_tier !== 'none',
                     subscriptionTier: data.subscription_tier,
-                    hasVotedThisMonth: data.has_voted_this_month,
+                    hasVotedThisMonth: data.has_voted_this_month || false,
                     lastDonationDate: data.last_donation_date,
-                    isAdmin: accountType === 'admin',
-                    isNgo: accountType === 'ngo',
-                    ngoId: accountType === 'ngo' ? data.id : undefined
+                    isAdmin: isAdmin,
+                    isNgo: isNgo,
+                    ngoId: isNgo ? data.id : undefined
                 } as User;
             } else {
                 // Profile fetch failed (RLS or timing) - fall back to auth metadata

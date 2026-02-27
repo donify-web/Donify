@@ -32,7 +32,7 @@ export default function DonorImpact({ user }: DonorImpactProps) {
                         <div className="h-40 overflow-hidden relative">
                             <img
                                 src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=800"
-                                alt="Reforestación"
+                                alt="Causa Medioambiental"
                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60" />
@@ -40,18 +40,18 @@ export default function DonorImpact({ user }: DonorImpactProps) {
                                 65% votado
                             </div>
                             <div className="absolute top-3 left-3 bg-black/30 backdrop-blur-md px-2 py-1 rounded-full text-xs font-bold text-white border border-white/20">
-                                Medio Ambiente
+                                Medio Ambiente [Ref]
                             </div>
                         </div>
                         <div className="p-5">
-                            <h3 className="font-bold text-gray-900 mb-1 group-hover:text-primary transition-colors">Reforestación Galicia</h3>
+                            <h3 className="font-bold text-gray-900 mb-1 group-hover:text-primary transition-colors">Causa Medioambiental [Ejemplo]</h3>
                             <div className="mt-4">
                                 <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                                     <div className="h-full bg-primary rounded-full" style={{ width: '65%' }}></div>
                                 </div>
                                 <div className="flex justify-between text-xs text-gray-500 mt-2 font-medium">
-                                    <span>1,245 votos</span>
-                                    <span>Meta: €5,000</span>
+                                    <span>Ejemplo de progreso</span>
+                                    <span>Meta: Demostrativa</span>
                                 </div>
                             </div>
 
@@ -64,7 +64,7 @@ export default function DonorImpact({ user }: DonorImpactProps) {
                         <div className="h-40 overflow-hidden relative">
                             <img
                                 src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800"
-                                alt="Comedores Sociales"
+                                alt="Acción Social"
                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60" />
@@ -72,18 +72,18 @@ export default function DonorImpact({ user }: DonorImpactProps) {
                                 35% votado
                             </div>
                             <div className="absolute top-3 left-3 bg-black/30 backdrop-blur-md px-2 py-1 rounded-full text-xs font-bold text-white border border-white/20">
-                                Ayuda Humanitaria
+                                Acción Social [Ref]
                             </div>
                         </div>
                         <div className="p-5">
-                            <h3 className="font-bold text-gray-900 mb-1 group-hover:text-primary transition-colors">Comedores Sociales</h3>
+                            <h3 className="font-bold text-gray-900 mb-1 group-hover:text-primary transition-colors">Acción Social [Ejemplo]</h3>
                             <div className="mt-4">
                                 <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                                     <div className="h-full bg-primary rounded-full" style={{ width: '35%' }}></div>
                                 </div>
                                 <div className="flex justify-between text-xs text-gray-500 mt-2 font-medium">
-                                    <span>890 votos</span>
-                                    <span>Meta: €3,500</span>
+                                    <span>Ejemplo de progreso</span>
+                                    <span>Meta: Demostrativa</span>
                                 </div>
                             </div>
 

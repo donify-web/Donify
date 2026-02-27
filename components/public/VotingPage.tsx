@@ -13,28 +13,28 @@ interface VotingPageProps {
 const MOCK_OPTIONS: VotingOption[] = [
     {
         id: 'mock-a',
-        title: 'Reforestación Galicia',
-        description: 'Plantación de 500 árboles nativos en zonas afectadas por incendios forestales. Tu voto apoya la recuperación de ecosistemas.',
+        title: 'Causa Medioambiental [Ejemplo]',
+        description: 'Plantación y cuidado de árboles nativos. Este texto sirve como ejemplo de cómo se vería un proyecto medioambiental real.',
         image_url: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=800',
-        votes: 245,
+        votes: 0,
         is_active: true,
         created_at: new Date().toISOString()
     },
     {
         id: 'mock-b',
-        title: 'Comedores Sociales Madrid',
-        description: 'Apoyo nutricional diario para 200 personas en situación de vulnerabilidad en comedores comunitarios.',
+        title: 'Acción de Rescate Social [Ejemplo]',
+        description: 'Apoyo nutricional diario en zona en riesgo de exclusión socioeconómica. Espacio para describir el impacto de la iniciativa.',
         image_url: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800',
-        votes: 189,
+        votes: 0,
         is_active: true,
         created_at: new Date().toISOString()
     },
     {
         id: 'mock-c',
-        title: 'Educación Digital Rural',
-        description: 'Tablets y conectividad para escuelas rurales en la España vaciada. Cerremos la brecha digital.',
+        title: 'Proyecto Educativo [Ejemplo]',
+        description: 'Material didáctico para niños en situación de pobreza. Aquí la ONG explicaría el uso pormenorizado de los fondos asignados.',
         image_url: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=800',
-        votes: 120,
+        votes: 0,
         is_active: true,
         created_at: new Date().toISOString()
     },
@@ -370,16 +370,24 @@ export default function VotingPage({ onNavigate }: VotingPageProps) {
 
                                         {/* Progress section */}
                                         <div className="mb-6">
-                                            <div className="flex justify-between items-center mb-2">
-                                                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Votos</span>
-                                                <span className="text-sm font-black text-gray-900">{option.votes} votos</span>
-                                            </div>
-                                            <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
-                                                <div
-                                                    className={`h-full ${theme.bar} rounded-full transition-all duration-1000 ease-out`}
-                                                    style={{ width: `${Math.max(percentage, 2)}%` }}
-                                                />
-                                            </div>
+                                            {!option.id.startsWith('mock-') ? (
+                                                <>
+                                                    <div className="flex justify-between items-center mb-2">
+                                                        <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Votos</span>
+                                                        <span className="text-sm font-black text-gray-900">{option.votes} votos</span>
+                                                    </div>
+                                                    <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
+                                                        <div
+                                                            className={`h-full ${theme.bar} rounded-full transition-all duration-1000 ease-out`}
+                                                            style={{ width: `${Math.max(percentage, 2)}%` }}
+                                                        />
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <div className="text-sm font-bold text-gray-400 italic mb-2 border-t border-gray-100 pt-4 text-center">
+                                                    Ejemplo de visualización de proyecto
+                                                </div>
+                                            )}
                                         </div>
 
                                         {/* Vote Button */}

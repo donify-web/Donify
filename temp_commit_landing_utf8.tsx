@@ -1,9 +1,8 @@
 ﻿import React, { useState } from 'react';
-import { PageView, SubscriptionTier, SubscriptionType } from '../../types';
+import { PageView, SubscriptionTier, SubscriptionType } from './types';
 import { Coins, Heart, CheckCircle, ArrowRight, ShieldCheck, Globe, Star, Zap, Crown, Lock } from 'lucide-react';
-import { Logo } from '../shared/Logo';
-import VotingSection from './VotingSection';
-
+import { Logo } from './components/shared/Logo';
+import VotingSection from './components/public/VotingSection';
 interface LandingProps {
   onNavigate: (view: PageView) => void;
   onShowPaymentWizard: (tier?: SubscriptionTier, type?: SubscriptionType) => void;
@@ -167,13 +166,13 @@ export default function Landing({ onNavigate, onShowPaymentWizard, onShowBenefit
                     onClick={() => setPricingMode('simple')}
                     className={`relative z-10 px-6 py-2 rounded-full font-bold text-sm transition-colors ${pricingMode === 'simple' ? 'text-gray-900' : 'text-gray-500'}`}
                   >
-                    Simple (0.99Ôé¼)
+                    Simple (0,99€/mes)
                   </button>
                   <button
                     onClick={() => setPricingMode('pro')}
                     className={`relative z-10 px-6 py-2 rounded-full font-bold text-sm transition-colors ${pricingMode === 'pro' ? 'text-gray-900' : 'text-gray-500'}`}
                   >
-                    Pro (1.99Ôé¼)
+                    Pro (1,99€/mes)
                   </button>
                 </div>
               </div>

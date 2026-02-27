@@ -29,6 +29,7 @@ export default function AdminPanel({ onNavigate, currentUser }: AdminPanelProps)
   const [votingOptions, setVotingOptions] = useState<VotingOption[]>([]);
   const [newOption, setNewOption] = useState({ title: '', description: '', image_url: '' });
   const [loading, setLoading] = useState(true);
+  const [isGeneratingLinks, setIsGeneratingLinks] = useState(false);
 
   useEffect(() => {
     fetchAdminData();
@@ -155,6 +156,106 @@ export default function AdminPanel({ onNavigate, currentUser }: AdminPanelProps)
           setPendingProjects(prev => prev.filter(p => p.id !== projectId));
         }
       }
+    }
+  };
+
+  const handleGenerateVotingLinks = async () => {
+    setIsGeneratingLinks(true);
+    try {
+      // 1. Fetch all users from profiles (in a real app, only active subscribers)
+      // For this demo, let's fetch all profiles
+      const { data: users, error: usersError } = await supabase
+        .from('profiles')
+        .select('id, email, name');
+
+      if (usersError || !users) {
+        alert('Error fetching users: ' + (usersError?.message || 'Unknown error'));
+        return;
+      }
+
+      if (users.length === 0) {
+        alert('No users found in the database.');
+        return;
+      }
+
+      const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
+      const generatedLinks: { email: string; name: string; token: string; link: string }[] = [];
+
+      // 2. Generate tokens for each user
+      for (const user of users) {
+        if (!user.email) continue; // Skip if no email
+
+        // Generate a random UUID for the token (simplified here, but Supabase normally does it server-side)
+        // We will insert and let Supabase generate the UUID, then fetch it back
+
+        // Wait, it's faster to generate the UUID client-side for the insert
+        const tokenUuid = crypto.randomUUID();
+
+        // Insert or ignore (if already exists for this month)
+        // We use an upsert or simply handle errors
+        const { error: insertError } = await supabase
+          .from('vote_tokens')
+          .insert({
+            token: tokenUuid,
+            email: user.email,
+            month: currentMonth
+          });
+
+        if (insertError) {
+          // If error because of unique constraint (already has a token this month)
+          // we fetch the existing one
+          if (insertError.code === '23505') {
+            const { data: existingToken } = await supabase
+              .from('vote_tokens')
+              .select('token')
+              .eq('email', user.email)
+              .eq('month', currentMonth)
+              .single();
+
+            if (existingToken) {
+              generatedLinks.push({
+                email: user.email,
+                name: user.name || 'Usuario',
+                token: existingToken.token,
+                link: `https://donify.world/#/quick-vote?token=${existingToken.token}`
+              });
+            }
+          } else {
+            console.error("Error inserting token for", user.email, insertError);
+          }
+        } else {
+          // Success
+          generatedLinks.push({
+            email: user.email,
+            name: user.name || 'Usuario',
+            token: tokenUuid,
+            link: `https://donify.world/#/quick-vote?token=${tokenUuid}`
+          });
+        }
+      }
+
+      // 3. Create CSV and trigger download
+      if (generatedLinks.length > 0) {
+        const csvContent = "data:text/csv;charset=utf-8,"
+          + "Email,Name,Token,MagicLink\n"
+          + generatedLinks.map(g => `${g.email},${g.name},${g.token},${g.link}`).join("\n");
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `voting_links_${currentMonth}.csv`);
+        document.body.appendChild(link); // Required for FF
+        link.click();
+        document.body.removeChild(link);
+
+        alert(`¡CSV con ${generatedLinks.length} enlaces generado correctamente! Importa este CSV en Resend.`);
+      }
+
+    } catch (err) {
+      console.error(err);
+      alert('Error inesperado al generar enlaces');
+    } finally {
+      setIsGeneratingLinks(false);
     }
   };
 
@@ -319,16 +420,23 @@ export default function AdminPanel({ onNavigate, currentUser }: AdminPanelProps)
                   <div className="flex gap-3 mb-6">
                     <button
                       onClick={async () => {
-                        if (confirm('¿Resetear todos los votos a 0? Esta acción no se puede deshacer.')) {
+                        if (confirm('¿Resetear absolutamente TODO (opciones, proyectos y base de votos mensuales)? Esta acción no se puede deshacer.')) {
+                          // 1. Reset options
                           await supabase.from('voting_options').update({ votes: 0 }).gte('votes', 0);
+                          // 2. Reset projects mock current_votes
+                          await supabase.from('projects').update({ current_votes: 0 }).gte('current_votes', 0);
+                          // 3. Clear all monthly_votes
+                          await supabase.from('monthly_votes').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+
                           fetchAdminData();
-                          alert('Votos reseteados');
+                          alert('Todos los datos de votos han sido reseteados a 0 correctamente.');
                         }
                       }}
-                      className="bg-red-50 text-red-600 px-4 py-2 rounded-lg text-sm font-bold hover:bg-red-100 border border-red-200"
+                      className="bg-red-50 text-red-600 px-4 py-2 rounded-lg text-sm font-bold hover:bg-red-100 border border-red-200 shadow-sm"
                     >
-                      Resetear Todos los Votos
+                      ⚠️ Super Reset (Borrar Todos los Votos)
                     </button>
+                    <p className="text-xs text-gray-500 max-w-sm">Esta acción pondrá a 0 tanto las opciones de votación como los proyectos de ONGs y limpiará el registro de votos mensuales de todos los usuarios.</p>
                   </div>
 
                   {/* Options list */}
@@ -392,8 +500,14 @@ export default function AdminPanel({ onNavigate, currentUser }: AdminPanelProps)
                 <button className="w-full text-left px-4 py-3 bg-red-50 text-red-600 rounded-lg text-sm font-bold hover:bg-red-100 flex items-center gap-2">
                   <AlertTriangle size={16} /> Cerrar Votación Mensual
                 </button>
-                <button className="w-full text-left px-4 py-3 bg-gray-50 text-gray-700 rounded-lg text-sm font-bold hover:bg-gray-100 flex items-center gap-2">
-                  <Download size={16} /> Exportar CSV Donantes
+                <button
+                  onClick={handleGenerateVotingLinks}
+                  disabled={isGeneratingLinks}
+                  className={`w-full text-left px-4 py-3 rounded-lg text-sm font-bold flex items-center gap-2 
+                  ${isGeneratingLinks ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-gray-50 text-gray-700 hover:bg-gray-100'}`}
+                >
+                  <Download size={16} />
+                  {isGeneratingLinks ? 'Generando CSV...' : 'Exportar Links (CSV Resend)'}
                 </button>
               </div>
             </div>

@@ -15,6 +15,7 @@ import AdminPanel from './components/admin/AdminPanel';
 import LaunchCountdown from './components/public/LaunchCountdown';
 import Organizations from './components/public/Organizations';
 import VotingPage from './components/public/VotingPage';
+import QuickVote from './components/public/QuickVote';
 import FAQ from './components/public/FAQ';
 import Settings from './components/donor/Settings';
 import PublicNavbar from './components/public/PublicNavbar';
@@ -36,10 +37,18 @@ function AppContent() {
   const { user, loading } = useAuth();
 
   // --- HASH-BASED ROUTING ---
-  // Read initial view from URL hash (e.g. #/voting)
   const getViewFromHash = (): PageView => {
-    const hash = window.location.hash.replace('#/', '').replace('#', '');
-    if (hash === 'voting') return 'voting';
+    const hash = window.location.hash.split('?')[0].replace('#/', '').replace('#', '') as PageView;
+    const validViews: PageView[] = [
+      'landing', 'app', 'login', 'signup', 'pricing', 'how-it-works', 'contact', 'ngo-apply',
+      'ngo-dashboard', 'ngo-projects', 'ngo-finance', 'ngo-settings', 'legal', 'privacy',
+      'cookies', 'admin', 'organizations', 'settings', 'dashboard-impact', 'dashboard-news',
+      'voting', 'quick-vote', 'transparency', 'faq'
+    ];
+
+    if (validViews.includes(hash)) {
+      return hash;
+    }
     return 'landing'; // default
   };
 
@@ -58,12 +67,14 @@ function AppContent() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    // Sync hash with current view — only set hash for 'voting', clear for others
-    if (currentView === 'voting') {
-      window.location.hash = '#/voting';
-    } else if (window.location.hash.includes('voting')) {
-      // Clear the hash when navigating away from voting
-      history.replaceState(null, '', window.location.pathname);
+    // Sync hash with current view
+    if (currentView !== 'landing' && currentView !== 'quick-vote') {
+      window.location.hash = `#/${currentView}`;
+    } else if (currentView === 'landing' || currentView === 'quick-vote') {
+      // For landing page, remove hash for cleaner URL
+      if (currentView === 'landing' && window.location.hash) {
+        history.replaceState(null, '', window.location.pathname);
+      }
     }
   }, [currentView]);
 
@@ -192,10 +203,25 @@ function AppContent() {
         return <Organizations onNavigate={setCurrentView} />;
       case 'voting':
         return <VotingPage onNavigate={setCurrentView} />;
+      case 'quick-vote':
+        return <QuickVote onNavigate={setCurrentView} />;
       case 'admin':
-        return user?.isAdmin ? (
+        console.log("Current User in App.tsx Admin View:", user);
+        if (!user) return <Login onNavigate={setCurrentView} initialState="login" />;
+        return user.isAdmin ? (
           <AdminPanel currentUser={user} onNavigate={setCurrentView} />
-        ) : <Login onNavigate={setCurrentView} initialState="login" />;
+        ) : (
+          <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 text-gray-800 p-4">
+            <h1 className="text-3xl font-bold text-red-600 mb-2">Acceso Denegado</h1>
+            <p className="mb-6 text-center max-w-md">No tienes permisos de administrador. Si eres el dueño, asegúrate de marcar la casilla "is_admin" en tu usuario dentro de Supabase.</p>
+            <button
+              onClick={() => setCurrentView('landing')}
+              className="px-6 py-2 bg-primary text-white rounded-full hover:bg-primary-dark transition-colors"
+            >
+              Volver al inicio
+            </button>
+          </div>
+        );
       case 'legal':
         return <LegalView onNavigate={setCurrentView} initialTab="terms" />;
       case 'privacy':
@@ -265,8 +291,8 @@ function AppContent() {
     }
   };
 
-  const showPublicNavbar = !['login', 'signup', 'app', 'admin', 'settings', 'ngo-dashboard', 'ngo-projects', 'ngo-finance', 'ngo-settings', 'dashboard-impact', 'dashboard-news', 'voting'].includes(currentView);
-  const showPublicFooter = !['login', 'signup', 'app', 'admin', 'settings', 'ngo-dashboard', 'ngo-projects', 'ngo-finance', 'ngo-settings', 'dashboard-impact', 'dashboard-news'].includes(currentView);
+  const showPublicNavbar = !['login', 'signup', 'app', 'admin', 'settings', 'ngo-dashboard', 'ngo-projects', 'ngo-finance', 'ngo-settings', 'dashboard-impact', 'dashboard-news', 'voting', 'quick-vote'].includes(currentView);
+  const showPublicFooter = !['login', 'signup', 'app', 'admin', 'settings', 'ngo-dashboard', 'ngo-projects', 'ngo-finance', 'ngo-settings', 'dashboard-impact', 'dashboard-news', 'quick-vote'].includes(currentView);
 
   return (
     <div className="min-h-screen bg-white">
